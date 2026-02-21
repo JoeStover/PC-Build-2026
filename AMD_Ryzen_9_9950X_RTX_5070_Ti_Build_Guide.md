@@ -20,6 +20,7 @@
 13. [Comprehensive Stress Testing Guide](#-phase-11-comprehensive-stress-testing-guide)
 14. [Troubleshooting Common Issues](#-troubleshooting-common-issues)
 15. [Optional Aesthetic Upgrades - Cable Extensions](#-optional-aesthetic-upgrades---cable-extensions)
+16. [Optional Aesthetic Upgrades - RGB Lighting](#-optional-aesthetic-upgrades---rgb-lighting)
 
 ---
 
@@ -60,6 +61,13 @@
 |------|---------|---------------------|------------|
 | **Extra PWM Splitters** | Backup for fan connections | **Noctua NA-SYC1** (Y-cables) | ~$8 |
 | **Thermal Paste (backup)** | NH-U12A includes paste, but backup recommended | **Noctua NT-H1** (included) or **Thermal Grizzly Kryonaut** | ~$10 |
+
+## Optional Aesthetic Items
+
+| Item | Purpose | Recommended Product | Est. Price |
+|------|---------|---------------------|------------|
+| **RGB Light Strips** | Interior accent lighting | **Phanteks NEON Digital RGB Kit (2x 400mm)** | ~$35 |
+| **Sleeved Cable Extensions** | Premium visible cable aesthetics | **CableMod Pro ModMesh** (see Cable Extensions section) | ~$90 |
 
 ---
 
@@ -907,7 +915,7 @@ Recommended curve:
 Cable extensions are **purely aesthetic** - your build works perfectly with stock Corsair cables. Extensions go BETWEEN your stock cables and components:
 
 ```
-PSU ═══���══════════════► EXTENSION ══════════════════► Motherboard/GPU
+PSU ══════════════════════════► EXTENSION ══════════════════► Motherboard/GPU
     Stock Corsair Cable   Sleeved Extension
     (hidden behind case)  (visible, premium look)
 ```
@@ -977,6 +985,124 @@ Too tight (bad):          Good slack (do this):
 
 ---
 
+# 🌈 Optional Aesthetic Upgrades - RGB Lighting
+
+## Your Build's Existing RGB
+
+Your build already includes some RGB from these components:
+
+| Component | RGB Type | Control Software |
+|-----------|----------|------------------|
+| **G.Skill Trident Z5 RGB RAM** | Addressable RGB on each stick | ASUS Aura Sync / G.Skill Trident Z Lighting Control |
+| **ASUS ROG STRIX RTX 5070 Ti** | ROG logo + edge lighting | ASUS Armoury Crate / Aura Sync |
+| **ASUS ROG Crosshair X870E Hero** | ROG logo, I/O shroud, chipset area | ASUS Aura Sync |
+
+All of these can be **synchronized together** using **ASUS Aura Sync** in Armoury Crate.
+
+---
+
+## Recommended RGB Addition: Phanteks NEON Digital RGB Strips
+
+For subtle, premium interior lighting that complements your all-black build, I recommend:
+
+### Phanteks NEON Digital RGB Kit
+
+| Feature | Details |
+|---------|---------|
+| **Product** | Phanteks NEON Digital RGB Strip Kit |
+| **Contents** | 2x 400mm diffused LED strips |
+| **Connector** | 5V ARGB (3-pin) - compatible with ASUS Aura Sync |
+| **Mounting** | Magnetic + adhesive backing |
+| **Price** | ~$35 |
+
+### Why This One?
+
+| Benefit | Explanation |
+|---------|-------------|
+| **Diffused lighting** | Soft, even glow - not harsh individual LEDs |
+| **Premium look** | Doesn't look "gamer-y" or cheap |
+| **Aura Sync compatible** | Syncs with your RAM, GPU, and motherboard |
+| **Easy to turn off** | One click in software if you change your mind |
+| **Non-destructive** | Magnetic mounting, easy to remove |
+
+### Placement Recommendations
+```
+┌─────────────────────────────────────────┐
+│   ════════════════════════════          │ ← Option A: Top edge
+│                                         │   (illuminates components from above)
+│        [CPU COOLER]                     │
+│                                         │
+│   ║    [GPU]                            │
+│   ║                                     │ ← Option B: Front edge
+│   ║                                     │   (creates depth, side glow)
+│   ════════════════════════════          │ ← Option C: PSU shroud top
+└─────────────────────────────────────────┘   (underlighting effect)
+```
+
+**Recommended placement**: One strip along the **top edge** pointing down, one along the **front vertical edge** or **bottom of PSU shroud**.
+
+### Installation
+
+**Step 1: Connect to Motherboard**
+
+1. Locate **ADD_GEN2** header on your X870E Hero (5V ARGB header)
+2. Connect the Phanteks controller/cable to this header
+3. Route cable behind motherboard tray
+
+**Step 2: Mount Strips**
+
+1. Plan placement before removing adhesive backing
+2. Clean mounting surface with isopropyl alcohol
+3. For magnetic strips: simply attach to metal case surfaces
+4. For non-magnetic surfaces: use included adhesive
+
+**Step 3: Configure in Software**
+
+1. Open **ASUS Armoury Crate**
+2. Go to **Aura Sync** section
+3. Strips should appear as addressable RGB devices
+4. Sync with RAM, GPU, and motherboard lighting
+
+---
+
+## Color Scheme Suggestions
+
+With your all-black chromax build, consider these color options:
+
+| Color | Vibe | Best For |
+|-------|------|----------|
+| **White** | Clean, modern, minimalist | Highlighting components, photography |
+| **Ice Blue / Cyan** | Cool, techy, futuristic | Tech/gaming aesthetic |
+| **Amber / Orange** | Warm, unique | Subtle Noctua brand color reference |
+| **Deep Red** | Classic ROG gaming look | Matching ROG branding |
+| **Static single color** | Classy, understated | Professional appearance |
+
+> 💡 **Pro Tip**: Avoid rainbow/color cycling effects with an all-black premium build. A **static single color** or **slow breathing effect** looks much more refined.
+
+---
+
+## What NOT to Add (And Why)
+
+| RGB Option | Recommendation | Reason |
+|------------|----------------|--------|
+| **RGB Fans** | ❌ Skip | Your Noctua NF-A14x25 G2s are premium performers - don't replace them |
+| **RGB CPU Cooler** | ❌ Skip | NH-U12A chromax.black is excellent and matches your theme |
+| **RGB AIO** | ⚠️ Only if you want LCD display | Major change, Noctua is quieter |
+| **Multiple RGB strips** | ⚠️ Use restraint | Less is more - 2 strips max |
+| **RGB GPU Support** | ❌ Skip | ROG Herculx matches better |
+
+---
+
+## RGB Shopping Summary
+
+| Item | Price | Priority |
+|------|-------|----------|
+| **Phanteks NEON Digital RGB Kit (2x 400mm)** | ~$35 | Optional |
+
+**Connection**: Plugs into **ADD_GEN2** header on X870E Hero (5V ARGB, 3-pin)
+
+---
+
 # 📋 Final Build Checklist
 
 ## Physical Build:
@@ -996,12 +1122,17 @@ Too tight (bad):          Good slack (do this):
 - [ ] Windows 11 installed and updated
 - [ ] All drivers installed
 - [ ] Monitoring software installed
+- [ ] ASUS Armoury Crate installed (for Aura Sync RGB control)
 
 ## Stress Testing:
 - [ ] CPU stress test passed
 - [ ] RAM test passed (0 errors)
 - [ ] GPU stress test passed
 - [ ] Storage verified healthy
+
+## Optional Aesthetics:
+- [ ] Cable extensions installed (when they arrive)
+- [ ] RGB strips installed and synced (if purchased)
 
 ---
 
@@ -1015,6 +1146,7 @@ You've completed a high-end PC build with excellent cable management and optimiz
 - **Storage**: Ultra-fast NVMe with room for expansion
 - **Cooling**: Premium Noctua fans with optimal airflow configuration
 - **Power**: Reliable 1000W supply with headroom for upgrades
+- **Aesthetics**: All-black chromax theme with optional RGB accents
 
 **Enjoy your new build!**
 
@@ -1026,7 +1158,9 @@ You've completed a high-end PC build with excellent cable management and optimiz
 - **Noctua NH-U12A Installation**: [Noctua Mounting Guide](https://noctua.at/en/nh-u12a/support)
 - **Fractal Design Meshify 2 XL**: [Fractal Support](https://www.fractal-design.com/)
 - **Corsair RM1000x (2024)**: [Corsair Support](https://www.corsair.com/)
-- **CableMod Extensions**: [CableMod Store](https://store.cablemod.com/)  
+- **CableMod Extensions**: [CableMod Store](https://store.cablemod.com/)
+- **Phanteks NEON RGB**: [Phanteks](https://www.phanteks.com/)
+- **ASUS Aura Sync**: [Armoury Crate](https://rog.asus.com/armoury-crate/)
 
 ---
 
