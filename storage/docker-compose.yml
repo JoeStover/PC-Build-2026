@@ -1,0 +1,27 @@
+version: '3'
+services:
+  plex:
+    image: plexinc/pms-docker:latest
+    container_name: plex
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - TZ=America/Your_Timezone
+      - PLEX_CLAIM=your-claim-token
+    volumes:
+      - /mnt/tank/apps/plex:/config
+      - /mnt/tank/share/media:/data
+
+  syncthing:
+    image: syncthing/syncthing:latest
+    container_name: syncthing
+    restart: unless-stopped
+    ports:
+      - 8384:8384
+      - 22000:22000
+      - 21027:21027/udp
+    environment:
+      - TZ=America/Your_Timezone
+    volumes:
+      - /mnt/tank/apps/syncthing:/var/syncthing/config
+      - /mnt/tank/share/documents:/var/syncthing/documents
