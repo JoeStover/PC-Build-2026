@@ -11,7 +11,7 @@
 4. [Motherboard Preparation (Outside Case)](#-phase-2-motherboard-preparation-outside-case)
 5. [Case Preparation and Fan Installation](#-phase-3-case-preparation-and-fan-installation)
 6. [Motherboard Installation](#-phase-4-motherboard-installation)
-7. [Storage Installation](#-phase-5-storage-installation)
+7. [Storage Verification](#-phase-5-storage-verification)
 8. [Power Supply Installation and Cable Routing](#-phase-6-power-supply-installation-and-cable-routing)
 9. [Cable Routing Quick Reference](#-cable-routing-quick-reference)
 10. [GPU Installation](#-phase-7-gpu-installation)
@@ -22,6 +22,7 @@
 15. [Troubleshooting Common Issues](#-troubleshooting-common-issues)
 16. [Optional Aesthetic Upgrades - Cable Extensions](#-optional-aesthetic-upgrades---cable-extensions)
 17. [Optional Aesthetic Upgrades - RGB Lighting](#-optional-aesthetic-upgrades---rgb-lighting)
+18. [Ongoing Maintenance](#-ongoing-maintenance)
 
 ---
 
@@ -216,6 +217,21 @@ Open all boxes and verify contents. **Do NOT remove components from anti-static 
 ### Pro Tip - Magnetic Screwdriver:
 A magnetic screwdriver is invaluable. You'll be working in tight spaces, and dropping a screw into the case can mean 20 minutes of fishing it out.
 
+## 1.5 Protective Films and Stickers — Remove These During Build
+
+Multiple components ship with protective films that must be removed. Keep an eye out for these throughout the build:
+
+| Component | Film Location | When to Remove |
+|-----------|--------------|----------------|
+| **GPU** | Backplate, fan shroud, sometimes on the display ports | Before installing in case |
+| **Case side panels** | Both sides of tempered glass panel | Before final panel closure |
+| **Motherboard I/O area** | Decorative shroud may have a film | During motherboard unboxing |
+| **M.2 heatsink** | Thermal pad protective film (underside) | During NVMe installation |
+| **CPU cooler** | Copper base plate may have a protective plastic cover | Before applying thermal paste |
+| **RAM** | Light bar / RGB diffuser may have a thin film | During RAM unboxing |
+
+> ⚠️ **CRITICAL**: The CPU cooler base plate and M.2 thermal pad films **must** be removed — leaving them on prevents proper heat transfer and will cause thermal issues. Other films are cosmetic but should still be removed.
+
 ---
 
 # 🔌 Phase 2: Motherboard Preparation (Outside Case)
@@ -307,10 +323,10 @@ The X870E Hero has **4 DIMM slots**. For **2 DIMMs**, you must use specific slot
 **Step 1: Open DIMM Slot Latches**
 
 1. Locate slots **A2** and **B2**
-2. Push the **retention clips** at both ends **outward**
-3. Clips should be in the open (angled outward) position
+2. Push the **retention clip(s)** to the open position
+3. On most modern ASUS AM5 boards (including the X870E Hero), there is a **single latch on one end** of each DIMM slot (the end farthest from the CPU). The other end is a fixed hook that the RAM slides into.
 
-> 🔥 **GOTCHA**: Some motherboards have clips on only ONE end. The X870E Hero has clips on both ends.
+> 🔥 **GOTCHA**: Check your specific board — the X870E Hero uses **single-sided latches**. Only one end opens. The RAM's bottom edge hooks into the fixed end first, then you press down on the latched end until it clicks.
 
 **Step 2: Align RAM Stick**
 
@@ -345,7 +361,33 @@ Install the second RAM stick in slot B2 using the same procedure.
 
 ---
 
-## 2.4 CPU Cooler Installation (Noctua NH-U12A chromax.black)
+## 2.4 NVMe Installation (Samsung 990 Pro 2TB) — Before Cooler
+
+> 📍 **Why install NVMe now?** The primary M.2_1 slot on the X870E Hero is directly below the CPU socket, partially under the cooler area. Installing it **before** mounting the CPU cooler gives you full access and visibility. This is much easier than reaching under/around the cooler later.
+
+### Step-by-Step M.2 Installation:
+
+1. Locate the **M.2_1 heatsink** — the large metal plate below the CPU socket area
+2. Remove M.2 heatsink screws (usually 1-2 Phillips screws) and lift the heatsink off
+3. **Remove protective film** from the thermal pad on the heatsink's underside (if present)
+4. Insert M.2 drive into the slot at a **30-degree angle** (gold contacts first, label side up)
+5. Press the SSD flat against the standoff
+6. Secure with the **M.2 screw** (small Phillips #1)
+7. Reinstall the heatsink over the SSD and re-secure with its screws
+
+> 🔥 **GOTCHA - Samsung 990 Pro Label**: The 990 Pro has a built-in heatsink label on its top side. **Leave it on** — removing it voids Samsung's warranty. The motherboard's heatsink thermal pad will still make adequate contact through the label.
+
+> 🔥 **GOTCHA - Don't forget the thermal pad film**: The motherboard heatsink has a thin plastic film over the thermal pad. You MUST peel this off or the thermal pad won't transfer heat.
+
+### NVMe Installation Verification:
+- [ ] SSD is in the M.2_1 slot (primary, closest to CPU)
+- [ ] SSD is fully flat and secured with screw
+- [ ] Heatsink thermal pad film removed
+- [ ] Heatsink re-installed over SSD
+
+---
+
+## 2.5 CPU Cooler Installation (Noctua NH-U12A chromax.black)
 
 The NH-U12A uses the **SecuFirm2** mounting system. For AMD AM5, you'll use the stock AMD mounting hardware that came with the motherboard.
 
@@ -385,11 +427,13 @@ This aligns with:
 
 **Step 2: Prepare AMD AM5 Mounting**
 
-The X870E Hero comes with AMD's standard AM5 mounting backplate pre-installed. The NH-U12A SecuFirm2 system works with it.
+The X870E Hero comes with AMD's standard AM5 mounting backplate pre-installed on the rear of the motherboard. The NH-U12A SecuFirm2 system works with this backplate.
 
 1. Locate the **AMD mounting bars** in the Noctua box (labeled "AM4/AM5")
 2. Find the **spacers** (small plastic rings)
 3. Find the **NM-AMB7 mounting screws** (or equivalent in your kit)
+
+> 🔥 **GOTCHA - Remove Plastic Retention Clips**: The motherboard ships with **plastic retention clips** snapped onto the backplate standoffs (these are for AMD's stock cooler). You must **unclip and remove these plastic pieces** before installing the Noctua mounting bars. They snap off — pull them straight up or squeeze the tabs to release. The metal backplate itself stays in place.
 
 **Step 3: Install Mounting Bars**
 
@@ -451,20 +495,31 @@ Before the motherboard goes into the case, do a quick cable orientation check on
 
 ---
 
-## 2.5 Pre-Case Installation Test (Optional but Recommended)
+## 2.6 Pre-Case Installation Test (Optional but Recommended)
 
 Before installing everything in the case, a quick test ensures components work:
 
+> ⚠️ **IMPORTANT**: The Ryzen 9 9950X has **no integrated graphics**. You must temporarily install the GPU for this bench test to get display output. If you prefer not to handle the GPU twice, skip this test and perform your first POST after full case assembly in Phase 9.
+
 ### "Bench Test" Procedure:
 
-1. Connect **24-pin ATX** cable to motherboard
-2. Connect **8-pin EPS** (CPU power) cable to motherboard (top-left area)
-3. Connect **monitor** to GPU
-4. Plug **PSU into wall** (switch OFF)
-5. Bridge the **power switch pins** with a screwdriver to power on
-6. System should POST - fans spin, debug LEDs cycle
+1. **Temporarily install GPU** in the primary PCIe x16 slot (press until retention latch clicks)
+2. Connect **24-pin ATX** cable to motherboard
+3. Connect **8-pin EPS** (CPU power) cable to motherboard (top-left area)
+4. Connect **12V-2x6** GPU power cable
+5. Connect **monitor** to GPU (not motherboard — there is no video output from the motherboard on this CPU)
+6. Plug **PSU into wall** (switch OFF)
+7. Flip PSU switch to ON
+8. Bridge the **power switch pins** with a screwdriver to power on
+9. System should POST - fans spin, debug LEDs cycle, display shows BIOS splash
 
-> ⚠️ If system doesn't POST, stop here and troubleshoot before case installation. Check RAM seating first (most common issue).
+**After successful bench test:**
+1. Power off and switch PSU off
+2. Disconnect all cables
+3. Remove GPU (press retention latch, pull straight up)
+4. Proceed to case installation
+
+> ⚠️ If system doesn't POST, stop here and troubleshoot before case installation. Check RAM seating first (most common issue). If no Q-LED indicators light and no fans spin, verify EPS and ATX power cables are fully seated.
 
 ---
 
@@ -610,7 +665,7 @@ Mount the fan hub **behind the motherboard tray** for clean cable management.
 **Step 3: Connect All Fan Cables**
 
 1. Connect all 7 Noctua fans + 1 rear fan to hub channels
-2. Connect hub's **PWM input cable** to motherboard's **CPU_FAN** header
+2. Connect hub's **PWM input cable** to a motherboard **CHA_FAN** header (not CPU_FAN — that's reserved for your CPU cooler fans)
 
 **Step 4: Power the Hub**
 
@@ -627,7 +682,7 @@ Connect the hub's **SATA power input** to a SATA power cable from the PSU.
     │   │  │  │  │  │  │  │  │                │
     │   FR FR FR BT BT TP TP RR               │ 
     │                                          │
-    │  [PWM IN]──────→ To Motherboard CPU_FAN │
+    │  [PWM IN]──────→ To Motherboard CHA_FAN │
     │  [SATA PWR]────→ To PSU SATA power      │
     └──────────────────────────────────────────┘
     
@@ -655,6 +710,35 @@ As you connect fan cables to the hub, organize them into these routing zones beh
 | **Lower zone** | Bottom fan cables, SATA power lead to hub |
 
 Use velcro ties or case tie-down points to keep these bundles flat. Do **not** fully tighten everything yet — leave the bundles adjustable until the full system POSTs successfully.
+
+## 3.5 Install RGB Strips (Phanteks NEON Digital RGB — If Purchased)
+
+> 📍 **Why install RGB strips now?** Mounting the strips is significantly easier with an empty case — full access to all mounting surfaces, no motherboard or GPU to work around. The ARGB cable will be connected to the motherboard header later in Phase 4.
+
+### Step-by-Step RGB Strip Installation:
+
+**Step 1: Plan Placement**
+
+Recommended placement for the Meshify 2 XL:
+- **Strip 1**: Along the **top front edge** of the case, pointing downward (illuminates components from above)
+- **Strip 2**: Along the **front vertical edge** (creates depth) OR along the **top of the PSU shroud** (underlighting effect)
+
+> 💡 **Tip**: Dry-fit the strips (hold them in place without removing adhesive) to preview the lighting effect before committing.
+
+**Step 2: Mount Strips**
+
+1. Clean the mounting surface with isopropyl alcohol
+2. For **magnetic case surfaces**: simply attach — the Phanteks NEON strips have magnetic backing
+3. For **non-magnetic surfaces**: use the included adhesive backing (peel and stick)
+4. Press firmly along the entire length for good adhesion
+
+**Step 3: Route ARGB Cable**
+
+1. Route the strip's ARGB cable toward the **nearest cable pass-through** behind the motherboard tray
+2. Leave enough slack to reach the **ADD_GEN2** header on the motherboard (5V ARGB, 3-pin) — you'll connect this in Phase 4 after the motherboard is installed
+3. Bundle the ARGB cable with the fan cable group in the same zone
+
+> 📍 **Do NOT connect to motherboard yet** — the motherboard isn't installed. Just stage the cable in the rear chamber for now.
 
 ---
 
@@ -751,6 +835,11 @@ Connect these cables **before installing the GPU**. Access is easier now, and th
    - Route through the nearest grommet with the straightest possible path
    - Avoid over-bending the cable near the connector
 
+5. **ARGB strip cable** (if Phanteks NEON installed in Phase 3.5)
+   - Bring the staged ARGB cable from the rear chamber through the nearest grommet
+   - Connect to the **ADD_GEN2** header on the X870E Hero (5V ARGB, 3-pin)
+   - This is a small 3-pin connector — align the key notch carefully
+
 #### Before moving on, verify:
 
 - [ ] No front-panel cable is crossing the center of the board
@@ -760,25 +849,23 @@ Connect these cables **before installing the GPU**. Access is easier now, and th
 
 ---
 
-# 💾 Phase 5: Storage Installation
+# 💾 Phase 5: Storage Verification
 
-## 5.1 Samsung 990 Pro 2TB NVMe Installation
+## 5.1 Samsung 990 Pro 2TB NVMe — Already Installed
 
-### Locate Primary M.2 Slot:
+> ✅ Your NVMe SSD was installed during Phase 2.4 (motherboard preparation outside the case). No action needed here.
 
-On the X870E Hero, the **primary M.2 slot** (M.2_1) is typically located under the integrated heatsink, directly below the CPU socket.
+If you skipped the NVMe installation earlier, you can still install it now, though access is tighter with the cooler and motherboard mounted:
 
-> 🔥 **GOTCHA - M.2 Heatsink**: The X870E Hero has M.2 heatsinks with thermal pads. Remove the heatsink, install the SSD, then reinstall the heatsink.
-
-### Step-by-Step M.2 Installation:
-
-1. Remove M.2 heatsink screws and lift heatsink
+1. Remove M.2_1 heatsink screws and lift heatsink
 2. **Remove protective film** from thermal pad if present
 3. Insert M.2 drive at **30-degree angle**
 4. Press SSD flat and secure with M.2 screw
 5. Reinstall heatsink
 
-> 🔥 **GOTCHA - Double Thermal Pad**: The 990 Pro has a built-in heatsink label. Leave it on - removing voids Samsung's warranty.
+### Additional Storage (Future Expansion)
+
+The X870E Hero has additional M.2 slots available for future NVMe drives. These can be added at any time without removing existing components.
 
 ---
 
@@ -905,18 +992,19 @@ Use this section as a fast reference during the build. The goal is to route each
 
 Follow this sequence for the least rework:
 
-1. Install CPU, RAM, NVMe, and cooler on the motherboard outside the case
-2. Install case fans and route their cables into the rear chamber
-3. Mount the fan hub and connect case fan cables
-4. Connect PSU cables to the PSU before PSU installation
-5. Install PSU and loosely stage 24-pin, EPS, SATA, and GPU power cables
-6. Install motherboard
-7. Connect **24-pin** and **EPS** power cables
-8. Connect front panel, HD Audio, USB 3.0, USB-C, and fan hub PWM lead
-9. Install GPU
-10. Connect GPU power cable carefully and verify full seating
-11. Do final rear-chamber bundling and visible-side cleanup
-12. POST test the system before fully tightening all cable ties
+1. Install CPU, RAM, NVMe, and cooler on the motherboard outside the case (Phase 2)
+2. Install case fans and route their cables into the rear chamber (Phase 3)
+3. Mount RGB strips if purchased — easier with empty case (Phase 3.5)
+4. Mount the fan hub and connect case fan cables (Phase 3.4)
+5. Connect PSU cables to the PSU before PSU installation
+6. Install PSU and loosely stage 24-pin, EPS, SATA, and GPU power cables (Phase 6)
+7. Install motherboard (Phase 4)
+8. Connect **24-pin** and **EPS** power cables
+9. Connect front panel, HD Audio, USB 3.0, USB-C, ARGB strip cable, and fan hub PWM lead
+10. Install GPU (Phase 7)
+11. Connect GPU power cable carefully and verify full seating
+12. Do final rear-chamber bundling and visible-side cleanup (Phase 8)
+13. POST test the system before fully tightening all cable ties
 
 ## Cable Routing Final Check
 
@@ -1007,11 +1095,13 @@ Route the native Corsair **12V-2x6** cable from the rear chamber through the **n
 - [ ] SATA power to fan hub
 
 ### Data/Signal Connections:
-- [ ] CPU_FAN header (from fan hub)
+- [ ] CPU_FAN / CPU_OPT headers connected (CPU cooler fans)
+- [ ] CHA_FAN header connected (fan hub PWM control)
 - [ ] Front panel (Q-connector installed)
 - [ ] USB 3.0 header
 - [ ] USB-C header
 - [ ] HD Audio header
+- [ ] ADD_GEN2 ARGB header (if RGB strips installed)
 
 ### Component Seating:
 - [ ] RAM fully clicked into slots A2 and B2
@@ -1062,21 +1152,50 @@ Now that all major components are installed and connected, do the final cable cl
 
 # 🖥️ Phase 9: First Boot and BIOS Configuration
 
+## 9.0 Pre-Boot: BIOS Flashback (If System Won't POST)
+
+> ⚠️ **IMPORTANT**: The X870E Hero may ship with a BIOS version that doesn't fully support the Ryzen 9 9950X. If the system does not POST (CPU Q-LED stays red, no display output), you likely need a BIOS update via USB Flashback — **no working CPU required** for this process.
+
+### Prepare BIOS Flashback USB (Do This in Advance):
+
+1. On another computer, go to **https://rog.asus.com** → find Crosshair X870E Hero → Support → BIOS & Firmware
+2. Download the **latest BIOS** file
+3. Extract the ZIP file
+4. Rename the BIOS file to the exact name specified in the manual (typically **X870EH.CAP** — check your manual)
+5. Copy the renamed file to the **root** of a FAT32-formatted USB 2.0/3.0 flash drive
+6. Keep this USB drive ready during your first boot attempt
+
+### Performing BIOS Flashback (Only If POST Fails):
+
+1. Power off the system completely and switch the PSU off
+2. Insert the prepared USB drive into the **BIOS Flashback USB port** (labeled on rear I/O — usually a specific USB-A port marked "BIOS")
+3. Switch the PSU back ON (do **not** press the power button)
+4. Press and hold the **BIOS Flashback button** on the rear I/O for ~3 seconds until the LED starts blinking
+5. **Wait** — the LED will blink for 3-8 minutes while flashing. **Do not interrupt power or remove the USB**
+6. When the LED stops blinking and turns off, the flash is complete
+7. Remove the USB drive
+8. Power on the system normally — it should now POST
+
+> 🔥 **GOTCHA**: The BIOS Flashback port is a specific USB port on the rear I/O — it's usually the one closest to the Flashback button and may be labeled. Using the wrong USB port will not work.
+
 ## 9.1 First Power On
 
 1. Flip PSU switch to ON
 2. Press case power button
 3. Watch Q-LED indicators:
-   - **CPU** - Red: CPU issue
+   - **CPU** - Red: CPU issue (try BIOS Flashback above)
    - **DRAM** - Yellow: Memory issue
    - **VGA** - White: Graphics issue
-   - **BOOT** - Green: Boot device issue
+   - **BOOT** - Green: Boot device issue (normal if no OS installed yet)
 
 ## 9.2 BIOS First-Time Setup
 
 ### Critical Settings:
 
-**1. Update BIOS** (download latest from ASUS support)
+**1. Update BIOS** (even if system POSTed, update to latest for best compatibility)
+- Download latest from ASUS support onto USB drive
+- In BIOS: go to **Tool** → **ASUS EZ Flash 3** → select the BIOS file on USB → update
+- System will reboot after update
 
 **2. Enable EXPO for RAM**
 - Go to **Ai Tweaker** → **Ai Overclock Tuner** → **EXPO I**
@@ -1087,11 +1206,16 @@ Now that all major components are installed and connected, do the final cable cl
 - Memory: 64GB @ 6000MHz
 - Storage: Samsung 990 Pro 2TB
 
-**4. Set Boot Order**
+**4. Enable Security Features for Windows 11**
+- Go to **Advanced** → **AMD fTPM Configuration** → Set **fTPM** to **Enabled** (usually enabled by default)
+- Go to **Boot** → **Secure Boot** → Set **Secure Boot** to **Enabled**
+- These are **required** for Windows 11 installation
+
+**5. Set Boot Order**
 - First: USB drive (for OS installation)
 - Second: Samsung 990 Pro
 
-**5. Configure Fan Profiles**
+**6. Configure Fan Profiles**
 
 Recommended curve:
 | CPU Temp | Fan Speed |
@@ -1391,10 +1515,14 @@ With your all-black chromax build, consider these color options:
 - [ ] GPU supported with ROG Herculx (no sag)
 - [ ] All panels close properly
 - [ ] WiFi antennas attached
+- [ ] All protective films removed (GPU, case panels, cooler base)
+- [ ] RGB strips mounted and ARGB cable connected (if installed)
 
 ## BIOS Configuration:
-- [ ] BIOS updated to latest version
+- [ ] BIOS updated to latest version (via EZ Flash or Flashback if needed)
 - [ ] EXPO enabled for RAM (6000MHz)
+- [ ] fTPM enabled (required for Windows 11)
+- [ ] Secure Boot enabled (required for Windows 11)
 - [ ] Boot order set correctly
 - [ ] Fan profiles configured
 
@@ -1413,6 +1541,30 @@ With your all-black chromax build, consider these color options:
 ## Optional Aesthetics:
 - [ ] Cable extensions installed (when they arrive)
 - [ ] RGB strips installed and synced (if purchased)
+
+---
+
+# 🔧 Ongoing Maintenance
+
+## Regular Maintenance Schedule
+
+| Task | Frequency | Notes |
+|------|-----------|-------|
+| **Clean dust filters** | Every 1-3 months | Remove front, bottom, and top filters; rinse or vacuum |
+| **Inspect interior for dust** | Every 3-6 months | Use compressed air or electric duster (e.g., XPOWER A-2) |
+| **Check fan operation** | Every 6 months | Verify all fans spin freely, no bearing noise |
+| **Monitor temperatures** | Monthly spot-check | Compare to your initial stress test baselines |
+| **Re-paste CPU cooler** | Every 2-3 years | Or sooner if temps rise 5-10°C above original baselines |
+| **Update GPU drivers** | As needed | Keep current for new games; skip if system is stable |
+| **Update BIOS** | Only when needed | Don't chase every update — only for stability fixes or new features you need |
+| **Check storage health** | Every 6 months | Use CrystalDiskInfo or Samsung Magician — watch for reallocated sectors |
+
+## Tips for Long-Term Reliability
+
+- **Record your baseline temps** after stress testing — write them down. This makes it easy to detect gradual cooling degradation.
+- **Keep a stable driver backup** — if you find a GPU driver version that works perfectly, note the version number before updating.
+- **Dust filters are your first defense** — if you notice temps rising, check filters before assuming paste or fan failure.
+- **Don't smoke or have candles near the PC** — particulate buildup from smoke is much worse than normal dust and can coat components in residue that's hard to clean.
 
 ---
 
