@@ -55,7 +55,7 @@
 | **Cable Ties (Velcro)** | Reusable cable management | Velcro brand cable ties (assorted sizes) | ~$10 |
 | **Isopropyl Alcohol 99%** | Cleaning thermal paste if needed | Any pharmacy brand | ~$5 |
 | **Microfiber Cloths** | Lint-free cleaning | Any brand | ~$5 |
-| **USB Flash Drive (16GB+)** | Windows installation media | Any USB 3.0 drive | ~$10 |
+| **USB Flash Drive (16GB+)** | OS installation media | ✅ Already have Ventoy multi-boot USB | — |
 
 ## Highly Recommended Items
 
@@ -530,7 +530,7 @@ Before installing everything in the case, a quick test ensures components work:
 3. Remove GPU (press retention latch, pull straight up)
 4. Proceed to case installation
 
-> ⚠️ If system doesn't POST, stop here and troubleshoot before case installation. Check RAM seating first (most common issue). If no Q-LED indicators light and no fans spin, verify EPS and ATX power cables are fully seated.
+> ⚠️ If system doesn't POST, stop here and troubleshoot before case installation. Check RAM seating first (most common issue). If no Q-LED indicators light and no fans spin, verify EPS and ATX power cables are fully seated. See the [Troubleshooting Common Issues](#-troubleshooting-common-issues) section for detailed guidance.
 
 ---
 
@@ -886,6 +886,8 @@ The X870E Hero has additional M.2 slots available for future NVMe drives. These 
 
 ### Modular Cable Selection:
 
+> ⚠️ **CRITICAL**: Modular PSU cables are **NOT interchangeable between brands or even between different models from the same brand**. The pinouts differ. Using cables from an old PSU can short-circuit and destroy components. **Only use the cables that came with your RM1000x (2024).**
+
 | Cable | Required | Quantity |
 |-------|----------|----------|
 | 24-pin ATX | ✅ | 1 |
@@ -1051,6 +1053,8 @@ Before closing the case, confirm:
 4. Press firmly until retention latch clicks closed
 5. Secure with screws through bracket into case
 
+> 💡 **X870E Hero Feature**: This motherboard has a **Q-Release button** near the PCIe x16 slot that makes it easy to release the GPU retention latch without reaching under the card. You won't need it during installation, but it's very handy for future GPU removal or upgrades.
+
 ## 7.3 Connect GPU Power
 
 > ⚠️ **CRITICAL STEP - 12V-2x6 Connection**
@@ -1156,7 +1160,7 @@ Now that all major components are installed and connected, do the final cable cl
 
 1. Verify no cables preventing panel closure
 2. Install WiFi antennas on rear I/O
-3. Connect monitor to **GPU** (not motherboard)
+3. Connect monitor to **GPU** (recommended for full performance — your 9950X does have an iGPU, but you'll want display output through the discrete GPU for daily use)
 4. Connect peripherals and power cable
 
 ---
@@ -1212,6 +1216,13 @@ Now that all major components are installed and connected, do the final cable cl
 - Go to **Ai Tweaker** → **Ai Overclock Tuner** → **EXPO I**
 - This enables DDR5-6000 speeds
 
+> 🔥 **EXPO Troubleshooting**: If the system is unstable after enabling EXPO (random crashes, fails to POST, or BIOS resets), try these fallbacks in order:
+> 1. Try **EXPO II** profile instead of EXPO I
+> 2. Manually set RAM to **DDR5-5600** with EXPO timings
+> 3. Run at JEDEC defaults (4800 MHz) and update BIOS, then retry EXPO
+>
+> DDR5-6000 CL36 is aggressive — it doesn't always work on the first attempt, especially with early BIOS versions.
+
 **3. Verify Component Detection**
 - CPU: AMD Ryzen 9 9950X
 - Memory: 64GB @ 6000MHz
@@ -1223,10 +1234,15 @@ Now that all major components are installed and connected, do the final cable cl
 - These are **required** for Windows 11 installation
 
 **5. Set Boot Order**
-- First: USB drive (for OS installation)
+- First: USB drive (for OS installation — your Ventoy drive will appear as a bootable USB device)
 - Second: Samsung 990 Pro
 
-**6. Configure Fan Profiles**
+**6. Set Primary Display Output**
+- Go to **Advanced** → **NB Configuration** (or **Graphics Configuration**)
+- Set **Primary Video Device** or **Initial Display Output** to **PCIe** (not IGFX)
+- This ensures the system always uses your RTX 5070 Ti for display output rather than the integrated GPU
+
+**7. Configure Fan Profiles**
 
 Recommended curve:
 | CPU Temp | Fan Speed |
@@ -1241,22 +1257,46 @@ Recommended curve:
 
 # 💿 Phase 10: Operating System Installation
 
-## 10.1 Install Windows 11
+## 10.1 Boot from Ventoy USB
 
-1. Create installation USB with Windows 11 Media Creation Tool
-2. Boot from USB (press F8 for boot menu)
-3. Select **Custom: Install Windows only**
-4. Select Samsung 990 Pro drive
-5. Complete setup
+Your Ventoy multi-boot USB drive contains multiple Windows and Linux ISOs. This makes OS installation straightforward:
+
+1. Insert your **Ventoy USB drive**
+2. Boot from USB (press **F8** during POST for boot menu, or set USB first in BIOS boot order)
+3. The **Ventoy menu** will appear showing all available ISOs on the drive
+4. Select the desired OS ISO (e.g., Windows 11, your preferred Linux distro)
+
+### Installing Windows 11:
+
+1. Select the Windows 11 ISO from the Ventoy menu
+2. Proceed through Windows Setup
+3. Select **Custom: Install Windows only (advanced)**
+4. Select the Samsung 990 Pro drive (should show as ~1.86 TB unallocated space)
+5. Let Windows create its partitions automatically (GPT/UEFI is handled automatically when booting in UEFI mode)
+6. Complete the setup wizard
+
+> 💡 **Local Account Tip**: If you want a local account instead of a Microsoft account during Windows 11 setup, disconnect from the internet (unplug Ethernet / don't connect WiFi) during the OOBE. Alternatively, use the `OOBE\BYPASSNRO` command at the network screen (press Shift+F10 to open a command prompt, type `OOBE\BYPASSNRO`, then the system reboots with an "I don't have internet" option).
+
+### Installing Linux (Dual-Boot or Standalone):
+
+1. Select your preferred Linux ISO from the Ventoy menu
+2. Follow the distro's installer
+3. If dual-booting with Windows, **install Windows first**, then Linux — Linux installers handle dual-boot GRUB/bootloader configuration better than doing it the other way around
+
+> 📍 **Partition Note**: If dual-booting, you can either split the Samsung 990 Pro into partitions or add a second NVMe drive later for the second OS (the X870E Hero has additional M.2 slots).
 
 ## 10.2 Post-Installation
 
 ### Driver Installation Priority:
 
+> 💡 **Note**: Windows Update will automatically install basic functional drivers for most components. The manual installs below are for **optimal/latest** versions with full feature support.
+
 1. **Chipset Drivers** (AMD) - from AMD.com or ASUS support
-2. **GPU Drivers** (NVIDIA) - from nvidia.com/drivers
-3. **Motherboard Drivers** (ASUS) - Armoury Crate or individual drivers
-4. **Samsung NVMe Driver** (Optional) - Samsung Magician
+2. **GPU Drivers** (NVIDIA) - from nvidia.com/drivers or via the **NVIDIA App** (replaces GeForce Experience for driver management and optimization)
+3. **Motherboard Drivers** (ASUS) - Armoury Crate or individual drivers from ASUS support page
+4. **Samsung NVMe Driver** (Optional) - Samsung Magician for health monitoring and firmware updates
+
+> 📍 **Linux Users**: Most drivers are handled by the kernel. For NVIDIA GPU drivers, use your distro's proprietary driver installer (e.g., `ubuntu-drivers autoinstall` or the RPM Fusion NVIDIA package on Fedora). The open-source `nouveau` driver works for basic display but lacks performance features.
 
 ---
 
