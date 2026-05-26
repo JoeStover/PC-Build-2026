@@ -13,14 +13,15 @@
 6. [Motherboard Installation](#-phase-4-motherboard-installation)
 7. [Storage Installation](#-phase-5-storage-installation)
 8. [Power Supply Installation and Cable Routing](#-phase-6-power-supply-installation-and-cable-routing)
-9. [GPU Installation](#-phase-7-gpu-installation)
-10. [Final Cable Management and Cleanup](#-phase-8-final-cable-management-and-cleanup)
-11. [First Boot and BIOS Configuration](#-phase-9-first-boot-and-bios-configuration)
-12. [Operating System Installation](#-phase-10-operating-system-installation)
-13. [Comprehensive Stress Testing Guide](#-phase-11-comprehensive-stress-testing-guide)
-14. [Troubleshooting Common Issues](#-troubleshooting-common-issues)
-15. [Optional Aesthetic Upgrades - Cable Extensions](#-optional-aesthetic-upgrades---cable-extensions)
-16. [Optional Aesthetic Upgrades - RGB Lighting](#-optional-aesthetic-upgrades---rgb-lighting)
+9. [Cable Routing Quick Reference](#-cable-routing-quick-reference)
+10. [GPU Installation](#-phase-7-gpu-installation)
+11. [Final Cable Management and Cleanup](#-phase-8-final-cable-management-and-cleanup)
+12. [First Boot and BIOS Configuration](#-phase-9-first-boot-and-bios-configuration)
+13. [Operating System Installation](#-phase-10-operating-system-installation)
+14. [Comprehensive Stress Testing Guide](#-phase-11-comprehensive-stress-testing-guide)
+15. [Troubleshooting Common Issues](#-troubleshooting-common-issues)
+16. [Optional Aesthetic Upgrades - Cable Extensions](#-optional-aesthetic-upgrades---cable-extensions)
+17. [Optional Aesthetic Upgrades - RGB Lighting](#-optional-aesthetic-upgrades---rgb-lighting)
 
 ---
 
@@ -431,6 +432,17 @@ The X870E Hero comes with AMD's standard AM5 mounting backplate pre-installed. T
 
 > 📍 **CABLE MANAGEMENT NOTE**: Route the fan cables behind the cooler tower, then down along the motherboard edge toward the headers.
 
+### CPU Cooler Cable Routing Note
+
+Before the motherboard goes into the case, do a quick cable orientation check on the cooler fans:
+
+- Route both cooler fan cables toward the **top edge or upper-right edge** of the motherboard, whichever gives the cleanest path to **CPU_FAN** and **CPU_OPT**
+- Keep the cables **tucked behind the heatsink fan frame/clips** where possible so they are not visible from the side panel window
+- Leave a **small service loop** so the fan clips can be removed later without straining the headers
+- Make sure no cable can drift into the fan blades
+
+> 📍 **Routing Tip**: Treat the CPU cooler fan cables as a separate, self-contained cable run. They should stay local to the cooler and motherboard header area, not run down into the main case cable channels.
+
 ### CPU Cooler Installation Verification:
 - [ ] Cooler is firmly mounted (no wiggle)
 - [ ] Fans are attached and oriented correctly (airflow to rear)
@@ -546,6 +558,38 @@ All Noctua fans have:
 | Top (exhaust) | 2x Noctua | Down through rear cutout → behind MB tray → fan hub |
 | Rear (exhaust) | 1x Stock | Direct to motherboard CHA_FAN or to hub |
 
+### Fan Cable Routing Strategy Before Continuing
+
+Before mounting all fans permanently, plan the cable paths now. This will save significant time later.
+
+#### Recommended routing paths:
+
+- **Front fans (3x 140mm intake):**
+  - Route cables through the **nearest front-side cable pass-through**
+  - Pull them immediately into the **rear chamber behind the motherboard tray**
+  - Bundle them together as a **front intake group**
+
+- **Bottom fans (2x 140mm intake):**
+  - Route cables through the **PSU shroud openings** or the nearest lower cutout
+  - Keep excess slack in the rear chamber, not in the main compartment
+  - Bundle them together as a **bottom intake group**
+
+- **Top fans (2x 140mm exhaust):**
+  - Route cables toward the **rear-top cutout**
+  - Drop them into the rear chamber along the upper cable path
+  - Bundle them together as a **top exhaust group**
+
+- **Rear fan (1x exhaust):**
+  - Route directly to the nearest rear cutout or motherboard header area
+  - Keep this cable tight to the rear edge of the case
+
+#### Before moving on, verify:
+
+- [ ] No fan cable crosses the center of the motherboard area
+- [ ] No fan cable hangs loose in front of future airflow paths
+- [ ] Front, bottom, and top fan cables are grouped separately behind the motherboard tray
+- [ ] Enough slack remains to reach the fan hub without tension
+
 ## 3.4 Install Fan Hub (Noctua NA-FH1)
 
 ### Fan Hub Location:
@@ -590,6 +634,28 @@ Connect the hub's **SATA power input** to a SATA power cable from the PSU.
     FR = Front fans | BT = Bottom | TP = Top | RR = Rear
 ```
 
+### Fan Hub Routing and Header Assignment Note
+
+For the cleanest layout and simplest BIOS behavior, use this connection strategy:
+
+- **CPU cooler fans** → `CPU_FAN` and `CPU_OPT`
+- **Case fan hub PWM control cable** → one motherboard **CHA_FAN** header
+- **Fan hub power** → **SATA power** from the PSU
+
+> ⚠️ **Important**: Avoid putting the case fan hub on `CPU_FAN` if your CPU cooler fans are already connected there. Keeping the CPU cooler on dedicated CPU headers makes troubleshooting easier and avoids CPU fan monitoring confusion during boot.
+
+### Rear Chamber Cable Grouping Plan
+
+As you connect fan cables to the hub, organize them into these routing zones behind the motherboard tray:
+
+| Zone | Cables |
+|------|--------|
+| **Upper zone** | Top fan cables, rear fan cable |
+| **Middle zone** | Front fan cables, fan hub PWM lead |
+| **Lower zone** | Bottom fan cables, SATA power lead to hub |
+
+Use velcro ties or case tie-down points to keep these bundles flat. Do **not** fully tighten everything yet — leave the bundles adjustable until the full system POSTs successfully.
+
 ---
 
 # ⚙️ Phase 4: Motherboard Installation
@@ -624,6 +690,29 @@ Connect the hub's **SATA power input** to a SATA power cable from the PSU.
 3. Finally remaining screws
 4. **Snug only** - do not over-tighten
 
+### Motherboard Power Routing - Do This Before Small Header Connections
+
+Once the motherboard is mounted, route and connect the large power cables first before the smaller front-panel and USB cables.
+
+#### Recommended order:
+
+1. **24-pin ATX motherboard cable**
+   - Route from the PSU area behind the motherboard tray
+   - Bring it through the **side grommet nearest the 24-pin motherboard socket**
+   - Plug it in now, then gently curve the visible section for a clean look
+
+2. **CPU EPS cables (2x 8-pin)**
+   - Route both cables through the **top-left cutout/grommet**
+   - Plug these in before the top edge becomes crowded with other cables
+   - These are usually the hardest cables to route cleanly, so do them early
+
+3. **SATA power cable for fan hub**
+   - Keep this in the rear chamber
+   - Route only as far as needed to reach the fan hub
+   - Tuck any unused SATA connectors into the rear compartment or PSU shroud area
+
+> 📍 **Routing Tip**: The EPS/CPU power cables are often the most awkward cables in the build. If they are not already staged behind the tray before motherboard installation, route them immediately after the board is mounted and before continuing.
+
 ## 4.4 Connect Front Panel Cables
 
 The X870E Hero includes a **Q-Connector** for easy front panel connections.
@@ -636,6 +725,38 @@ The X870E Hero includes a **Q-Connector** for easy front panel connections.
 - USB 3.0 Header (19-pin)
 - USB-C Header (20-pin)
 - HD Audio
+
+### Front Panel Cable Routing Order
+
+Connect these cables **before installing the GPU**. Access is easier now, and the final result will be much cleaner.
+
+#### Recommended connection order:
+
+1. **Front panel switch/LED cables**
+   - Connect these first using the ASUS **Q-Connector**
+   - Route them from the lower case area through the nearest lower cutout
+   - Keep them tight to the bottom edge of the motherboard
+
+2. **HD Audio**
+   - Route along the bottom-rear edge of the case
+   - Bring it to the motherboard's bottom-left audio header
+   - Keep it low and out of sight
+
+3. **USB 3.0 (19-pin)**
+   - Route through the nearest side grommet to the motherboard header
+   - This cable is thick and stiff, so avoid twisting it sharply
+   - Use a smooth bend and keep excess slack behind the tray
+
+4. **USB-C front panel header**
+   - Route through the nearest grommet with the straightest possible path
+   - Avoid over-bending the cable near the connector
+
+#### Before moving on, verify:
+
+- [ ] No front-panel cable is crossing the center of the board
+- [ ] HD Audio stays along the bottom edge
+- [ ] USB 3.0 and USB-C cables are routed through the nearest side openings
+- [ ] Extra slack is stored behind the motherboard tray, not in the main chamber
 
 ---
 
@@ -675,6 +796,28 @@ On the X870E Hero, the **primary M.2 slot** (M.2_1) is typically located under t
 | SATA | ✅ | 1 (for fan hub) |
 | Peripheral/Molex | ❌ | Not needed |
 
+### PSU Cable Pre-Routing Plan
+
+Before installing the PSU into the case, connect only the cables you actually need:
+
+- 1x **24-pin ATX**
+- 2x **8-pin EPS/CPU**
+- 1x **12V-2x6 GPU cable**
+- 1x **SATA power cable** for fan hub
+
+Pre-connecting these cables to the PSU outside the case is easier than attaching them later in the rear chamber.
+
+### Recommended cable staging plan:
+
+| Cable | Stage To | Final Destination |
+|------|----------|-------------------|
+| **24-pin ATX** | Rear middle channel | Motherboard 24-pin socket |
+| **EPS/CPU (2x)** | Rear upper channel | Top-left motherboard power sockets |
+| **12V-2x6 GPU** | Rear lower/middle channel | GPU power connector |
+| **SATA power** | Rear lower channel | Fan hub |
+
+> 📍 **Routing Tip**: Do not fully cinch these cables down yet. Stage them loosely in their intended areas first, then do final tightening only after all components are installed and the system POSTs successfully.
+
 ### GPU Power Cable - CRITICAL:
 
 > 🔥 **MAJOR GOTCHA - RTX 5070 Ti Power**
@@ -699,6 +842,97 @@ The RTX 5070 Ti uses the **12V-2x6 connector** (also called 12VHPWR). The RM1000
 6. **Don't route cables over airflow paths**
 
 > 📍 **PRO TIP FOR FUTURE CABLE EXTENSIONS**: When routing your stock cables during the base build, **leave a little extra slack** behind the motherboard tray. This makes it much easier to add sleeved extensions later without re-routing everything.
+
+### Cable Routing by Rear Chamber Zone
+
+To keep the back side of the build organized, use three routing lanes behind the motherboard tray:
+
+| Rear Chamber Zone | Recommended Cables |
+|------------------|--------------------|
+| **Upper lane** | EPS/CPU power, top fan cables, rear fan cable |
+| **Middle lane** | 24-pin ATX, front fan cables, fan hub PWM lead, USB 3.0 / USB-C slack |
+| **Lower lane** | SATA power, HD Audio, bottom fan cables, staged GPU cable slack |
+
+### Practical routing rules:
+
+- Keep **large power cables** on the outer edge of the bundle where possible
+- Keep **small signal cables** separated enough that they can be removed later without undoing everything
+- Cross cables only when necessary, and do it in the rear chamber rather than the visible side
+- Leave enough slack near connectors to unplug components later without cutting all cable ties
+
+> 🔧 **Best Practice**: Use temporary velcro straps during assembly. Replace or tighten them neatly only after the first successful boot and cable verification.
+
+---
+
+# 🧭 Cable Routing Quick Reference
+
+Use this section as a fast reference during the build. The goal is to route each cable at the easiest possible stage, keep the visible chamber clean, and avoid having to redo work later.
+
+## Recommended Connection Strategy
+
+| Device Group | Motherboard Header / Power Source | Recommendation |
+|-------------|-----------------------------------|----------------|
+| **CPU cooler fans** | `CPU_FAN` + `CPU_OPT` | Keep CPU cooling on dedicated CPU headers |
+| **Case fan hub PWM control** | `CHA_FAN` header | Best for case airflow control and simpler troubleshooting |
+| **Fan hub power** | PSU SATA power | Use SATA, not the Molex barrel adapter |
+| **Motherboard main power** | 24-pin ATX | Route through nearest side grommet |
+| **CPU power** | 2x 8-pin EPS | Route through top-left cutout early |
+| **GPU power** | Native 12V-2x6 cable | Route late, after GPU is installed |
+| **Front panel** | Q-Connector / front-panel header | Connect before GPU install |
+| **HD Audio** | Bottom-left motherboard header | Route low along case edge |
+| **USB 3.0 / USB-C** | Internal USB headers | Route through nearest side cutouts |
+
+## Cable-by-Cable Routing Map
+
+| Cable | Route Path | Connect When | Special Notes |
+|------|------------|--------------|---------------|
+| **24-pin ATX** | PSU area → rear middle channel → nearest side grommet → motherboard socket | Right after motherboard installation | Use a smooth visible curve; store extra slack behind tray |
+| **EPS/CPU 8-pin #1/#2** | PSU area → rear upper channel → top-left cutout → motherboard | Immediately after motherboard installation | Route early; these are usually the hardest cables |
+| **CPU cooler fan cables** | Along cooler body/top edge → `CPU_FAN` / `CPU_OPT` | During cooler installation | Keep local to cooler area; hide behind heatsink where possible |
+| **Front fan cables** | Front mounts → nearest side pass-through → rear middle channel → fan hub | During fan installation | Bundle as one group |
+| **Bottom fan cables** | Bottom mounts → PSU shroud/lower cutout → rear lower channel → fan hub | During fan installation | Keep all slack out of main chamber |
+| **Top fan cables** | Top mounts → rear-top cutout → rear upper channel → fan hub | During fan installation | Route before upper area gets crowded |
+| **Rear fan cable** | Rear mount → nearest rear cutout/header path → fan hub or chassis header | During fan installation | Keep tight to rear edge |
+| **Fan hub PWM lead** | Fan hub → nearest cutout → `CHA_FAN` header | Before GPU installation | Avoid using `CPU_FAN` if cooler fans already occupy CPU headers |
+| **Fan hub SATA power** | PSU SATA cable → rear lower channel → fan hub | After PSU installation | Tuck unused SATA connectors behind tray or in PSU shroud |
+| **Front panel switch/LED** | Lower cutout → bottom edge of motherboard | Before GPU installation | Use Q-Connector first for easier installation |
+| **HD Audio** | Rear lower edge → bottom-left motherboard header | Before GPU installation | Keep low and hidden |
+| **USB 3.0 (19-pin)** | Rear middle channel → nearest side grommet → motherboard header | Before GPU installation | Thick cable; avoid sharp twisting |
+| **USB-C front panel** | Rear middle channel → nearest grommet → motherboard header | Before GPU installation | Avoid over-bending near connector |
+| **GPU 12V-2x6** | PSU area → rear lower/middle channel → nearest side grommet to GPU connector | After GPU installation | Fully seat connector first, then form a gentle bend |
+
+## Build Order for Cleanest Cable Routing
+
+Follow this sequence for the least rework:
+
+1. Install CPU, RAM, NVMe, and cooler on the motherboard outside the case
+2. Install case fans and route their cables into the rear chamber
+3. Mount the fan hub and connect case fan cables
+4. Connect PSU cables to the PSU before PSU installation
+5. Install PSU and loosely stage 24-pin, EPS, SATA, and GPU power cables
+6. Install motherboard
+7. Connect **24-pin** and **EPS** power cables
+8. Connect front panel, HD Audio, USB 3.0, USB-C, and fan hub PWM lead
+9. Install GPU
+10. Connect GPU power cable carefully and verify full seating
+11. Do final rear-chamber bundling and visible-side cleanup
+12. POST test the system before fully tightening all cable ties
+
+## Cable Routing Final Check
+
+Before closing the case, confirm:
+
+- [ ] EPS cables are fully seated and routed through the top-left area cleanly
+- [ ] 24-pin ATX cable has a clean curve with no unnecessary slack visible
+- [ ] Front-panel and HD Audio cables are low and hidden
+- [ ] USB 3.0 and USB-C cables are not sharply bent
+- [ ] Fan cables are grouped by location and not loose in airflow paths
+- [ ] Fan hub uses **SATA power**
+- [ ] CPU cooler fans are on **CPU_FAN / CPU_OPT**
+- [ ] Case fan hub PWM lead is on a **CHA_FAN** header
+- [ ] GPU 12V-2x6 cable is fully seated with **no visible gold contacts**
+- [ ] No cable is touching any fan blade
+- [ ] Rear chamber bundles are flat enough for the side panel to close easily
 
 ---
 
@@ -739,6 +973,20 @@ The RTX 5070 Ti uses the **12V-2x6 connector** (also called 12VHPWR). The RM1000
     [GPU]                   [GPU]
 ```
 
+### GPU Cable Routing Note
+
+Route the native Corsair **12V-2x6** cable from the rear chamber through the **nearest side grommet aligned with the GPU power connector**.
+
+#### Important routing rules:
+
+- Bring the cable into the main chamber as close to the GPU connector as possible
+- Insert the connector **fully straight** before shaping the cable
+- Do **not** create a sharp bend immediately at the connector
+- Use a **gentle curve** back toward the cable-routing area behind the motherboard tray
+- Only secure the cable tightly after confirming the connector is fully seated and the side panel closes without pressing hard against the cable
+
+> ⚠️ **Safety Reminder**: The most important part of GPU cable routing is not aesthetics — it is maintaining full connector seating and avoiding side-load or tight bending stress at the plug.
+
 ## 7.4 Install GPU Support Bracket (ASUS ROG Herculx)
 
 1. Follow bracket instructions
@@ -771,7 +1019,39 @@ The RTX 5070 Ti uses the **12V-2x6 connector** (also called 12VHPWR). The RM1000
 - [ ] M.2 SSD secured with screw
 - [ ] CPU cooler firmly mounted
 
-## 8.2 Install Side Panels and External Connections
+## 8.2 Rear Chamber Final Bundling Strategy
+
+Now that all major components are installed and connected, do the final cable cleanup behind the motherboard tray.
+
+### Tighten cables in this order:
+
+1. **Upper lane**
+   - EPS/CPU power cables
+   - Top fan cables
+   - Rear fan cable
+
+2. **Middle lane**
+   - 24-pin ATX
+   - Front fan bundle
+   - Fan hub PWM lead
+   - USB 3.0 / USB-C slack
+
+3. **Lower lane**
+   - SATA power to hub
+   - Bottom fan bundle
+   - HD Audio
+   - GPU cable slack
+
+### Final bundling rules:
+
+- Flatten bundles against the tray rather than stacking them outward
+- Do not over-tighten small signal cables
+- Keep removable components' cables accessible for future maintenance
+- If the rear side panel resists closing, redistribute thickness across multiple tie-down points instead of forcing the panel
+
+> 🔧 **Best Practice**: After the first successful POST and BIOS check, reopen the rear panel once more and do a final cosmetic pass on cable tension and alignment.
+
+## 8.3 Install Side Panels and External Connections
 
 1. Verify no cables preventing panel closure
 2. Install WiFi antennas on rear I/O
