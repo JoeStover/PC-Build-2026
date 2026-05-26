@@ -499,19 +499,30 @@ Before the motherboard goes into the case, do a quick cable orientation check on
 
 Before installing everything in the case, a quick test ensures components work:
 
-> ⚠️ **IMPORTANT**: The Ryzen 9 9950X has **no integrated graphics**. You must temporarily install the GPU for this bench test to get display output. If you prefer not to handle the GPU twice, skip this test and perform your first POST after full case assembly in Phase 9.
+> 💡 **NOTE**: The Ryzen 9 9950X has a basic **integrated GPU** (Radeon 610M, RDNA 2 architecture — 2 CUs, up to 2.2 GHz), suitable for display output during initial setup. You can connect a monitor to the motherboard's rear HDMI 2.1 port for this bench test without installing the discrete GPU. However, if you prefer to test the full system (including the GPU) at this stage, you can temporarily install it now.
 
 ### "Bench Test" Procedure:
+
+**Option A — Using the iGPU (simplest for initial POST test):**
+
+1. Connect **24-pin ATX** cable to motherboard
+2. Connect **8-pin EPS** (CPU power) cable to motherboard (top-left area)
+3. Connect **monitor** to the motherboard's rear **HDMI 2.1** port (uses the 9950X's integrated Radeon 610M)
+
+**Option B — Using the discrete GPU:**
 
 1. **Temporarily install GPU** in the primary PCIe x16 slot (press until retention latch clicks)
 2. Connect **24-pin ATX** cable to motherboard
 3. Connect **8-pin EPS** (CPU power) cable to motherboard (top-left area)
 4. Connect **12V-2x6** GPU power cable
-5. Connect **monitor** to GPU (not motherboard — there is no video output from the motherboard on this CPU)
-6. Plug **PSU into wall** (switch OFF)
-7. Flip PSU switch to ON
-8. Bridge the **power switch pins** with a screwdriver to power on
-9. System should POST - fans spin, debug LEDs cycle, display shows BIOS splash
+5. Connect **monitor** to GPU
+
+**Then (both options):**
+
+1. Plug **PSU into wall** (switch OFF)
+2. Flip PSU switch to ON
+3. Bridge the **power switch pins** with a screwdriver to power on
+4. System should POST - fans spin, debug LEDs cycle, display shows BIOS splash
 
 **After successful bench test:**
 1. Power off and switch PSU off
