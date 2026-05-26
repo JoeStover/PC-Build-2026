@@ -11,16 +11,18 @@
 4. [Motherboard Preparation (Outside Case)](#-phase-2-motherboard-preparation-outside-case)
 5. [Case Preparation and Fan Installation](#-phase-3-case-preparation-and-fan-installation)
 6. [Motherboard Installation](#-phase-4-motherboard-installation)
-7. [Storage Installation](#-phase-5-storage-installation)
+7. [Storage Verification](#-phase-5-storage-verification)
 8. [Power Supply Installation and Cable Routing](#-phase-6-power-supply-installation-and-cable-routing)
-9. [GPU Installation](#-phase-7-gpu-installation)
-10. [Final Cable Management and Cleanup](#-phase-8-final-cable-management-and-cleanup)
-11. [First Boot and BIOS Configuration](#-phase-9-first-boot-and-bios-configuration)
-12. [Operating System Installation](#-phase-10-operating-system-installation)
-13. [Comprehensive Stress Testing Guide](#-phase-11-comprehensive-stress-testing-guide)
-14. [Troubleshooting Common Issues](#-troubleshooting-common-issues)
-15. [Optional Aesthetic Upgrades - Cable Extensions](#-optional-aesthetic-upgrades---cable-extensions)
-16. [Optional Aesthetic Upgrades - RGB Lighting](#-optional-aesthetic-upgrades---rgb-lighting)
+9. [Cable Routing Quick Reference](#-cable-routing-quick-reference)
+10. [GPU Installation](#-phase-7-gpu-installation)
+11. [Final Cable Management and Cleanup](#-phase-8-final-cable-management-and-cleanup)
+12. [First Boot and BIOS Configuration](#-phase-9-first-boot-and-bios-configuration)
+13. [Operating System Installation](#-phase-10-operating-system-installation)
+14. [Comprehensive Stress Testing Guide](#-phase-11-comprehensive-stress-testing-guide)
+15. [Troubleshooting Common Issues](#-troubleshooting-common-issues)
+16. [Optional Aesthetic Upgrades - Cable Extensions](#-optional-aesthetic-upgrades---cable-extensions)
+17. [Optional Aesthetic Upgrades - RGB Lighting](#-optional-aesthetic-upgrades---rgb-lighting)
+18. [Ongoing Maintenance](#-ongoing-maintenance)
 
 ---
 
@@ -53,7 +55,7 @@
 | **Cable Ties (Velcro)** | Reusable cable management | Velcro brand cable ties (assorted sizes) | ~$10 |
 | **Isopropyl Alcohol 99%** | Cleaning thermal paste if needed | Any pharmacy brand | ~$5 |
 | **Microfiber Cloths** | Lint-free cleaning | Any brand | ~$5 |
-| **USB Flash Drive (16GB+)** | Windows installation media | Any USB 3.0 drive | ~$10 |
+| **USB Flash Drive (16GB+)** | OS installation media | ✅ Already have Ventoy multi-boot USB | — |
 
 ## Highly Recommended Items
 
@@ -215,6 +217,21 @@ Open all boxes and verify contents. **Do NOT remove components from anti-static 
 ### Pro Tip - Magnetic Screwdriver:
 A magnetic screwdriver is invaluable. You'll be working in tight spaces, and dropping a screw into the case can mean 20 minutes of fishing it out.
 
+## 1.5 Protective Films and Stickers — Remove These During Build
+
+Multiple components ship with protective films that must be removed. Keep an eye out for these throughout the build:
+
+| Component | Film Location | When to Remove |
+|-----------|--------------|----------------|
+| **GPU** | Backplate, fan shroud, sometimes on the display ports | Before installing in case |
+| **Case side panels** | Both sides of tempered glass panel | Before final panel closure |
+| **Motherboard I/O area** | Decorative shroud may have a film | During motherboard unboxing |
+| **M.2 heatsink** | Thermal pad protective film (underside) | During NVMe installation |
+| **CPU cooler** | Copper base plate may have a protective plastic cover | Before applying thermal paste |
+| **RAM** | Light bar / RGB diffuser may have a thin film | During RAM unboxing |
+
+> ⚠️ **CRITICAL**: The CPU cooler base plate and M.2 thermal pad films **must** be removed — leaving them on prevents proper heat transfer and will cause thermal issues. Other films are cosmetic but should still be removed.
+
 ---
 
 # 🔌 Phase 2: Motherboard Preparation (Outside Case)
@@ -306,10 +323,10 @@ The X870E Hero has **4 DIMM slots**. For **2 DIMMs**, you must use specific slot
 **Step 1: Open DIMM Slot Latches**
 
 1. Locate slots **A2** and **B2**
-2. Push the **retention clips** at both ends **outward**
-3. Clips should be in the open (angled outward) position
+2. Push the **retention clip(s)** to the open position
+3. On most modern ASUS AM5 boards (including the X870E Hero), there is a **single latch on one end** of each DIMM slot (the end farthest from the CPU). The other end is a fixed hook that the RAM slides into.
 
-> 🔥 **GOTCHA**: Some motherboards have clips on only ONE end. The X870E Hero has clips on both ends.
+> 🔥 **GOTCHA**: Check your specific board — the X870E Hero uses **single-sided latches**. Only one end opens. The RAM's bottom edge hooks into the fixed end first, then you press down on the latched end until it clicks.
 
 **Step 2: Align RAM Stick**
 
@@ -344,7 +361,33 @@ Install the second RAM stick in slot B2 using the same procedure.
 
 ---
 
-## 2.4 CPU Cooler Installation (Noctua NH-U12A chromax.black)
+## 2.4 NVMe Installation (Samsung 990 Pro 2TB) — Before Cooler
+
+> 📍 **Why install NVMe now?** The primary M.2_1 slot on the X870E Hero is directly below the CPU socket, partially under the cooler area. Installing it **before** mounting the CPU cooler gives you full access and visibility. This is much easier than reaching under/around the cooler later.
+
+### Step-by-Step M.2 Installation:
+
+1. Locate the **M.2_1 heatsink** — the large metal plate below the CPU socket area
+2. Remove M.2 heatsink screws (usually 1-2 Phillips screws) and lift the heatsink off
+3. **Remove protective film** from the thermal pad on the heatsink's underside (if present)
+4. Insert M.2 drive into the slot at a **30-degree angle** (gold contacts first, label side up)
+5. Press the SSD flat against the standoff
+6. Secure with the **M.2 screw** (small Phillips #1)
+7. Reinstall the heatsink over the SSD and re-secure with its screws
+
+> 🔥 **GOTCHA - Samsung 990 Pro Label**: The 990 Pro has a built-in heatsink label on its top side. **Leave it on** — removing it voids Samsung's warranty. The motherboard's heatsink thermal pad will still make adequate contact through the label.
+
+> 🔥 **GOTCHA - Don't forget the thermal pad film**: The motherboard heatsink has a thin plastic film over the thermal pad. You MUST peel this off or the thermal pad won't transfer heat.
+
+### NVMe Installation Verification:
+- [ ] SSD is in the M.2_1 slot (primary, closest to CPU)
+- [ ] SSD is fully flat and secured with screw
+- [ ] Heatsink thermal pad film removed
+- [ ] Heatsink re-installed over SSD
+
+---
+
+## 2.5 CPU Cooler Installation (Noctua NH-U12A chromax.black)
 
 The NH-U12A uses the **SecuFirm2** mounting system. For AMD AM5, you'll use the stock AMD mounting hardware that came with the motherboard.
 
@@ -384,11 +427,13 @@ This aligns with:
 
 **Step 2: Prepare AMD AM5 Mounting**
 
-The X870E Hero comes with AMD's standard AM5 mounting backplate pre-installed. The NH-U12A SecuFirm2 system works with it.
+The X870E Hero comes with AMD's standard AM5 mounting backplate pre-installed on the rear of the motherboard. The NH-U12A SecuFirm2 system works with this backplate.
 
 1. Locate the **AMD mounting bars** in the Noctua box (labeled "AM4/AM5")
 2. Find the **spacers** (small plastic rings)
 3. Find the **NM-AMB7 mounting screws** (or equivalent in your kit)
+
+> 🔥 **GOTCHA - Remove Plastic Retention Clips**: The motherboard ships with **plastic retention clips** snapped onto the backplate standoffs (these are for AMD's stock cooler). You must **unclip and remove these plastic pieces** before installing the Noctua mounting bars. They snap off — pull them straight up or squeeze the tabs to release. The metal backplate itself stays in place.
 
 **Step 3: Install Mounting Bars**
 
@@ -431,6 +476,17 @@ The X870E Hero comes with AMD's standard AM5 mounting backplate pre-installed. T
 
 > 📍 **CABLE MANAGEMENT NOTE**: Route the fan cables behind the cooler tower, then down along the motherboard edge toward the headers.
 
+### CPU Cooler Cable Routing Note
+
+Before the motherboard goes into the case, do a quick cable orientation check on the cooler fans:
+
+- Route both cooler fan cables toward the **top edge or upper-right edge** of the motherboard, whichever gives the cleanest path to **CPU_FAN** and **CPU_OPT**
+- Keep the cables **tucked behind the heatsink fan frame/clips** where possible so they are not visible from the side panel window
+- Leave a **small service loop** so the fan clips can be removed later without straining the headers
+- Make sure no cable can drift into the fan blades
+
+> 📍 **Routing Tip**: Treat the CPU cooler fan cables as a separate, self-contained cable run. They should stay local to the cooler and motherboard header area, not run down into the main case cable channels.
+
 ### CPU Cooler Installation Verification:
 - [ ] Cooler is firmly mounted (no wiggle)
 - [ ] Fans are attached and oriented correctly (airflow to rear)
@@ -439,20 +495,42 @@ The X870E Hero comes with AMD's standard AM5 mounting backplate pre-installed. T
 
 ---
 
-## 2.5 Pre-Case Installation Test (Optional but Recommended)
+## 2.6 Pre-Case Installation Test (Optional but Recommended)
 
 Before installing everything in the case, a quick test ensures components work:
 
+> 💡 **NOTE**: The Ryzen 9 9950X has a basic **integrated GPU** (Radeon 610M, RDNA 2 architecture — 2 CUs, up to 2.2 GHz), suitable for display output during initial setup. You can connect a monitor to the motherboard's rear HDMI 2.1 port for this bench test without installing the discrete GPU. However, if you prefer to test the full system (including the GPU) at this stage, you can temporarily install it now.
+
 ### "Bench Test" Procedure:
+
+**Option A — Using the iGPU (simplest for initial POST test):**
 
 1. Connect **24-pin ATX** cable to motherboard
 2. Connect **8-pin EPS** (CPU power) cable to motherboard (top-left area)
-3. Connect **monitor** to GPU
-4. Plug **PSU into wall** (switch OFF)
-5. Bridge the **power switch pins** with a screwdriver to power on
-6. System should POST - fans spin, debug LEDs cycle
+3. Connect **monitor** to the motherboard's rear **HDMI 2.1** port (uses the 9950X's integrated Radeon 610M)
 
-> ⚠️ If system doesn't POST, stop here and troubleshoot before case installation. Check RAM seating first (most common issue).
+**Option B — Using the discrete GPU:**
+
+1. **Temporarily install GPU** in the primary PCIe x16 slot (press until retention latch clicks)
+2. Connect **24-pin ATX** cable to motherboard
+3. Connect **8-pin EPS** (CPU power) cable to motherboard (top-left area)
+4. Connect **12V-2x6** GPU power cable
+5. Connect **monitor** to GPU
+
+**Then (both options):**
+
+1. Plug **PSU into wall** (switch OFF)
+2. Flip PSU switch to ON
+3. Bridge the **power switch pins** with a screwdriver to power on
+4. System should POST - fans spin, debug LEDs cycle, display shows BIOS splash
+
+**After successful bench test:**
+1. Power off and switch PSU off
+2. Disconnect all cables
+3. Remove GPU (press retention latch, pull straight up)
+4. Proceed to case installation
+
+> ⚠️ If system doesn't POST, stop here and troubleshoot before case installation. Check RAM seating first (most common issue). If no Q-LED indicators light and no fans spin, verify EPS and ATX power cables are fully seated. See the [Troubleshooting Common Issues](#-troubleshooting-common-issues) section for detailed guidance.
 
 ---
 
@@ -546,6 +624,38 @@ All Noctua fans have:
 | Top (exhaust) | 2x Noctua | Down through rear cutout → behind MB tray → fan hub |
 | Rear (exhaust) | 1x Stock | Direct to motherboard CHA_FAN or to hub |
 
+### Fan Cable Routing Strategy Before Continuing
+
+Before mounting all fans permanently, plan the cable paths now. This will save significant time later.
+
+#### Recommended routing paths:
+
+- **Front fans (3x 140mm intake):**
+  - Route cables through the **nearest front-side cable pass-through**
+  - Pull them immediately into the **rear chamber behind the motherboard tray**
+  - Bundle them together as a **front intake group**
+
+- **Bottom fans (2x 140mm intake):**
+  - Route cables through the **PSU shroud openings** or the nearest lower cutout
+  - Keep excess slack in the rear chamber, not in the main compartment
+  - Bundle them together as a **bottom intake group**
+
+- **Top fans (2x 140mm exhaust):**
+  - Route cables toward the **rear-top cutout**
+  - Drop them into the rear chamber along the upper cable path
+  - Bundle them together as a **top exhaust group**
+
+- **Rear fan (1x exhaust):**
+  - Route directly to the nearest rear cutout or motherboard header area
+  - Keep this cable tight to the rear edge of the case
+
+#### Before moving on, verify:
+
+- [ ] No fan cable crosses the center of the motherboard area
+- [ ] No fan cable hangs loose in front of future airflow paths
+- [ ] Front, bottom, and top fan cables are grouped separately behind the motherboard tray
+- [ ] Enough slack remains to reach the fan hub without tension
+
 ## 3.4 Install Fan Hub (Noctua NA-FH1)
 
 ### Fan Hub Location:
@@ -566,7 +676,7 @@ Mount the fan hub **behind the motherboard tray** for clean cable management.
 **Step 3: Connect All Fan Cables**
 
 1. Connect all 7 Noctua fans + 1 rear fan to hub channels
-2. Connect hub's **PWM input cable** to motherboard's **CPU_FAN** header
+2. Connect hub's **PWM input cable** to a motherboard **CHA_FAN** header (not CPU_FAN — that's reserved for your CPU cooler fans)
 
 **Step 4: Power the Hub**
 
@@ -583,12 +693,63 @@ Connect the hub's **SATA power input** to a SATA power cable from the PSU.
     │   │  │  │  │  │  │  │  │                │
     │   FR FR FR BT BT TP TP RR               │ 
     │                                          │
-    │  [PWM IN]──────→ To Motherboard CPU_FAN │
+    │  [PWM IN]──────→ To Motherboard CHA_FAN │
     │  [SATA PWR]────→ To PSU SATA power      │
     └──────────────────────────────────────────┘
     
     FR = Front fans | BT = Bottom | TP = Top | RR = Rear
 ```
+
+### Fan Hub Routing and Header Assignment Note
+
+For the cleanest layout and simplest BIOS behavior, use this connection strategy:
+
+- **CPU cooler fans** → `CPU_FAN` and `CPU_OPT`
+- **Case fan hub PWM control cable** → one motherboard **CHA_FAN** header
+- **Fan hub power** → **SATA power** from the PSU
+
+> ⚠️ **Important**: Avoid putting the case fan hub on `CPU_FAN` if your CPU cooler fans are already connected there. Keeping the CPU cooler on dedicated CPU headers makes troubleshooting easier and avoids CPU fan monitoring confusion during boot.
+
+### Rear Chamber Cable Grouping Plan
+
+As you connect fan cables to the hub, organize them into these routing zones behind the motherboard tray:
+
+| Zone | Cables |
+|------|--------|
+| **Upper zone** | Top fan cables, rear fan cable |
+| **Middle zone** | Front fan cables, fan hub PWM lead |
+| **Lower zone** | Bottom fan cables, SATA power lead to hub |
+
+Use velcro ties or case tie-down points to keep these bundles flat. Do **not** fully tighten everything yet — leave the bundles adjustable until the full system POSTs successfully.
+
+## 3.5 Install RGB Strips (Phanteks NEON Digital RGB — If Purchased)
+
+> 📍 **Why install RGB strips now?** Mounting the strips is significantly easier with an empty case — full access to all mounting surfaces, no motherboard or GPU to work around. The ARGB cable will be connected to the motherboard header later in Phase 4.
+
+### Step-by-Step RGB Strip Installation:
+
+**Step 1: Plan Placement**
+
+Recommended placement for the Meshify 2 XL:
+- **Strip 1**: Along the **top front edge** of the case, pointing downward (illuminates components from above)
+- **Strip 2**: Along the **front vertical edge** (creates depth) OR along the **top of the PSU shroud** (underlighting effect)
+
+> 💡 **Tip**: Dry-fit the strips (hold them in place without removing adhesive) to preview the lighting effect before committing.
+
+**Step 2: Mount Strips**
+
+1. Clean the mounting surface with isopropyl alcohol
+2. For **magnetic case surfaces**: simply attach — the Phanteks NEON strips have magnetic backing
+3. For **non-magnetic surfaces**: use the included adhesive backing (peel and stick)
+4. Press firmly along the entire length for good adhesion
+
+**Step 3: Route ARGB Cable**
+
+1. Route the strip's ARGB cable toward the **nearest cable pass-through** behind the motherboard tray
+2. Leave enough slack to reach the **ADD_GEN2** header on the motherboard (5V ARGB, 3-pin) — you'll connect this in Phase 4 after the motherboard is installed
+3. Bundle the ARGB cable with the fan cable group in the same zone
+
+> 📍 **Do NOT connect to motherboard yet** — the motherboard isn't installed. Just stage the cable in the rear chamber for now.
 
 ---
 
@@ -624,6 +785,29 @@ Connect the hub's **SATA power input** to a SATA power cable from the PSU.
 3. Finally remaining screws
 4. **Snug only** - do not over-tighten
 
+### Motherboard Power Routing - Do This Before Small Header Connections
+
+Once the motherboard is mounted, route and connect the large power cables first before the smaller front-panel and USB cables.
+
+#### Recommended order:
+
+1. **24-pin ATX motherboard cable**
+   - Route from the PSU area behind the motherboard tray
+   - Bring it through the **side grommet nearest the 24-pin motherboard socket**
+   - Plug it in now, then gently curve the visible section for a clean look
+
+2. **CPU EPS cables (2x 8-pin)**
+   - Route both cables through the **top-left cutout/grommet**
+   - Plug these in before the top edge becomes crowded with other cables
+   - These are usually the hardest cables to route cleanly, so do them early
+
+3. **SATA power cable for fan hub**
+   - Keep this in the rear chamber
+   - Route only as far as needed to reach the fan hub
+   - Tuck any unused SATA connectors into the rear compartment or PSU shroud area
+
+> 📍 **Routing Tip**: The EPS/CPU power cables are often the most awkward cables in the build. If they are not already staged behind the tray before motherboard installation, route them immediately after the board is mounted and before continuing.
+
 ## 4.4 Connect Front Panel Cables
 
 The X870E Hero includes a **Q-Connector** for easy front panel connections.
@@ -637,27 +821,62 @@ The X870E Hero includes a **Q-Connector** for easy front panel connections.
 - USB-C Header (20-pin)
 - HD Audio
 
+### Front Panel Cable Routing Order
+
+Connect these cables **before installing the GPU**. Access is easier now, and the final result will be much cleaner.
+
+#### Recommended connection order:
+
+1. **Front panel switch/LED cables**
+   - Connect these first using the ASUS **Q-Connector**
+   - Route them from the lower case area through the nearest lower cutout
+   - Keep them tight to the bottom edge of the motherboard
+
+2. **HD Audio**
+   - Route along the bottom-rear edge of the case
+   - Bring it to the motherboard's bottom-left audio header
+   - Keep it low and out of sight
+
+3. **USB 3.0 (19-pin)**
+   - Route through the nearest side grommet to the motherboard header
+   - This cable is thick and stiff, so avoid twisting it sharply
+   - Use a smooth bend and keep excess slack behind the tray
+
+4. **USB-C front panel header**
+   - Route through the nearest grommet with the straightest possible path
+   - Avoid over-bending the cable near the connector
+
+5. **ARGB strip cable** (if Phanteks NEON installed in Phase 3.5)
+   - Bring the staged ARGB cable from the rear chamber through the nearest grommet
+   - Connect to the **ADD_GEN2** header on the X870E Hero (5V ARGB, 3-pin)
+   - This is a small 3-pin connector — align the key notch carefully
+
+#### Before moving on, verify:
+
+- [ ] No front-panel cable is crossing the center of the board
+- [ ] HD Audio stays along the bottom edge
+- [ ] USB 3.0 and USB-C cables are routed through the nearest side openings
+- [ ] Extra slack is stored behind the motherboard tray, not in the main chamber
+
 ---
 
-# 💾 Phase 5: Storage Installation
+# 💾 Phase 5: Storage Verification
 
-## 5.1 Samsung 990 Pro 2TB NVMe Installation
+## 5.1 Samsung 990 Pro 2TB NVMe — Already Installed
 
-### Locate Primary M.2 Slot:
+> ✅ Your NVMe SSD was installed during Phase 2.4 (motherboard preparation outside the case). No action needed here.
 
-On the X870E Hero, the **primary M.2 slot** (M.2_1) is typically located under the integrated heatsink, directly below the CPU socket.
+If you skipped the NVMe installation earlier, you can still install it now, though access is tighter with the cooler and motherboard mounted:
 
-> 🔥 **GOTCHA - M.2 Heatsink**: The X870E Hero has M.2 heatsinks with thermal pads. Remove the heatsink, install the SSD, then reinstall the heatsink.
-
-### Step-by-Step M.2 Installation:
-
-1. Remove M.2 heatsink screws and lift heatsink
+1. Remove M.2_1 heatsink screws and lift heatsink
 2. **Remove protective film** from thermal pad if present
 3. Insert M.2 drive at **30-degree angle**
 4. Press SSD flat and secure with M.2 screw
 5. Reinstall heatsink
 
-> 🔥 **GOTCHA - Double Thermal Pad**: The 990 Pro has a built-in heatsink label. Leave it on - removing voids Samsung's warranty.
+### Additional Storage (Future Expansion)
+
+The X870E Hero has additional M.2 slots available for future NVMe drives. These can be added at any time without removing existing components.
 
 ---
 
@@ -667,6 +886,8 @@ On the X870E Hero, the **primary M.2 slot** (M.2_1) is typically located under t
 
 ### Modular Cable Selection:
 
+> ⚠️ **CRITICAL**: Modular PSU cables are **NOT interchangeable between brands or even between different models from the same brand**. The pinouts differ. Using cables from an old PSU can short-circuit and destroy components. **Only use the cables that came with your RM1000x (2024).**
+
 | Cable | Required | Quantity |
 |-------|----------|----------|
 | 24-pin ATX | ✅ | 1 |
@@ -674,6 +895,28 @@ On the X870E Hero, the **primary M.2 slot** (M.2_1) is typically located under t
 | 12V-2x6 (GPU) | ✅ | 1 |
 | SATA | ✅ | 1 (for fan hub) |
 | Peripheral/Molex | ❌ | Not needed |
+
+### PSU Cable Pre-Routing Plan
+
+Before installing the PSU into the case, connect only the cables you actually need:
+
+- 1x **24-pin ATX**
+- 2x **8-pin EPS/CPU**
+- 1x **12V-2x6 GPU cable**
+- 1x **SATA power cable** for fan hub
+
+Pre-connecting these cables to the PSU outside the case is easier than attaching them later in the rear chamber.
+
+### Recommended cable staging plan:
+
+| Cable | Stage To | Final Destination |
+|------|----------|-------------------|
+| **24-pin ATX** | Rear middle channel | Motherboard 24-pin socket |
+| **EPS/CPU (2x)** | Rear upper channel | Top-left motherboard power sockets |
+| **12V-2x6 GPU** | Rear lower/middle channel | GPU power connector |
+| **SATA power** | Rear lower channel | Fan hub |
+
+> 📍 **Routing Tip**: Do not fully cinch these cables down yet. Stage them loosely in their intended areas first, then do final tightening only after all components are installed and the system POSTs successfully.
 
 ### GPU Power Cable - CRITICAL:
 
@@ -700,6 +943,98 @@ The RTX 5070 Ti uses the **12V-2x6 connector** (also called 12VHPWR). The RM1000
 
 > 📍 **PRO TIP FOR FUTURE CABLE EXTENSIONS**: When routing your stock cables during the base build, **leave a little extra slack** behind the motherboard tray. This makes it much easier to add sleeved extensions later without re-routing everything.
 
+### Cable Routing by Rear Chamber Zone
+
+To keep the back side of the build organized, use three routing lanes behind the motherboard tray:
+
+| Rear Chamber Zone | Recommended Cables |
+|------------------|--------------------|
+| **Upper lane** | EPS/CPU power, top fan cables, rear fan cable |
+| **Middle lane** | 24-pin ATX, front fan cables, fan hub PWM lead, USB 3.0 / USB-C slack |
+| **Lower lane** | SATA power, HD Audio, bottom fan cables, staged GPU cable slack |
+
+### Practical routing rules:
+
+- Keep **large power cables** on the outer edge of the bundle where possible
+- Keep **small signal cables** separated enough that they can be removed later without undoing everything
+- Cross cables only when necessary, and do it in the rear chamber rather than the visible side
+- Leave enough slack near connectors to unplug components later without cutting all cable ties
+
+> 🔧 **Best Practice**: Use temporary velcro straps during assembly. Replace or tighten them neatly only after the first successful boot and cable verification.
+
+---
+
+# 🧭 Cable Routing Quick Reference
+
+Use this section as a fast reference during the build. The goal is to route each cable at the easiest possible stage, keep the visible chamber clean, and avoid having to redo work later.
+
+## Recommended Connection Strategy
+
+| Device Group | Motherboard Header / Power Source | Recommendation |
+|-------------|-----------------------------------|----------------|
+| **CPU cooler fans** | `CPU_FAN` + `CPU_OPT` | Keep CPU cooling on dedicated CPU headers |
+| **Case fan hub PWM control** | `CHA_FAN` header | Best for case airflow control and simpler troubleshooting |
+| **Fan hub power** | PSU SATA power | Use SATA, not the Molex barrel adapter |
+| **Motherboard main power** | 24-pin ATX | Route through nearest side grommet |
+| **CPU power** | 2x 8-pin EPS | Route through top-left cutout early |
+| **GPU power** | Native 12V-2x6 cable | Route late, after GPU is installed |
+| **Front panel** | Q-Connector / front-panel header | Connect before GPU install |
+| **HD Audio** | Bottom-left motherboard header | Route low along case edge |
+| **USB 3.0 / USB-C** | Internal USB headers | Route through nearest side cutouts |
+
+## Cable-by-Cable Routing Map
+
+| Cable | Route Path | Connect When | Special Notes |
+|------|------------|--------------|---------------|
+| **24-pin ATX** | PSU area → rear middle channel → nearest side grommet → motherboard socket | Right after motherboard installation | Use a smooth visible curve; store extra slack behind tray |
+| **EPS/CPU 8-pin #1/#2** | PSU area → rear upper channel → top-left cutout → motherboard | Immediately after motherboard installation | Route early; these are usually the hardest cables |
+| **CPU cooler fan cables** | Along cooler body/top edge → `CPU_FAN` / `CPU_OPT` | During cooler installation | Keep local to cooler area; hide behind heatsink where possible |
+| **Front fan cables** | Front mounts → nearest side pass-through → rear middle channel → fan hub | During fan installation | Bundle as one group |
+| **Bottom fan cables** | Bottom mounts → PSU shroud/lower cutout → rear lower channel → fan hub | During fan installation | Keep all slack out of main chamber |
+| **Top fan cables** | Top mounts → rear-top cutout → rear upper channel → fan hub | During fan installation | Route before upper area gets crowded |
+| **Rear fan cable** | Rear mount → nearest rear cutout/header path → fan hub or chassis header | During fan installation | Keep tight to rear edge |
+| **Fan hub PWM lead** | Fan hub → nearest cutout → `CHA_FAN` header | Before GPU installation | Avoid using `CPU_FAN` if cooler fans already occupy CPU headers |
+| **Fan hub SATA power** | PSU SATA cable → rear lower channel → fan hub | After PSU installation | Tuck unused SATA connectors behind tray or in PSU shroud |
+| **Front panel switch/LED** | Lower cutout → bottom edge of motherboard | Before GPU installation | Use Q-Connector first for easier installation |
+| **HD Audio** | Rear lower edge → bottom-left motherboard header | Before GPU installation | Keep low and hidden |
+| **USB 3.0 (19-pin)** | Rear middle channel → nearest side grommet → motherboard header | Before GPU installation | Thick cable; avoid sharp twisting |
+| **USB-C front panel** | Rear middle channel → nearest grommet → motherboard header | Before GPU installation | Avoid over-bending near connector |
+| **GPU 12V-2x6** | PSU area → rear lower/middle channel → nearest side grommet to GPU connector | After GPU installation | Fully seat connector first, then form a gentle bend |
+
+## Build Order for Cleanest Cable Routing
+
+Follow this sequence for the least rework:
+
+1. Install CPU, RAM, NVMe, and cooler on the motherboard outside the case (Phase 2)
+2. Install case fans and route their cables into the rear chamber (Phase 3)
+3. Mount RGB strips if purchased — easier with empty case (Phase 3.5)
+4. Mount the fan hub and connect case fan cables (Phase 3.4)
+5. Connect PSU cables to the PSU before PSU installation
+6. Install PSU and loosely stage 24-pin, EPS, SATA, and GPU power cables (Phase 6)
+7. Install motherboard (Phase 4)
+8. Connect **24-pin** and **EPS** power cables
+9. Connect front panel, HD Audio, USB 3.0, USB-C, ARGB strip cable, and fan hub PWM lead
+10. Install GPU (Phase 7)
+11. Connect GPU power cable carefully and verify full seating
+12. Do final rear-chamber bundling and visible-side cleanup (Phase 8)
+13. POST test the system before fully tightening all cable ties
+
+## Cable Routing Final Check
+
+Before closing the case, confirm:
+
+- [ ] EPS cables are fully seated and routed through the top-left area cleanly
+- [ ] 24-pin ATX cable has a clean curve with no unnecessary slack visible
+- [ ] Front-panel and HD Audio cables are low and hidden
+- [ ] USB 3.0 and USB-C cables are not sharply bent
+- [ ] Fan cables are grouped by location and not loose in airflow paths
+- [ ] Fan hub uses **SATA power**
+- [ ] CPU cooler fans are on **CPU_FAN / CPU_OPT**
+- [ ] Case fan hub PWM lead is on a **CHA_FAN** header
+- [ ] GPU 12V-2x6 cable is fully seated with **no visible gold contacts**
+- [ ] No cable is touching any fan blade
+- [ ] Rear chamber bundles are flat enough for the side panel to close easily
+
 ---
 
 # 🎮 Phase 7: GPU Installation
@@ -717,6 +1052,8 @@ The RTX 5070 Ti uses the **12V-2x6 connector** (also called 12VHPWR). The RM1000
 3. Align GPU and **insert straight down** with even pressure
 4. Press firmly until retention latch clicks closed
 5. Secure with screws through bracket into case
+
+> 💡 **X870E Hero Feature**: This motherboard has a **Q-Release button** near the PCIe x16 slot that makes it easy to release the GPU retention latch without reaching under the card. You won't need it during installation, but it's very handy for future GPU removal or upgrades.
 
 ## 7.3 Connect GPU Power
 
@@ -739,6 +1076,20 @@ The RTX 5070 Ti uses the **12V-2x6 connector** (also called 12VHPWR). The RM1000
     [GPU]                   [GPU]
 ```
 
+### GPU Cable Routing Note
+
+Route the native Corsair **12V-2x6** cable from the rear chamber through the **nearest side grommet aligned with the GPU power connector**.
+
+#### Important routing rules:
+
+- Bring the cable into the main chamber as close to the GPU connector as possible
+- Insert the connector **fully straight** before shaping the cable
+- Do **not** create a sharp bend immediately at the connector
+- Use a **gentle curve** back toward the cable-routing area behind the motherboard tray
+- Only secure the cable tightly after confirming the connector is fully seated and the side panel closes without pressing hard against the cable
+
+> ⚠️ **Safety Reminder**: The most important part of GPU cable routing is not aesthetics — it is maintaining full connector seating and avoiding side-load or tight bending stress at the plug.
+
 ## 7.4 Install GPU Support Bracket (ASUS ROG Herculx)
 
 1. Follow bracket instructions
@@ -759,11 +1110,13 @@ The RTX 5070 Ti uses the **12V-2x6 connector** (also called 12VHPWR). The RM1000
 - [ ] SATA power to fan hub
 
 ### Data/Signal Connections:
-- [ ] CPU_FAN header (from fan hub)
+- [ ] CPU_FAN / CPU_OPT headers connected (CPU cooler fans)
+- [ ] CHA_FAN header connected (fan hub PWM control)
 - [ ] Front panel (Q-connector installed)
 - [ ] USB 3.0 header
 - [ ] USB-C header
 - [ ] HD Audio header
+- [ ] ADD_GEN2 ARGB header (if RGB strips installed)
 
 ### Component Seating:
 - [ ] RAM fully clicked into slots A2 and B2
@@ -771,47 +1124,125 @@ The RTX 5070 Ti uses the **12V-2x6 connector** (also called 12VHPWR). The RM1000
 - [ ] M.2 SSD secured with screw
 - [ ] CPU cooler firmly mounted
 
-## 8.2 Install Side Panels and External Connections
+## 8.2 Rear Chamber Final Bundling Strategy
+
+Now that all major components are installed and connected, do the final cable cleanup behind the motherboard tray.
+
+### Tighten cables in this order:
+
+1. **Upper lane**
+   - EPS/CPU power cables
+   - Top fan cables
+   - Rear fan cable
+
+2. **Middle lane**
+   - 24-pin ATX
+   - Front fan bundle
+   - Fan hub PWM lead
+   - USB 3.0 / USB-C slack
+
+3. **Lower lane**
+   - SATA power to hub
+   - Bottom fan bundle
+   - HD Audio
+   - GPU cable slack
+
+### Final bundling rules:
+
+- Flatten bundles against the tray rather than stacking them outward
+- Do not over-tighten small signal cables
+- Keep removable components' cables accessible for future maintenance
+- If the rear side panel resists closing, redistribute thickness across multiple tie-down points instead of forcing the panel
+
+> 🔧 **Best Practice**: After the first successful POST and BIOS check, reopen the rear panel once more and do a final cosmetic pass on cable tension and alignment.
+
+## 8.3 Install Side Panels and External Connections
 
 1. Verify no cables preventing panel closure
 2. Install WiFi antennas on rear I/O
-3. Connect monitor to **GPU** (not motherboard)
+3. Connect monitor to **GPU** (recommended for full performance — your 9950X does have an iGPU, but you'll want display output through the discrete GPU for daily use)
 4. Connect peripherals and power cable
 
 ---
 
 # 🖥️ Phase 9: First Boot and BIOS Configuration
 
+## 9.0 Pre-Boot: BIOS Flashback (If System Won't POST)
+
+> ⚠️ **IMPORTANT**: The X870E Hero may ship with a BIOS version that doesn't fully support the Ryzen 9 9950X. If the system does not POST (CPU Q-LED stays red, no display output), you likely need a BIOS update via USB Flashback — **no working CPU required** for this process.
+
+### Prepare BIOS Flashback USB (Do This in Advance):
+
+1. On another computer, go to **https://rog.asus.com** → find Crosshair X870E Hero → Support → BIOS & Firmware
+2. Download the **latest BIOS** file
+3. Extract the ZIP file
+4. Rename the BIOS file to the exact name specified in the manual (typically **X870EH.CAP** — check your manual)
+5. Copy the renamed file to the **root** of a FAT32-formatted USB 2.0/3.0 flash drive
+6. Keep this USB drive ready during your first boot attempt
+
+### Performing BIOS Flashback (Only If POST Fails):
+
+1. Power off the system completely and switch the PSU off
+2. Insert the prepared USB drive into the **BIOS Flashback USB port** (labeled on rear I/O — usually a specific USB-A port marked "BIOS")
+3. Switch the PSU back ON (do **not** press the power button)
+4. Press and hold the **BIOS Flashback button** on the rear I/O for ~3 seconds until the LED starts blinking
+5. **Wait** — the LED will blink for 3-8 minutes while flashing. **Do not interrupt power or remove the USB**
+6. When the LED stops blinking and turns off, the flash is complete
+7. Remove the USB drive
+8. Power on the system normally — it should now POST
+
+> 🔥 **GOTCHA**: The BIOS Flashback port is a specific USB port on the rear I/O — it's usually the one closest to the Flashback button and may be labeled. Using the wrong USB port will not work.
+
 ## 9.1 First Power On
 
 1. Flip PSU switch to ON
 2. Press case power button
 3. Watch Q-LED indicators:
-   - **CPU** - Red: CPU issue
+   - **CPU** - Red: CPU issue (try BIOS Flashback above)
    - **DRAM** - Yellow: Memory issue
    - **VGA** - White: Graphics issue
-   - **BOOT** - Green: Boot device issue
+   - **BOOT** - Green: Boot device issue (normal if no OS installed yet)
 
 ## 9.2 BIOS First-Time Setup
 
 ### Critical Settings:
 
-**1. Update BIOS** (download latest from ASUS support)
+**1. Update BIOS** (even if system POSTed, update to latest for best compatibility)
+- Download latest from ASUS support onto USB drive
+- In BIOS: go to **Tool** → **ASUS EZ Flash 3** → select the BIOS file on USB → update
+- System will reboot after update
 
 **2. Enable EXPO for RAM**
 - Go to **Ai Tweaker** → **Ai Overclock Tuner** → **EXPO I**
 - This enables DDR5-6000 speeds
+
+> 🔥 **EXPO Troubleshooting**: If the system is unstable after enabling EXPO (random crashes, fails to POST, or BIOS resets), try these fallbacks in order:
+> 1. Try **EXPO II** profile instead of EXPO I
+> 2. Manually set RAM to **DDR5-5600** with EXPO timings
+> 3. Run at JEDEC defaults (4800 MHz) and update BIOS, then retry EXPO
+>
+> DDR5-6000 CL36 is aggressive — it doesn't always work on the first attempt, especially with early BIOS versions.
 
 **3. Verify Component Detection**
 - CPU: AMD Ryzen 9 9950X
 - Memory: 64GB @ 6000MHz
 - Storage: Samsung 990 Pro 2TB
 
-**4. Set Boot Order**
-- First: USB drive (for OS installation)
+**4. Enable Security Features for Windows 11**
+- Go to **Advanced** → **AMD fTPM Configuration** → Set **fTPM** to **Enabled** (usually enabled by default)
+- Go to **Boot** → **Secure Boot** → Set **Secure Boot** to **Enabled**
+- These are **required** for Windows 11 installation
+
+**5. Set Boot Order**
+- First: USB drive (for OS installation — your Ventoy drive will appear as a bootable USB device)
 - Second: Samsung 990 Pro
 
-**5. Configure Fan Profiles**
+**6. Set Primary Display Output**
+- Go to **Advanced** → **NB Configuration** (or **Graphics Configuration**)
+- Set **Primary Video Device** or **Initial Display Output** to **PCIe** (not IGFX)
+- This ensures the system always uses your RTX 5070 Ti for display output rather than the integrated GPU
+
+**7. Configure Fan Profiles**
 
 Recommended curve:
 | CPU Temp | Fan Speed |
@@ -826,22 +1257,46 @@ Recommended curve:
 
 # 💿 Phase 10: Operating System Installation
 
-## 10.1 Install Windows 11
+## 10.1 Boot from Ventoy USB
 
-1. Create installation USB with Windows 11 Media Creation Tool
-2. Boot from USB (press F8 for boot menu)
-3. Select **Custom: Install Windows only**
-4. Select Samsung 990 Pro drive
-5. Complete setup
+Your Ventoy multi-boot USB drive contains multiple Windows and Linux ISOs. This makes OS installation straightforward:
+
+1. Insert your **Ventoy USB drive**
+2. Boot from USB (press **F8** during POST for boot menu, or set USB first in BIOS boot order)
+3. The **Ventoy menu** will appear showing all available ISOs on the drive
+4. Select the desired OS ISO (e.g., Windows 11, your preferred Linux distro)
+
+### Installing Windows 11:
+
+1. Select the Windows 11 ISO from the Ventoy menu
+2. Proceed through Windows Setup
+3. Select **Custom: Install Windows only (advanced)**
+4. Select the Samsung 990 Pro drive (should show as ~1.86 TB unallocated space)
+5. Let Windows create its partitions automatically (GPT/UEFI is handled automatically when booting in UEFI mode)
+6. Complete the setup wizard
+
+> 💡 **Local Account Tip**: If you want a local account instead of a Microsoft account during Windows 11 setup, disconnect from the internet (unplug Ethernet / don't connect WiFi) during the OOBE. Alternatively, use the `OOBE\BYPASSNRO` command at the network screen (press Shift+F10 to open a command prompt, type `OOBE\BYPASSNRO`, then the system reboots with an "I don't have internet" option).
+
+### Installing Linux (Dual-Boot or Standalone):
+
+1. Select your preferred Linux ISO from the Ventoy menu
+2. Follow the distro's installer
+3. If dual-booting with Windows, **install Windows first**, then Linux — Linux installers handle dual-boot GRUB/bootloader configuration better than doing it the other way around
+
+> 📍 **Partition Note**: If dual-booting, you can either split the Samsung 990 Pro into partitions or add a second NVMe drive later for the second OS (the X870E Hero has additional M.2 slots).
 
 ## 10.2 Post-Installation
 
 ### Driver Installation Priority:
 
+> 💡 **Note**: Windows Update will automatically install basic functional drivers for most components. The manual installs below are for **optimal/latest** versions with full feature support.
+
 1. **Chipset Drivers** (AMD) - from AMD.com or ASUS support
-2. **GPU Drivers** (NVIDIA) - from nvidia.com/drivers
-3. **Motherboard Drivers** (ASUS) - Armoury Crate or individual drivers
-4. **Samsung NVMe Driver** (Optional) - Samsung Magician
+2. **GPU Drivers** (NVIDIA) - from nvidia.com/drivers or via the **NVIDIA App** (replaces GeForce Experience for driver management and optimization)
+3. **Motherboard Drivers** (ASUS) - Armoury Crate or individual drivers from ASUS support page
+4. **Samsung NVMe Driver** (Optional) - Samsung Magician for health monitoring and firmware updates
+
+> 📍 **Linux Users**: Most drivers are handled by the kernel. For NVIDIA GPU drivers, use your distro's proprietary driver installer (e.g., `ubuntu-drivers autoinstall` or the RPM Fusion NVIDIA package on Fedora). The open-source `nouveau` driver works for basic display but lacks performance features.
 
 ---
 
@@ -1111,10 +1566,14 @@ With your all-black chromax build, consider these color options:
 - [ ] GPU supported with ROG Herculx (no sag)
 - [ ] All panels close properly
 - [ ] WiFi antennas attached
+- [ ] All protective films removed (GPU, case panels, cooler base)
+- [ ] RGB strips mounted and ARGB cable connected (if installed)
 
 ## BIOS Configuration:
-- [ ] BIOS updated to latest version
+- [ ] BIOS updated to latest version (via EZ Flash or Flashback if needed)
 - [ ] EXPO enabled for RAM (6000MHz)
+- [ ] fTPM enabled (required for Windows 11)
+- [ ] Secure Boot enabled (required for Windows 11)
 - [ ] Boot order set correctly
 - [ ] Fan profiles configured
 
@@ -1133,6 +1592,30 @@ With your all-black chromax build, consider these color options:
 ## Optional Aesthetics:
 - [ ] Cable extensions installed (when they arrive)
 - [ ] RGB strips installed and synced (if purchased)
+
+---
+
+# 🔧 Ongoing Maintenance
+
+## Regular Maintenance Schedule
+
+| Task | Frequency | Notes |
+|------|-----------|-------|
+| **Clean dust filters** | Every 1-3 months | Remove front, bottom, and top filters; rinse or vacuum |
+| **Inspect interior for dust** | Every 3-6 months | Use compressed air or electric duster (e.g., XPOWER A-2) |
+| **Check fan operation** | Every 6 months | Verify all fans spin freely, no bearing noise |
+| **Monitor temperatures** | Monthly spot-check | Compare to your initial stress test baselines |
+| **Re-paste CPU cooler** | Every 2-3 years | Or sooner if temps rise 5-10°C above original baselines |
+| **Update GPU drivers** | As needed | Keep current for new games; skip if system is stable |
+| **Update BIOS** | Only when needed | Don't chase every update — only for stability fixes or new features you need |
+| **Check storage health** | Every 6 months | Use CrystalDiskInfo or Samsung Magician — watch for reallocated sectors |
+
+## Tips for Long-Term Reliability
+
+- **Record your baseline temps** after stress testing — write them down. This makes it easy to detect gradual cooling degradation.
+- **Keep a stable driver backup** — if you find a GPU driver version that works perfectly, note the version number before updating.
+- **Dust filters are your first defense** — if you notice temps rising, check filters before assuming paste or fan failure.
+- **Don't smoke or have candles near the PC** — particulate buildup from smoke is much worse than normal dust and can coat components in residue that's hard to clean.
 
 ---
 
