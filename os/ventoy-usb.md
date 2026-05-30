@@ -26,7 +26,7 @@ Section 2 reflects the contents currently present on the Ventoy USB. Items not y
     - **Audio**
     - **Chipset**
     - **LAN**
-    - **Wifi-Bluetoth**
+    - **Wifi-Bluetooth**
   - **Storage**
   - NOTES:
     - This area is for offline driver packages needed after Windows installation or when network access is not yet available.
@@ -105,21 +105,19 @@ Section 2 reflects the contents currently present on the Ventoy USB. Items not y
         - NOTES:
           - One of the first Windows drivers to install after OS setup.
     - **LAN**
-      - *latest ASUS/ROG LAN driver package for X870E Hero* (RECOMMENDED)
+      - *latest ASUS/ROG LAN driver package for X870E Hero* (REQUIRED)
         - Source:
           - ASUS support page for the ROG Crosshair X870E Hero motherboard.
         - Destination:
           - `Drivers/Motherboard/LAN/`
         - NOTES:
           - Useful if Windows does not automatically bring networking up cleanly.
-    - **Wifi-Bluetoth**
+    - **Wifi-Bluetooth**
       - *latest ASUS/ROG Wi-Fi/Bluetooth driver package for X870E Hero* (RECOMMENDED)
         - Source:
           - ASUS support page for the ROG Crosshair X870E Hero motherboard.
         - Destination:
-          - `Drivers/Motherboard/Wifi-Bluetoth/`
-        - NOTES:
-          - Matches current folder spelling; rename folder later if you standardize it to `Wifi-Bluetooth`.
+          - `Drivers/Motherboard/Wifi-Bluetooth/`
   - **Storage**
     - *Samsung Magician installer* (RECOMMENDED)
       - Source:
@@ -170,7 +168,7 @@ Section 2 reflects the contents currently present on the Ventoy USB. Items not y
         - Destination:
           - `Utilities/Windows/Cinebench/`
     - **CrystalDiskInfo**
-      - *latest CrystalDiskInfo package* (RECOMMENDED)
+      - *latest CrystalDiskInfo package* (REQUIRED)
         - Source:
           - Crystal Dew World download page.
         - Destination:
@@ -188,7 +186,7 @@ Section 2 reflects the contents currently present on the Ventoy USB. Items not y
         - Destination:
           - `Utilities/Windows/GPU-Z/`
     - **HWiNFO64**
-      - *latest HWiNFO64 package* (RECOMMENDED)
+      - *latest HWiNFO64 package* (REQUIRED)
         - Source:
           - HWiNFO official download page.
         - Destination:
