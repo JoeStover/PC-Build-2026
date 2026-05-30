@@ -16,10 +16,18 @@ Section 2 reflects the contents currently present on the Ventoy USB. Items not y
   - **Build-Notes**
   - **License-Keys**
   - **Manuals**
+    - **Motherboard**
+    - **GPU**
+    - **PSU**
+    - **Case**
+    - **Cooler**
+    - **Storage**
+    - **Monitor**
   - **Network-Info**
   - NOTES:
     - Avoid storing plaintext secrets here when possible.
     - If `License-Keys` or `Network-Info` contain sensitive material, prefer encrypted files or a password manager reference instead of raw credentials.
+    - `Docs/Manuals` is reserved for hardware manuals only; software or tool documentation should live with the related artifact.
 - **Drivers**
   - **GPU**
   - **Motherboard**
@@ -47,6 +55,7 @@ Section 2 reflects the contents currently present on the Ventoy USB. Items not y
   - NOTES:
     - This section reflects the current bootable media already present on the Ventoy USB.
     - Linux media is split into full/install-focused images and live-focused images for easier scanning.
+    - Supporting documentation for an ISO should be nested under the related ISO entry when present.
 - **Utilities**
   - **Firmware-Tools**
   - **Windows**
@@ -60,6 +69,7 @@ Section 2 reflects the contents currently present on the Ventoy USB. Items not y
   - NOTES:
     - These are post-boot utilities used for validation, monitoring, benchmarking, and stress testing.
     - The utility names above are folders intended to hold the downloaded packages for each tool.
+    - Supporting documentation for utilities or firmware tools should be nested under the related primary file when present.
 
 ## 3. Downloads Still Needed
 
@@ -74,11 +84,59 @@ Section 2 reflects the contents currently present on the Ventoy USB. Items not y
       - NOTES:
         - Keep the newest intended-to-use BIOS here.
         - When replaced later, move older known-good BIOS files into `BIOS/Archive/`.
+      - Supporting:
+        - *ASUS BIOS flash instructions PDF or saved guide* (RECOMMENDED)
+          - Source:
+            - ASUS support resources for the ROG Crosshair X870E Hero motherboard.
+          - Destination:
+            - `BIOS/Current/`
 - **Checksums**
 - **Docs**
   - **Build-Notes**
   - **License-Keys**
   - **Manuals**
+    - **Motherboard**
+      - *motherboard manual PDF* (REQUIRED)
+        - Source:
+          - ASUS support page for the ROG Crosshair X870E Hero motherboard.
+        - Destination:
+          - `Docs/Manuals/Motherboard/`
+    - **GPU**
+      - *GPU manual PDF* (RECOMMENDED)
+        - Source:
+          - Official support page for the installed graphics card vendor/model.
+        - Destination:
+          - `Docs/Manuals/GPU/`
+    - **PSU**
+      - *PSU manual PDF* (RECOMMENDED)
+        - Source:
+          - Official support page for the power supply model.
+        - Destination:
+          - `Docs/Manuals/PSU/`
+    - **Case**
+      - *case manual PDF* (RECOMMENDED)
+        - Source:
+          - Official support page for the case model.
+        - Destination:
+          - `Docs/Manuals/Case/`
+    - **Cooler**
+      - *cooler or AIO manual PDF* (RECOMMENDED)
+        - Source:
+          - Official support page for the installed cooler or AIO model.
+        - Destination:
+          - `Docs/Manuals/Cooler/`
+    - **Storage**
+      - *SSD or NVMe manual PDF* (OPTIONAL)
+        - Source:
+          - Official support page for the installed storage device.
+        - Destination:
+          - `Docs/Manuals/Storage/`
+    - **Monitor**
+      - *monitor manual PDF* (OPTIONAL)
+        - Source:
+          - Official support page for the display model.
+        - Destination:
+          - `Docs/Manuals/Monitor/`
   - **Network-Info**
 - **Drivers**
   - **GPU**
@@ -133,6 +191,13 @@ Section 2 reflects the contents currently present on the Ventoy USB. Items not y
         - `Drivers/Storage/`
 - **ISOS**
   - **Diagnostic**
+    - *MemTest86 guide PDF* (RECOMMENDED)
+      - Source:
+        - MemTest86 documentation or user guide page.
+      - Destination:
+        - `ISOS/Diagnostic/`
+      - NOTES:
+        - Software/tool documentation should live with the related utility or ISO rather than in `Docs/Manuals`.
   - **Linux-Full**
     - *latest Bazzite desktop ISO* (REQUIRED)
       - Source:
@@ -150,6 +215,16 @@ Section 2 reflects the contents currently present on the Ventoy USB. Items not y
         - Useful as a fallback or comparison distro if you later move on from Bazzite.
   - **Linux-Live**
   - **Recovery**
+    - *Clonezilla documentation PDF* (RECOMMENDED)
+      - Source:
+        - Clonezilla documentation page.
+      - Destination:
+        - `ISOS/Recovery/`
+    - *SystemRescue documentation PDF* (OPTIONAL)
+      - Source:
+        - SystemRescue documentation page.
+      - Destination:
+        - `ISOS/Recovery/`
   - **Windows**
 - **Utilities**
   - **Firmware-Tools**
@@ -160,6 +235,11 @@ Section 2 reflects the contents currently present on the Ventoy USB. Items not y
         - `Utilities/Firmware-Tools/`
       - NOTES:
         - Only keep this if it is actually useful for your BIOS Flashback workflow.
+    - *Ventoy quick reference or documentation PDF* (RECOMMENDED)
+      - Source:
+        - Ventoy official documentation page.
+      - Destination:
+        - `Utilities/Firmware-Tools/`
   - **Windows**
     - **Cinebench**
       - *latest Cinebench package* (RECOMMENDED)
@@ -206,9 +286,10 @@ Section 2 reflects the contents currently present on the Ventoy USB. Items not y
 
 ## 4. Maintenance Notes
 
-- Verify checksums for newly downloaded ISOs, firmware files, drivers, and utilities whenever possible.
+- Verify checksums for newly downloaded ISOs, firmware files, drivers, utilities, and manuals whenever possible.
 - Keep the latest known-good BIOS files in **BIOS** → **Current** and move superseded versions to **BIOS** → **Archive**.
 - Review the USB contents periodically and remove stale or duplicate files that are no longer useful.
 - Prefer stable, known-good install and recovery media over collecting too many overlapping tools.
+- Keep hardware manuals in **Docs** → **Manuals** and store software/tool documentation with the related artifact.
 - After major changes to the USB, test that Ventoy still boots and that newly added ISOs appear correctly in the menu.
 - Keep sensitive information off the USB when possible, or store it in encrypted form.
