@@ -33,10 +33,11 @@ Section 2 reflects the contents currently present on the Ventoy USB. Items not y
 - **ISOS**
   - **Diagnostic**
     - *memtest86-iso-iso*
-  - **Linux**
+  - **Linux-Full**
+    - *ubuntu-26.04-desktop-amd64.iso*
+  - **Linux-Live**
     - *kali-linux-2026.1-live-amd64.iso*
     - *kali-linux-2026.1-live-everything-amd64.iso*
-    - *ubuntu-26.04-desktop-amd64.iso*
   - **Recovery**
     - *clonezilla-live-3.3.1-35-amd64.iso*
     - *gparted-live-1.8.1-3-amd64.iso*
@@ -45,23 +46,25 @@ Section 2 reflects the contents currently present on the Ventoy USB. Items not y
     - *Win11_25H2_English_x64_v2.iso*
   - NOTES:
     - This section reflects the current bootable media already present on the Ventoy USB.
-    - Linux entries currently include live and install-style media together because that is how the USB is currently organized.
+    - Linux media is split into full/install-focused images and live-focused images for easier scanning.
 - **Utilities**
   - **Firmware-Tools**
   - **Windows**
-    - *Cinebench*
-    - *CrystalDiskInfo*
-    - *CrystalDiskMark*
-    - *GPU-Z*
-    - *HWiNFO64*
-    - *OCCT*
-    - *Prime95*
+    - **Cinebench**
+    - **CrystalDiskInfo**
+    - **CrystalDiskMark**
+    - **GPU-Z**
+    - **HWiNFO64**
+    - **OCCT**
+    - **Prime95**
   - NOTES:
     - These are post-boot utilities used for validation, monitoring, benchmarking, and stress testing.
+    - The utility names above are folders intended to hold the downloaded packages for each tool.
 
 ## 3. Downloads Still Needed
 
 - **BIOS**
+  - **Archive**
   - **Current**
     - *latest ASUS ROG CROSSHAIR X870E HERO BIOS file* (REQUIRED)
       - Source:
@@ -71,6 +74,12 @@ Section 2 reflects the contents currently present on the Ventoy USB. Items not y
       - NOTES:
         - Keep the newest intended-to-use BIOS here.
         - When replaced later, move older known-good BIOS files into `BIOS/Archive/`.
+- **Checksums**
+- **Docs**
+  - **Build-Notes**
+  - **License-Keys**
+  - **Manuals**
+  - **Network-Info**
 - **Drivers**
   - **GPU**
     - *latest NVIDIA GeForce driver package for RTX 5070 Ti* (REQUIRED)
@@ -125,21 +134,25 @@ Section 2 reflects the contents currently present on the Ventoy USB. Items not y
       - Destination:
         - `Drivers/Storage/`
 - **ISOS**
-  - **Linux**
+  - **Diagnostic**
+  - **Linux-Full**
     - *latest Bazzite desktop ISO* (REQUIRED)
       - Source:
         - Bazzite official download page.
       - Destination:
-        - `ISOS/Linux/`
+        - `ISOS/Linux-Full/`
       - NOTES:
         - Primary Linux target for the new desktop build.
     - *latest Fedora Workstation ISO* (RECOMMENDED)
       - Source:
         - Fedora Workstation official download page.
       - Destination:
-        - `ISOS/Linux/`
+        - `ISOS/Linux-Full/`
       - NOTES:
         - Useful as a fallback or comparison distro if you later move on from Bazzite.
+  - **Linux-Live**
+  - **Recovery**
+  - **Windows**
 - **Utilities**
   - **Firmware-Tools**
     - *ASUS BIOS renaming or flash-prep utility, if needed* (OPTIONAL)
@@ -149,6 +162,49 @@ Section 2 reflects the contents currently present on the Ventoy USB. Items not y
         - `Utilities/Firmware-Tools/`
       - NOTES:
         - Only keep this if it is actually useful for your BIOS Flashback workflow.
+  - **Windows**
+    - **Cinebench**
+      - *latest Cinebench package* (RECOMMENDED)
+        - Source:
+          - Maxon download page.
+        - Destination:
+          - `Utilities/Windows/Cinebench/`
+    - **CrystalDiskInfo**
+      - *latest CrystalDiskInfo package* (RECOMMENDED)
+        - Source:
+          - Crystal Dew World download page.
+        - Destination:
+          - `Utilities/Windows/CrystalDiskInfo/`
+    - **CrystalDiskMark**
+      - *latest CrystalDiskMark package* (RECOMMENDED)
+        - Source:
+          - Crystal Dew World download page.
+        - Destination:
+          - `Utilities/Windows/CrystalDiskMark/`
+    - **GPU-Z**
+      - *latest GPU-Z package* (RECOMMENDED)
+        - Source:
+          - TechPowerUp download page.
+        - Destination:
+          - `Utilities/Windows/GPU-Z/`
+    - **HWiNFO64**
+      - *latest HWiNFO64 package* (RECOMMENDED)
+        - Source:
+          - HWiNFO official download page.
+        - Destination:
+          - `Utilities/Windows/HWiNFO64/`
+    - **OCCT**
+      - *latest OCCT package* (RECOMMENDED)
+        - Source:
+          - OCBASE / OCCT official download page.
+        - Destination:
+          - `Utilities/Windows/OCCT/`
+    - **Prime95**
+      - *latest Prime95 package* (RECOMMENDED)
+        - Source:
+          - Mersenne / Prime95 official download page.
+        - Destination:
+          - `Utilities/Windows/Prime95/`
 
 ## 4. Maintenance Notes
 
