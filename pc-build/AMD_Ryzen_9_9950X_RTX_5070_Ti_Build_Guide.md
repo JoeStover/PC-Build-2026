@@ -127,7 +127,7 @@ Use this as your live build flow. Detailed instructions and inline STOP checkpoi
 - GPU seating + 12V-2x6 power seating verified before first full power-on
 - Full pre-boot and first successful boot checks complete before final panel closure
 
-> 🧠 **Build Discipline Rule**: If anything seems wrong, stop immediately and return to the most recent STOP checkpoint. Then re-verify that checkpoint checklist first, and backtrack only as far as needed to correct the issue. Do not continue on assumptions.
+> 🧠 **Build Discipline Rule**: If anything seems wrong, stop immediately and return to the most recent STOP checkpoint. Then re-verify that checkpoint checklist first, and backtrack only as far as needed to correct the issue. Verify each item with visual inspection or direct testing before proceeding.
 
 ---
 
