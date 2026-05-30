@@ -109,7 +109,7 @@ Use this as your live build flow. Detailed instructions and inline STOP checkpoi
 ## High-Level Build Sequence
 
 1. Prepare workspace, tools, and components
-2. Prepare motherboard outside the case (CPU, RAM, NVMe, cooler, cooler fans, optional bench test)
+2. Prepare motherboard outside the case (CPU, RAM, NVMe, cooler with fans, optional bench test)
 3. Prepare the case (fans, cable routing, fan hub, RGB strips if used)
 4. Install PSU and stage major cables
 5. Install motherboard into case and connect main power + internal headers
@@ -121,11 +121,11 @@ Use this as your live build flow. Detailed instructions and inline STOP checkpoi
 
 ## Major STOP Checkpoints
 
-- CPU + RAM + NVMe + cooler installed and verified before moving into the case
+- CPU installation, RAM seating, NVMe mounting, and cooler setup verified before moving into the case
 - Bench test completed (if performed) before committing to full case assembly
 - Fan hub + motherboard main power + front-panel/internal headers verified before GPU blocks access
 - GPU seating + 12V-2x6 power seating verified before first full power-on
-- Full pre-boot and post-POST checks complete before final panel closure
+- Full pre-boot and first successful boot checks complete before final panel closure
 
 > 🧠 **Build Discipline Rule**: If anything seems wrong, stop immediately and return to the most recent STOP checkpoint. Do not continue on assumptions.
 
