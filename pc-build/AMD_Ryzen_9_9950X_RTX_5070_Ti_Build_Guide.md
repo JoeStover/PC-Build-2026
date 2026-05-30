@@ -7,22 +7,23 @@
 
 1. [Build Components](#build-components)
 2. [Additional Items to Purchase](#-additional-items-to-purchase)
-3. [Pre-Build Preparation](#-phase-1-pre-build-preparation)
-4. [Motherboard Preparation (Outside Case)](#-phase-2-motherboard-preparation-outside-case)
-5. [Case Preparation and Fan Installation](#-phase-3-case-preparation-and-fan-installation)
-6. [Motherboard Installation](#-phase-4-motherboard-installation)
-7. [Storage Verification](#-phase-5-storage-verification)
-8. [Power Supply Installation and Cable Routing](#-phase-6-power-supply-installation-and-cable-routing)
-9. [Cable Routing Quick Reference](#-cable-routing-quick-reference)
-10. [GPU Installation](#-phase-7-gpu-installation)
-11. [Final Cable Management and Cleanup](#-phase-8-final-cable-management-and-cleanup)
-12. [First Boot and BIOS Configuration](#-phase-9-first-boot-and-bios-configuration)
-13. [Operating System Installation](#-phase-10-operating-system-installation)
-14. [Comprehensive Stress Testing Guide](#-phase-11-comprehensive-stress-testing-guide)
-15. [Troubleshooting Common Issues](#-troubleshooting-common-issues)
-16. [Optional Aesthetic Upgrades - Cable Extensions](#-optional-aesthetic-upgrades---cable-extensions)
-17. [Optional Aesthetic Upgrades - RGB Lighting](#-optional-aesthetic-upgrades---rgb-lighting)
-18. [Ongoing Maintenance](#-ongoing-maintenance)
+3. [Build Day Fast Path](#-build-day-fast-path)
+4. [Pre-Build Preparation](#-phase-1-pre-build-preparation)
+5. [Motherboard Preparation (Outside Case)](#-phase-2-motherboard-preparation-outside-case)
+6. [Case Preparation and Fan Installation](#-phase-3-case-preparation-and-fan-installation)
+7. [Power Supply Installation and Cable Routing](#-phase-4-power-supply-installation-and-cable-routing)
+8. [Motherboard Installation](#-phase-5-motherboard-installation)
+9. [Storage Verification](#-phase-6-storage-verification)
+10. [Cable Routing Quick Reference](#-cable-routing-quick-reference)
+11. [GPU Installation](#-phase-7-gpu-installation)
+12. [Final Cable Management and Cleanup](#-phase-8-final-cable-management-and-cleanup)
+13. [First Boot and BIOS Configuration](#-phase-9-first-boot-and-bios-configuration)
+14. [Operating System Installation](#-phase-10-operating-system-installation)
+15. [Comprehensive Stress Testing Guide](#-phase-11-comprehensive-stress-testing-guide)
+16. [Troubleshooting Common Issues](#-troubleshooting-common-issues)
+17. [Optional Aesthetic Upgrades - Cable Extensions](#-optional-aesthetic-upgrades---cable-extensions)
+18. [Optional Aesthetic Upgrades - RGB Lighting](#-optional-aesthetic-upgrades---rgb-lighting)
+19. [Ongoing Maintenance](#-ongoing-maintenance)
 
 ---
 
@@ -98,6 +99,35 @@ Since you're using an ASUS ROG STRIX RTX 5070 Ti and ASUS ROG Crosshair X870E He
 | **Price** | ~$30-40 |
 
 This matches your ROG theme (motherboard + GPU) and provides the same functionality as third-party options.
+
+---
+
+# 🚀 Build Day Fast Path
+
+Use this as your live build flow. Detailed instructions and inline STOP checkpoints are in the phases below.
+
+## High-Level Build Sequence
+
+1. Prepare workspace, tools, and components
+2. Prepare motherboard outside the case (CPU, RAM, NVMe, cooler, CPU_FAN/CPU_OPT fan connections, optional bench test)
+3. Prepare the case (fans, cable routing, fan hub, RGB strips if used)
+4. Install PSU and stage major cables
+5. Install motherboard into case and connect main power + internal headers
+6. Install GPU and support bracket
+7. Final cable cleanup
+8. First boot and BIOS
+9. Install operating system
+10. Stress test and validate
+
+## Major STOP Checkpoints
+
+- CPU installation, RAM seating, NVMe mounting, and cooler setup verified before moving into the case
+- Bench test completed (if performed) before committing to full case assembly
+- Fan hub + motherboard main power + front-panel/internal headers verified before GPU blocks access
+- GPU seating + 12V-2x6 power seating verified before first full power-on
+- Full pre-boot and first successful boot checks complete before final panel closure
+
+> 🧠 **Build Discipline Rule**: If anything seems wrong, stop immediately and return to the most recent STOP checkpoint. Then re-verify that checkpoint checklist first, and backtrack only as far as needed to correct the issue. Verify each item with visual inspection or direct testing before proceeding.
 
 ---
 
@@ -297,6 +327,14 @@ Multiple components ship with protective films that must be removed. Keep an eye
 - [ ] Retention arm is fully locked
 - [ ] Plastic socket cover removed and saved
 
+> 🛑 **STOP — Verify CPU Installation Before Continuing**
+> - [ ] CPU is seated flat with correct triangle alignment
+> - [ ] Retention arm is fully locked under the hook
+> - [ ] Socket cover popped off and is saved for warranty/service use
+> - [ ] No socket pin contact or handling mistakes occurred
+> 
+> If any item above is not true, do not continue yet.
+
 ---
 
 ## 2.3 RAM Installation (G.Skill Trident Z5 RGB 64GB DDR5-6000)
@@ -355,6 +393,14 @@ Install the second RAM stick in slot B2 using the same procedure.
 - [ ] RAM sits level (no tilting)
 - [ ] Gold contacts are not visible (fully inserted)
 
+> 🛑 **STOP — Verify RAM Installation Before Continuing**
+> - [ ] Both DIMMs are installed in A2 and B2
+> - [ ] Latches are fully engaged on each DIMM slot
+> - [ ] RAM sits level with no tilt
+> - [ ] No gold contacts are visible
+> 
+> If any item above is not true, do not continue yet.
+
 ### DDR5 Specific Notes:
 
 > 🔥 **DDR5 GOTCHA**: DDR5 modules have an on-board PMIC (Power Management IC). Each stick negotiates voltage independently. The G.Skill Trident Z5 kit is validated together, so always install them as a pair from the same kit.
@@ -384,6 +430,14 @@ Install the second RAM stick in slot B2 using the same procedure.
 - [ ] SSD is fully flat and secured with screw
 - [ ] Heatsink thermal pad film removed
 - [ ] Heatsink re-installed over SSD
+
+> 🛑 **STOP — Verify NVMe Installation Before Continuing**
+> - [ ] Drive is in M.2_1 and fully flat on the standoff
+> - [ ] M.2 screw is installed and snug
+> - [ ] Thermal pad protective film was removed
+> - [ ] Heatsink is reinstalled and secured
+> 
+> If any item above is not true, do not continue yet.
 
 ---
 
@@ -493,6 +547,15 @@ Before the motherboard goes into the case, do a quick cable orientation check on
 - [ ] Fan cables connected to CPU_FAN/CPU_OPT
 - [ ] No thermal paste squeeze-out visible on sides
 
+> 🛑 **STOP — Verify CPU Cooler Installation Before Continuing**
+> - [ ] Cooler is firmly mounted with even pressure
+> - [ ] Thermal paste was applied before mounting
+> - [ ] Both cooler fans are oriented to push air toward rear exhaust
+> - [ ] Cooler fans are on CPU_FAN and CPU_OPT (not the hub)
+> - [ ] No fan cable can contact fan blades
+> 
+> If any item above is not true, do not continue yet.
+
 ---
 
 ## 2.6 Pre-Case Installation Test (Optional but Recommended)
@@ -531,6 +594,14 @@ Before installing everything in the case, a quick test ensures components work:
 4. Proceed to case installation
 
 > ⚠️ If system doesn't POST, stop here and troubleshoot before case installation. Check RAM seating first (most common issue). If no Q-LED indicators light and no fans spin, verify EPS and ATX power cables are fully seated. See the [Troubleshooting Common Issues](#-troubleshooting-common-issues) section for detailed guidance.
+
+> 🛑 **STOP — Verify Bench Test Result Before Continuing**
+> - [ ] Bench test was completed or intentionally skipped
+> - [ ] If completed, system reached POST successfully
+> - [ ] PSU was switched off and temporary cables were removed cleanly
+> - [ ] Any POST issue was resolved before moving into the case
+> 
+> If any item above is not true, do not continue yet.
 
 ---
 
@@ -722,9 +793,17 @@ As you connect fan cables to the hub, organize them into these routing zones beh
 
 Use velcro ties or case tie-down points to keep these bundles flat. Do **not** fully tighten everything yet — leave the bundles adjustable until the full system POSTs successfully.
 
+> 🛑 **STOP — Verify Fan Hub Setup Before Continuing**
+> - [ ] Fan hub PWM lead is connected to a CHA_FAN header
+> - [ ] Fan hub receives SATA power from the PSU
+> - [ ] CPU cooler fans remain on CPU_FAN/CPU_OPT (not on hub)
+> - [ ] Fan cable bundles are grouped and clear of blade paths
+> 
+> If any item above is not true, do not continue yet.
+
 ## 3.5 Install RGB Strips (Phanteks NEON Digital RGB — If Purchased)
 
-> 📍 **Why install RGB strips now?** Mounting the strips is significantly easier with an empty case — full access to all mounting surfaces, no motherboard or GPU to work around. The ARGB cable will be connected to the motherboard header later in Phase 4.
+> 📍 **Why install RGB strips now?** Mounting the strips is significantly easier with an empty case — full access to all mounting surfaces, no motherboard or GPU to work around. The ARGB cable will be connected to the motherboard header later in Phase 5.
 
 ### Step-by-Step RGB Strip Installation:
 
@@ -746,16 +825,86 @@ Recommended placement for the Meshify 2 XL:
 **Step 3: Route ARGB Cable**
 
 1. Route the strip's ARGB cable toward the **nearest cable pass-through** behind the motherboard tray
-2. Leave enough slack to reach the **ADD_GEN2** header on the motherboard (5V ARGB, 3-pin) — you'll connect this in Phase 4 after the motherboard is installed
+2. Leave enough slack to reach the **ADD_GEN2** header on the motherboard (5V ARGB, 3-pin) — you'll connect this in Phase 5 after the motherboard is installed
 3. Bundle the ARGB cable with the fan cable group in the same zone
 
 > 📍 **Do NOT connect to motherboard yet** — the motherboard isn't installed. Just stage the cable in the rear chamber for now.
 
 ---
 
-# ⚙️ Phase 4: Motherboard Installation
+# ⚡ Phase 4: Power Supply Installation and Cable Routing
 
-## 4.1 Verify Standoffs
+## 4.1 Corsair RM1000x (2024) Preparation
+
+### Modular Cable Selection:
+
+> ⚠️ **CRITICAL**: Modular PSU cables are **NOT interchangeable between brands or even between different models from the same brand**. The pinouts differ. Using cables from an old PSU can short-circuit and destroy components. **Only use the cables that came with your RM1000x (2024).**
+
+| Cable | Required | Quantity |
+|-------|----------|----------|
+| 24-pin ATX | ✅ | 1 |
+| 8-pin EPS (CPU) | ✅ | 2 |
+| 12V-2x6 (GPU) | ✅ | 1 |
+| SATA | ✅ | 1 (for fan hub) |
+| Peripheral/Molex | ❌ | Not needed |
+
+### PSU Cable Pre-Routing Plan
+
+Before installing the PSU into the case, connect only the cables you actually need:
+
+- 1x **24-pin ATX**
+- 2x **8-pin EPS/CPU**
+- 1x **12V-2x6 GPU cable**
+- 1x **SATA power cable** for fan hub
+
+Pre-connecting these cables to the PSU outside the case is easier than attaching them later in the rear chamber.
+
+### Recommended cable staging plan:
+
+| Cable | Stage To | Final Destination |
+|------|----------|-------------------|
+| **24-pin ATX** | Rear middle channel | Motherboard 24-pin socket |
+| **EPS/CPU (2x)** | Rear upper channel | Top-left motherboard power sockets |
+| **12V-2x6 GPU** | Rear lower/middle channel | GPU power connector |
+| **SATA power** | Rear lower channel | Fan hub |
+
+> 📍 **Routing Tip**: Do not fully cinch these cables down yet. Stage them loosely in their intended areas first, then do final tightening only after all components are installed and the system POSTs successfully.
+
+### GPU Power Cable - CRITICAL:
+
+> 🔥 **MAJOR GOTCHA - RTX 5070 Ti Power**
+
+The RTX 5070 Ti uses the **12V-2x6 connector** (also called 12VHPWR). The RM1000x (2024) includes a **native 12V-2x6 cable**.
+
+> ⚠️ **12VHPWR/12V-2x6 Safety**: These connectors must be **fully inserted**. Partial insertion causes resistance, heat, and potential fire. The connector should click securely. **No visible gold contacts when properly seated.**
+
+## 4.2 Install PSU in Case
+
+**Fan Orientation**: Fan facing **DOWN** toward bottom filter (recommended).
+
+## 4.3 Cable Routing Strategy
+
+### Practical routing rules:
+
+1. **Route cables behind the motherboard tray** whenever possible
+2. **Plan routes before plugging in** - dry-fit cables first
+3. **Use case cable channels and tie-down points**
+4. **Bundle cables going the same direction**
+5. **Leave service loops** - slight slack for future maintenance
+6. **Don't route cables over airflow paths**
+7. Keep **large power cables** on the outer edge of bundles
+8. Keep **small signal cables** separable for future removal
+9. Cross cables only in the rear chamber, not on the visible side
+
+> 📍 **PRO TIP FOR FUTURE CABLE EXTENSIONS**: When routing your stock cables during the base build, **leave a little extra slack** behind the motherboard tray. This makes it much easier to add sleeved extensions later without re-routing everything.
+
+> 🔧 **Best Practice**: Use temporary velcro straps during assembly. Replace or tighten them neatly only after the first successful boot and cable verification.
+
+---
+
+# ⚙️ Phase 5: Motherboard Installation
+
+## 5.1 Verify Standoffs
 
 > ⚠️ **CRITICAL**: Incorrect standoffs can short-circuit your motherboard, destroying it instantly.
 
@@ -764,11 +913,11 @@ Recommended placement for the Meshify 2 XL:
 3. **Verify** standoffs match motherboard mounting holes (9 for ATX)
 4. **Remove any extra standoffs** that don't align with motherboard holes
 
-## 4.2 I/O Shield Installation
+## 5.2 I/O Shield Installation
 
 > 🔥 **GOTCHA - X870E Hero**: This motherboard has an **integrated I/O shield** attached to the board. You do NOT need to install a separate shield.
 
-## 4.3 Install Motherboard in Case
+## 5.3 Install Motherboard in Case
 
 **Step 1: Position Motherboard**
 
@@ -806,9 +955,17 @@ Once the motherboard is mounted, route and connect the large power cables first 
    - Route only as far as needed to reach the fan hub
    - Tuck any unused SATA connectors into the rear compartment or PSU shroud area
 
-> 📍 **Routing Tip**: The EPS/CPU power cables are often the most awkward cables in the build. If they are not already staged behind the tray before motherboard installation, route them immediately after the board is mounted and before continuing.
+> 📍 **Routing Tip**: The EPS/CPU power cables are often the most awkward cables in the build. They should already be staged behind the tray from Phase 4 — connect them immediately after the board is mounted and before continuing.
 
-## 4.4 Connect Front Panel Cables
+> 🛑 **STOP — Verify Motherboard Main Power Before Continuing**
+> - [ ] 24-pin ATX is fully seated with latch engaged
+> - [ ] Both 8-pin EPS cables are fully seated at the top-left connectors
+> - [ ] Large power cables are routed before small headers crowd access
+> - [ ] SATA power is staged for fan hub in the rear chamber
+> 
+> If any item above is not true, do not continue yet.
+
+## 5.4 Connect Front Panel Cables
 
 The X870E Hero includes a **Q-Connector** for easy front panel connections.
 
@@ -858,11 +1015,19 @@ Connect these cables **before installing the GPU**. Access is easier now, and th
 - [ ] USB 3.0 and USB-C cables are routed through the nearest side openings
 - [ ] Extra slack is stored behind the motherboard tray, not in the main chamber
 
+> 🛑 **STOP — Verify Front-Panel and Internal Headers Before Continuing**
+> - [ ] Front-panel switch/LED connections are correct
+> - [ ] USB 3.0, USB-C, and HD Audio headers are fully seated
+> - [ ] ARGB strip cable (if used) is on ADD_GEN2 with correct orientation
+> - [ ] Header cables are routed cleanly before GPU installation blocks access
+> 
+> If any item above is not true, do not continue yet.
+
 ---
 
-# 💾 Phase 5: Storage Verification
+# 💾 Phase 6: Storage Verification
 
-## 5.1 Samsung 990 Pro 2TB NVMe — Already Installed
+## 6.1 Samsung 990 Pro 2TB NVMe — Already Installed
 
 > ✅ Your NVMe SSD was installed during Phase 2.4 (motherboard preparation outside the case). No action needed here.
 
@@ -877,90 +1042,6 @@ If you skipped the NVMe installation earlier, you can still install it now, thou
 ### Additional Storage (Future Expansion)
 
 The X870E Hero has additional M.2 slots available for future NVMe drives. These can be added at any time without removing existing components.
-
----
-
-# ⚡ Phase 6: Power Supply Installation and Cable Routing
-
-## 6.1 Corsair RM1000x (2024) Preparation
-
-### Modular Cable Selection:
-
-> ⚠️ **CRITICAL**: Modular PSU cables are **NOT interchangeable between brands or even between different models from the same brand**. The pinouts differ. Using cables from an old PSU can short-circuit and destroy components. **Only use the cables that came with your RM1000x (2024).**
-
-| Cable | Required | Quantity |
-|-------|----------|----------|
-| 24-pin ATX | ✅ | 1 |
-| 8-pin EPS (CPU) | ✅ | 2 |
-| 12V-2x6 (GPU) | ✅ | 1 |
-| SATA | ✅ | 1 (for fan hub) |
-| Peripheral/Molex | ❌ | Not needed |
-
-### PSU Cable Pre-Routing Plan
-
-Before installing the PSU into the case, connect only the cables you actually need:
-
-- 1x **24-pin ATX**
-- 2x **8-pin EPS/CPU**
-- 1x **12V-2x6 GPU cable**
-- 1x **SATA power cable** for fan hub
-
-Pre-connecting these cables to the PSU outside the case is easier than attaching them later in the rear chamber.
-
-### Recommended cable staging plan:
-
-| Cable | Stage To | Final Destination |
-|------|----------|-------------------|
-| **24-pin ATX** | Rear middle channel | Motherboard 24-pin socket |
-| **EPS/CPU (2x)** | Rear upper channel | Top-left motherboard power sockets |
-| **12V-2x6 GPU** | Rear lower/middle channel | GPU power connector |
-| **SATA power** | Rear lower channel | Fan hub |
-
-> 📍 **Routing Tip**: Do not fully cinch these cables down yet. Stage them loosely in their intended areas first, then do final tightening only after all components are installed and the system POSTs successfully.
-
-### GPU Power Cable - CRITICAL:
-
-> 🔥 **MAJOR GOTCHA - RTX 5070 Ti Power**
-
-The RTX 5070 Ti uses the **12V-2x6 connector** (also called 12VHPWR). The RM1000x (2024) includes a **native 12V-2x6 cable**.
-
-> ⚠️ **12VHPWR/12V-2x6 Safety**: These connectors must be **fully inserted**. Partial insertion causes resistance, heat, and potential fire. The connector should click securely. **No visible gold contacts when properly seated.**
-
-## 6.2 Install PSU in Case
-
-**Fan Orientation**: Fan facing **DOWN** toward bottom filter (recommended).
-
-## 6.3 Cable Routing Strategy
-
-### The Golden Rules of Cable Management:
-
-1. **Route cables behind the motherboard tray** whenever possible
-2. **Plan routes before plugging in** - dry-fit cables first
-3. **Use case cable channels and tie-down points**
-4. **Bundle cables going the same direction**
-5. **Leave service loops** - slight slack for future maintenance
-6. **Don't route cables over airflow paths**
-
-> 📍 **PRO TIP FOR FUTURE CABLE EXTENSIONS**: When routing your stock cables during the base build, **leave a little extra slack** behind the motherboard tray. This makes it much easier to add sleeved extensions later without re-routing everything.
-
-### Cable Routing by Rear Chamber Zone
-
-To keep the back side of the build organized, use three routing lanes behind the motherboard tray:
-
-| Rear Chamber Zone | Recommended Cables |
-|------------------|--------------------|
-| **Upper lane** | EPS/CPU power, top fan cables, rear fan cable |
-| **Middle lane** | 24-pin ATX, front fan cables, fan hub PWM lead, USB 3.0 / USB-C slack |
-| **Lower lane** | SATA power, HD Audio, bottom fan cables, staged GPU cable slack |
-
-### Practical routing rules:
-
-- Keep **large power cables** on the outer edge of the bundle where possible
-- Keep **small signal cables** separated enough that they can be removed later without undoing everything
-- Cross cables only when necessary, and do it in the rear chamber rather than the visible side
-- Leave enough slack near connectors to unplug components later without cutting all cable ties
-
-> 🔧 **Best Practice**: Use temporary velcro straps during assembly. Replace or tighten them neatly only after the first successful boot and cable verification.
 
 ---
 
@@ -1001,39 +1082,7 @@ Use this section as a fast reference during the build. The goal is to route each
 | **USB-C front panel** | Rear middle channel → nearest grommet → motherboard header | Before GPU installation | Avoid over-bending near connector |
 | **GPU 12V-2x6** | PSU area → rear lower/middle channel → nearest side grommet to GPU connector | After GPU installation | Fully seat connector first, then form a gentle bend |
 
-## Build Order for Cleanest Cable Routing
-
-Follow this sequence for the least rework:
-
-1. Install CPU, RAM, NVMe, and cooler on the motherboard outside the case (Phase 2)
-2. Install case fans and route their cables into the rear chamber (Phase 3)
-3. Mount RGB strips if purchased — easier with empty case (Phase 3.5)
-4. Mount the fan hub and connect case fan cables (Phase 3.4)
-5. Connect PSU cables to the PSU before PSU installation
-6. Install PSU and loosely stage 24-pin, EPS, SATA, and GPU power cables (Phase 6)
-7. Install motherboard (Phase 4)
-8. Connect **24-pin** and **EPS** power cables
-9. Connect front panel, HD Audio, USB 3.0, USB-C, ARGB strip cable, and fan hub PWM lead
-10. Install GPU (Phase 7)
-11. Connect GPU power cable carefully and verify full seating
-12. Do final rear-chamber bundling and visible-side cleanup (Phase 8)
-13. POST test the system before fully tightening all cable ties
-
-## Cable Routing Final Check
-
-Before closing the case, confirm:
-
-- [ ] EPS cables are fully seated and routed through the top-left area cleanly
-- [ ] 24-pin ATX cable has a clean curve with no unnecessary slack visible
-- [ ] Front-panel and HD Audio cables are low and hidden
-- [ ] USB 3.0 and USB-C cables are not sharply bent
-- [ ] Fan cables are grouped by location and not loose in airflow paths
-- [ ] Fan hub uses **SATA power**
-- [ ] CPU cooler fans are on **CPU_FAN / CPU_OPT**
-- [ ] Case fan hub PWM lead is on a **CHA_FAN** header
-- [ ] GPU 12V-2x6 cable is fully seated with **no visible gold contacts**
-- [ ] No cable is touching any fan blade
-- [ ] Rear chamber bundles are flat enough for the side panel to close easily
+> 📍 **Build Order**: For the recommended overall build sequence, refer to the [Build Day Fast Path](#-build-day-fast-path) at the top of this guide. Use the tables above as a routing reference during each phase.
 
 ---
 
@@ -1054,6 +1103,14 @@ Before closing the case, confirm:
 5. Secure with screws through bracket into case
 
 > 💡 **X870E Hero Feature**: This motherboard has a **Q-Release button** near the PCIe x16 slot that makes it easy to release the GPU retention latch without reaching under the card. You won't need it during installation, but it's very handy for future GPU removal or upgrades.
+
+> 🛑 **STOP — Verify GPU Seating Before Continuing**
+> - [ ] GPU is fully seated in the primary PCIe x16 slot
+> - [ ] PCIe retention latch is closed
+> - [ ] GPU bracket screws are installed and snug
+> - [ ] Card is level before adding power cable strain
+> 
+> If any item above is not true, do not continue yet.
 
 ## 7.3 Connect GPU Power
 
@@ -1089,6 +1146,14 @@ Route the native Corsair **12V-2x6** cable from the rear chamber through the **n
 - Only secure the cable tightly after confirming the connector is fully seated and the side panel closes without pressing hard against the cable
 
 > ⚠️ **Safety Reminder**: The most important part of GPU cable routing is not aesthetics — it is maintaining full connector seating and avoiding side-load or tight bending stress at the plug.
+
+> 🛑 **STOP — Verify GPU Power Connection Before Continuing**
+> - [ ] 12V-2x6 connector is fully seated with no visible gold contacts
+> - [ ] Connector was inserted straight before cable shaping
+> - [ ] No tight bend exists near the connector body
+> - [ ] Cable path will not pull or side-load the connector
+> 
+> If any item above is not true, do not continue yet.
 
 ## 7.4 Install GPU Support Bracket (ASUS ROG Herculx)
 
@@ -1156,6 +1221,14 @@ Now that all major components are installed and connected, do the final cable cl
 
 > 🔧 **Best Practice**: After the first successful POST and BIOS check, reopen the rear panel once more and do a final cosmetic pass on cable tension and alignment.
 
+> 🛑 **STOP — Verify Final Pre-Panel-Closure Checks Before Continuing**
+> - [ ] System has successfully POSTed at least once
+> - [ ] Rear-chamber cable bundles are flat and panel-safe
+> - [ ] No cable is contacting fan blades or sharp edges
+> - [ ] No loose screws or tools remain inside the case
+> 
+> If any item above is not true, do not continue yet.
+
 ## 8.3 Install Side Panels and External Connections
 
 1. Verify no cables preventing panel closure
@@ -1192,6 +1265,15 @@ Now that all major components are installed and connected, do the final cable cl
 8. Power on the system normally — it should now POST
 
 > 🔥 **GOTCHA**: The BIOS Flashback port is a specific USB port on the rear I/O — it's usually the one closest to the Flashback button and may be labeled. Using the wrong USB port will not work.
+
+> 🛑 **STOP — Verify Pre-Boot Readiness Before Continuing**
+> - [ ] 24-pin ATX, EPS, GPU power, and fan hub SATA power are all seated
+> - [ ] CPU cooler fans and case fan control leads are connected
+> - [ ] RAM, GPU, and NVMe are fully seated and secured
+> - [ ] No loose screws, packing film, or cables in any fan blade path
+> - [ ] Monitor is connected to GPU and keyboard is connected
+> 
+> If any item above is not true, do not continue yet.
 
 ## 9.1 First Power On
 
