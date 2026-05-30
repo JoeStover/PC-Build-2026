@@ -61,11 +61,94 @@ Section 2 reflects the contents currently present on the Ventoy USB. Items not y
 
 ## 3. Downloads Still Needed
 
-- NOTES:
-  - No pending downloads have been added to this section yet.
-  - Add missing files here only after identifying a specific need.
-  - Keep items in this section organized under the folder where they should ultimately live.
-  - Once obtained, move the entry from this section into Section 2 so the current hierarchy remains truthful.
+- **BIOS**
+  - **Current**
+    - *latest ASUS ROG CROSSHAIR X870E HERO BIOS file* (REQUIRED)
+      - Source:
+        - ASUS support page for the ROG Crosshair X870E Hero motherboard.
+      - Destination:
+        - `BIOS/Current/`
+      - NOTES:
+        - Keep the newest intended-to-use BIOS here.
+        - When replaced later, move older known-good BIOS files into `BIOS/Archive/`.
+- **Drivers**
+  - **GPU**
+    - *latest NVIDIA GeForce driver package for RTX 5070 Ti* (REQUIRED)
+      - Source:
+        - NVIDIA driver download page.
+      - Destination:
+        - `Drivers/GPU/`
+      - NOTES:
+        - Keep an offline installer available in case Windows networking or Windows Update is not ready yet.
+  - **Motherboard**
+    - **Audio**
+      - *latest ASUS/ROG audio driver package for X870E Hero* (RECOMMENDED)
+        - Source:
+          - ASUS support page for the ROG Crosshair X870E Hero motherboard.
+        - Destination:
+          - `Drivers/Motherboard/Audio/`
+    - **Chipset**
+      - *latest AMD chipset driver package* (REQUIRED)
+        - Source:
+          - AMD chipset driver download page.
+        - Destination:
+          - `Drivers/Motherboard/Chipset/`
+        - NOTES:
+          - One of the first Windows drivers to install after OS setup.
+    - **LAN**
+      - *latest ASUS/ROG LAN driver package for X870E Hero* (RECOMMENDED)
+        - Source:
+          - ASUS support page for the ROG Crosshair X870E Hero motherboard.
+        - Destination:
+          - `Drivers/Motherboard/LAN/`
+        - NOTES:
+          - Useful if Windows does not automatically bring networking up cleanly.
+    - **Wifi-Bluetoth**
+      - *latest ASUS/ROG Wi-Fi/Bluetooth driver package for X870E Hero* (RECOMMENDED)
+        - Source:
+          - ASUS support page for the ROG Crosshair X870E Hero motherboard.
+        - Destination:
+          - `Drivers/Motherboard/Wifi-Bluetoth/`
+        - NOTES:
+          - Matches current folder spelling; rename folder later if you standardize it to `Wifi-Bluetooth`.
+  - **Storage**
+    - *Samsung Magician installer* (RECOMMENDED)
+      - Source:
+        - Samsung support/download page.
+      - Destination:
+        - `Drivers/Storage/`
+      - NOTES:
+        - Useful for firmware checks, health monitoring, and drive management on the Samsung 990 Pro.
+    - *Samsung NVMe driver package* (OPTIONAL)
+      - Source:
+        - Samsung support/download page.
+      - Destination:
+        - `Drivers/Storage/`
+- **ISOS**
+  - **Linux**
+    - *latest Bazzite desktop ISO* (REQUIRED)
+      - Source:
+        - Bazzite official download page.
+      - Destination:
+        - `ISOS/Linux/`
+      - NOTES:
+        - Primary Linux target for the new desktop build.
+    - *latest Fedora Workstation ISO* (RECOMMENDED)
+      - Source:
+        - Fedora Workstation official download page.
+      - Destination:
+        - `ISOS/Linux/`
+      - NOTES:
+        - Useful as a fallback or comparison distro if you later move on from Bazzite.
+- **Utilities**
+  - **Firmware-Tools**
+    - *ASUS BIOS renaming or flash-prep utility, if needed* (OPTIONAL)
+      - Source:
+        - ASUS support resources for the ROG Crosshair X870E Hero motherboard.
+      - Destination:
+        - `Utilities/Firmware-Tools/`
+      - NOTES:
+        - Only keep this if it is actually useful for your BIOS Flashback workflow.
 
 ## 4. Maintenance Notes
 
