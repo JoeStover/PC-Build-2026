@@ -11,20 +11,129 @@ Each section below:
 
 ## Table of Contents
 
-1. [BIOS/Current/README.txt](#1-bioscurrentreadmetxt)
-2. [Docs/Manuals/Motherboard/README.txt](#2-docsmanualsmotherboardreadmetxt)
-3. [Docs/Manuals/Cooler/README.txt](#3-docsmanualscoolerreadmetxt)
-4. [Drivers/GPU/README.txt](#4-driversgpureadmetxt)
-5. [Drivers/Motherboard/README.txt](#5-driversmotherboardreadmetxt)
-6. [Drivers/Storage/README.txt](#6-driversstoragereadmetxt)
-7. [ISOS/Linux-Full/README.txt](#7-isoslinux-fullreadmetxt)
-8. [ISOS/Recovery/README.txt](#8-isosrecoveryreadmetxt)
-9. [Utilities/Firmware-Tools/README.txt](#9-utilitiesfirmware-toolsreadmetxt)
-10. [Utilities/Windows/README.txt](#10-utilitieswindowsreadmetxt)
+1. [README.txt](#1-readmetxt)
+2. [BIOS/Current/README.txt](#2-bioscurrentreadmetxt)
+3. [Docs/Manuals/Motherboard/README.txt](#3-docsmanualsmotherboardreadmetxt)
+4. [Docs/Manuals/Cooler/README.txt](#4-docsmanualscoolerreadmetxt)
+5. [Drivers/GPU/README.txt](#5-driversgpureadmetxt)
+6. [Drivers/Motherboard/README.txt](#6-driversmotherboardreadmetxt)
+7. [Drivers/Storage/README.txt](#7-driversstoragereadmetxt)
+8. [ISOS/Linux-Full/README.txt](#8-isoslinux-fullreadmetxt)
+9. [ISOS/Recovery/README.txt](#9-isosrecoveryreadmetxt)
+10. [Utilities/Firmware-Tools/README.txt](#10-utilitiesfirmware-toolsreadmetxt)
+11. [Utilities/Windows/README.txt](#11-utilitieswindowsreadmetxt)
 
 ---
 
-## 1. BIOS/Current/README.txt
+## 1. README.txt
+
+```text
+========================================
+Ventoy USB Toolkit
+Root README
+========================================
+
+Purpose:
+This USB is a multi-purpose build, recovery, and installation toolkit
+for the PC build and related home-infrastructure work.
+
+Primary Uses:
+- BIOS recovery and firmware prep
+- operating system installation
+- offline Windows driver staging
+- Linux install and recovery media
+- diagnostics, validation, and troubleshooting
+- post-install monitoring and stress-test utilities
+
+Important Notes:
+- This USB supports a Linux-first workflow with Windows kept as a
+  fallback / anti-cheat appliance.
+- Most items in Drivers/ are primarily for Windows use after install
+  or during Windows recovery/troubleshooting.
+- Most Linux driver support comes from the distro/kernel rather than
+  offline driver packages on this USB.
+- Keep hardware manuals under Docs/Manuals/.
+- Keep software/tool-specific notes near the related artifact when practical.
+- Prefer keeping original downloaded files when checksum validation matters.
+
+Top-Level Folder Guide:
+- BIOS/
+  Current and archived motherboard BIOS files and related flash notes.
+
+- Checksums/
+  Saved hashes or verification notes for important downloads such as
+  BIOS files, ISOs, and critical driver packages.
+
+- Docs/
+  Build notes, manuals, reference material, network notes, and other
+  non-bootable documentation.
+
+- Drivers/
+  Offline Windows driver and support packages, mainly for motherboard,
+  GPU, networking, and storage.
+
+- ISOS/
+  Bootable operating system, recovery, and diagnostic media used
+  through Ventoy.
+
+- Utilities/
+  Post-boot tools for firmware help, monitoring, benchmarking,
+  diagnostics, and validation.
+
+Checksum Policy:
+- Published checksums usually apply to the exact original downloaded
+  file (ZIP, ISO, EXE, CAP, etc.).
+- Verify checksums BEFORE extracting files whenever possible.
+- If long-term verification matters, keep the original downloaded
+  archive/file in addition to any extracted contents.
+- Do not assume extracted folders can be verified against a checksum
+  that was published for the original archive.
+
+Windows vs Linux Guidance:
+- Drivers/ is mostly for Windows setup, maintenance, and recovery.
+- Linux installs should rely primarily on the distro, kernel, and
+  official install guidance.
+- Use ISOS/Linux-Full/ for full Linux installers and ISOS/Recovery/
+  for repair tools.
+- Use Utilities/Windows/ only after booting into Windows.
+
+Recommended Use Order for PC Build First Boot and OS Install:
+1. If the system fails to POST, check BIOS/Current/ and motherboard
+   manuals first for BIOS Flashback workflow.
+2. Use Docs/Manuals/Motherboard/ during first boot, BIOS setup,
+   EXPO setup, Secure Boot review, and boot-order verification.
+3. Install or boot the intended operating system from ISOS/ through
+   the Ventoy menu.
+4. If installing Windows, use Drivers/ after boot if networking,
+   chipset, GPU, Wi-Fi, or storage tooling is needed offline.
+5. If installing Linux, prioritize the distro installer and official
+   install guidance before assuming offline driver packages are needed.
+6. After OS installation, use Utilities/Windows/ for validation,
+   monitoring, health checks, and stress testing where applicable.
+7. Return to Checksums/ and Docs/ if you need to verify what was
+   downloaded, installed, or staged.
+
+Quick Build-Specific Reminder:
+For the PC build guide, this USB is most relevant during:
+- BIOS recovery / BIOS update
+- Phase 9 (First Boot and BIOS Configuration)
+- Phase 10 (Operating System Installation)
+- Phase 11 (Validation, monitoring, and stress testing)
+
+Safety / Handling Notes:
+- Do not store plaintext secrets here unless absolutely necessary.
+- Prefer encrypted records or password-manager references for sensitive info.
+- Keep only useful, current files on the USB.
+- Remove stale duplicates when they no longer add value.
+
+========================================
+```
+
+[Back to Table of Contents](#toc)
+
+---
+
+## 2. BIOS/Current/README.txt
 
 ```text
 ========================================
@@ -69,7 +178,7 @@ Notes:
 
 ---
 
-## 2. Docs/Manuals/Motherboard/README.txt
+## 3. Docs/Manuals/Motherboard/README.txt
 
 ```text
 ========================================
@@ -117,7 +226,7 @@ Notes:
 
 ---
 
-## 3. Docs/Manuals/Cooler/README.txt
+## 4. Docs/Manuals/Cooler/README.txt
 
 ```text
 ========================================
@@ -167,7 +276,7 @@ Notes:
 
 ---
 
-## 4. Drivers/GPU/README.txt
+## 5. Drivers/GPU/README.txt
 
 ```text
 ========================================
@@ -212,7 +321,7 @@ Notes:
 
 ---
 
-## 5. Drivers/Motherboard/README.txt
+## 6. Drivers/Motherboard/README.txt
 
 ```text
 ========================================
@@ -268,7 +377,7 @@ Notes:
 
 ---
 
-## 6. Drivers/Storage/README.txt
+## 7. Drivers/Storage/README.txt
 
 ```text
 ========================================
@@ -315,7 +424,7 @@ Notes:
 
 ---
 
-## 7. ISOS/Linux-Full/README.txt
+## 8. ISOS/Linux-Full/README.txt
 
 ```text
 ========================================
@@ -363,7 +472,7 @@ Notes:
 
 ---
 
-## 8. ISOS/Recovery/README.txt
+## 9. ISOS/Recovery/README.txt
 
 ```text
 ========================================
@@ -412,7 +521,7 @@ Notes:
 
 ---
 
-## 9. Utilities/Firmware-Tools/README.txt
+## 10. Utilities/Firmware-Tools/README.txt
 
 ```text
 ========================================
@@ -459,7 +568,7 @@ Notes:
 
 ---
 
-## 10. Utilities/Windows/README.txt
+## 11. Utilities/Windows/README.txt
 
 ```text
 ========================================
