@@ -132,17 +132,19 @@ Section 2 reflects the contents currently present on the Ventoy USB. Section 3 t
     - **GPU**
       - *GPU manual PDF or official support-page export* (RECOMMENDED)
         - Source page:
-          - Replace with the exact support page for your specific ASUS ROG STRIX RTX 5070 Ti SKU
+          - <https://rog.asus.com/us/graphics-cards/graphics-cards/rog-strix/rog-strix-rtx5070ti-16g-gaming/helpdesk/>
         - Destination:
           - `Docs/Manuals/GPU/`
         - NOTES:
-          - Use the exact page for your specific card model/SKU if ASUS offers one.
+          - Save the official support/helpdesk page or any downloadable manual/resources ASUS provides for the exact installed GPU model.
     - **PSU**
       - *PSU manual PDF or quick-start guide* (RECOMMENDED)
         - Source page:
-          - Replace with the exact Corsair RM1000x (2024) support/manual page
+          - <https://www.corsair.com/us/en/p/psu/CP-9020271-NA/rmx-series-rm1000x-fully-modular-power-supply-cp-9020271-na>
         - Destination:
           - `Docs/Manuals/PSU/`
+        - NOTES:
+          - Save the official product/support page and any linked quick-start or manual content relevant to the RM1000x (2024).
     - **Case**
       - *case manual PDF* (RECOMMENDED)
         - Source page:
@@ -154,14 +156,16 @@ Section 2 reflects the contents currently present on the Ventoy USB. Section 3 t
     - **Cooler**
       - *Noctua NH-U12A chromax.black manual PDF* (RECOMMENDED)
         - Source page:
-          - <https://noctua.at/en/nh-u12a-chromax-black/specification>
-        - NOTES:
-          - Download the installation manual PDF from the official Noctua product page if the direct PDF link changes.
+          - <https://www.noctua.at/en/products/nh-u12a-chromax-black>
+        - Direct PDF:
+          - <https://cdn.noctua.at/media/noctua_nh_u12a_chromax.black_manual_en_web.pdf>
         - Destination:
           - `Docs/Manuals/Cooler/`
       - *Noctua NA-FH1 manual PDF* (RECOMMENDED)
         - Source page:
-          - <https://noctua.at/en/na-fh1>
+          - <https://www.noctua.at/en/products/na-fh1>
+        - Direct PDF:
+          - <https://cdn.noctua.at/media/noctua_na_fh1_manual_spot_en.pdf>
         - Destination:
           - `Docs/Manuals/Cooler/`
         - NOTES:
@@ -169,7 +173,9 @@ Section 2 reflects the contents currently present on the Ventoy USB. Section 3 t
     - **Storage**
       - *SSD or NVMe manual / support PDF* (OPTIONAL)
         - Source page:
-          - Replace with the exact Samsung 990 Pro support/download page
+          - <https://www.samsung.com/us/memory-storage/ssd/>
+        - Tools / support page:
+          - <https://semiconductor.samsung.com/consumer-storage/support/tools/>
         - Destination:
           - `Docs/Manuals/Storage/`
     - **Monitor**
@@ -227,18 +233,19 @@ Section 2 reflects the contents currently present on the Ventoy USB. Section 3 t
   - **Storage**
     - *Samsung Magician installer* (RECOMMENDED)
       - Source page:
-        - <https://semiconductor.samsung.com/consumer-storage/magician/>
+        - <https://semiconductor.samsung.com/consumer-storage/support/tools/>
       - Destination:
         - `Drivers/Storage/`
       - NOTES:
         - Useful for firmware checks, health monitoring, and drive management on the Samsung 990 Pro.
     - *Samsung NVMe driver package* (OPTIONAL)
       - Source page:
-        - Replace with the current Samsung SSD / NVMe support or downloads page if you decide to keep this
+        - <https://semiconductor.samsung.com/consumer-storage/support/tools/>
       - Destination:
         - `Drivers/Storage/`
       - NOTES:
         - Lower priority than chipset, GPU, and network drivers.
+        - Keep this only if Samsung currently provides a driver package you actually intend to use with the 990 Pro workflow.
 
 - **ISOS**
   - **Diagnostic**
