@@ -6,12 +6,14 @@ This guide turns a Lenovo M720q Tiny into a simple, family-friendly HTPC that fe
 
 ### How to use this guide
 
-1. Create the shared Linux user as `family` and keep that username. Later file paths assume it.
-2. For this exact build, use the **Bazzite / Fedora Atomic** command blocks and ignore the **Debian / Ubuntu** reference blocks unless you are intentionally adapting the guide.
-3. Run Bazzite-specific commands from the normal KDE terminal on the HTPC itself, not from a distrobox or container shell.
-4. Copy commands exactly unless a step explicitly tells you to replace a value such as `MAC`.
-5. Reboot any time the guide tells you to reboot. On Bazzite, host-level changes often do not apply until the next boot.
-6. Treat Sections 9, 10, and 12 as optional until streaming, Steam Big Picture, and at least one controller work correctly.
+1. Create two Linux users: your personal admin account and a shared couch-facing account named `family`. Keep the shared account name as `family` because later file paths assume it.
+2. Use your personal admin account for setup, sudo/admin work, recovery, firmware tasks, updates, and occasional desktop/admin use.
+3. Use `family` for auto-login, Steam Big Picture, streaming launchers, `.desktop` files, and normal day-to-day HTPC use from the couch.
+4. For this exact build, use the **Bazzite / Fedora Atomic** command blocks and ignore the **Debian / Ubuntu** reference blocks unless you are intentionally adapting the guide.
+5. Run Bazzite-specific commands from the normal KDE terminal on the HTPC itself, not from a distrobox or container shell.
+6. Copy commands exactly unless a step explicitly tells you to replace a value such as `MAC`.
+7. Reboot any time the guide tells you to reboot. On Bazzite, host-level changes often do not apply until the next boot.
+8. Treat Sections 9, 10, and 12 as optional until streaming, Steam Big Picture, and at least one controller work correctly.
 
 ## Section 1: Introduction and Goals
 
@@ -20,6 +22,12 @@ This guide converts a Lenovo M720q Tiny with an i5-8400T, 16GB RAM, and 256GB SS
 It is written for a Linux novice who is also a .NET developer: technical enough to follow structured steps, but not interested in constant churn or avoidable Linux maintenance. Because the household already uses Firestick and Xbox, the system should feel familiar, controller-friendly, remote-friendly, and simple for the whole family. Routine use should work from a controller or HTPC-friendly remote, while the KDE desktop stays mostly in the background as an admin tool and occasional web-browsing fallback with a nearby Logitech K400+.
 
 The main goals are simplicity, reproducibility, stability, and clear recovery when something breaks. Day-one success means the box reliably launches the family's heavy-lifter services such as Hulu, HBO Max, Disney+, Apple TV+, Netflix, and YouTube over the initial Wi-Fi setup. It should also leave a clean path for later additions such as Kodi and Jellyfin once the NAS exists, NAS-hosted files and ROMs, and game streaming from the main gaming PC when the network is ready. Wired Ethernet and Cat6a are later upgrades that should improve NAS-backed media and in-home game streaming, not prerequisites for the first working box. Each of those goals matters because this HTPC is meant to work as a dependable living-room device, not just as a successful one-time setup.
+
+### Account model for this build
+
+This HTPC intentionally uses two Linux accounts. Your personal Linux account is the admin account. The shared `family` Linux account is the couch-facing account. That split keeps passwords, updates, recovery, and setup work separate from the everyday TV experience.
+
+When a step says to use the admin account, log into your personal Linux account. Use it for installer choices, sudo/admin tasks, firmware work, rollback, recovery, and occasional desktop troubleshooting. When a step says to use `family`, log into the shared `family` Linux account. Use it for Steam Big Picture, streaming launchers, non-Steam shortcuts, and anything stored under `/home/family`.
 
 ## Section 2: Hardware Overview
 
@@ -35,7 +43,7 @@ Ventoy is a good fit for this build because it keeps USB setup simple and reusab
 
 Bazzite KDE is the target OS because it is gaming-focused, Steam-friendly, Flatpak-friendly, and closer in spirit to a console-like Linux experience than a general-purpose desktop distro. KDE is the preferred edition because it is flexible, works well on TV-oriented setups, and gives you more control over session behavior, autologin, and launcher integration.
 
-The installer should create a dedicated `family` user rather than using a personal account. That keeps the living-room experience separate from personal habits and makes the system feel like a shared appliance instead of someone's workstation. Auto-login is recommended for the same reason: a TV box should boot directly into the usable interface without making the family stop at a login screen.
+For this build, do not treat `family` as the only Linux user. Your personal Linux account should be the admin/sudo account, and `family` should be the shared couch-facing account. `family` should be the auto-login session because it owns the Steam, launcher, and desktop files that make the HTPC feel like a simple living-room appliance.
 
 ### Create the Ventoy USB
 
@@ -82,16 +90,20 @@ This quick check matters because it confirms that the Lenovo, display, and Bazzi
 1. Launch the installer from the live session.
 2. Choose the target SSD.
 3. Proceed with the default install flow unless you have a strong reason to customize partitioning.
-4. When prompted for a user account, create a shared account named `family`.
-5. Set a password you can recover later if needed.
-6. Complete the installation and reboot when prompted.
-7. Remove the USB drive when the system restarts.
+4. When prompted for the main Linux user account, create your personal admin account. Do not use `family` for this first account.
+5. Make sure that personal account has the normal admin or sudo rights for the machine.
+6. Set passwords you can recover later if needed.
+7. Complete the installation and reboot when prompted.
+8. Remove the USB drive when the system restarts.
+9. After first boot, sign in with your personal admin account.
+10. Open KDE user management, usually **System Settings -> Users**, and create a second Linux account named `family`.
+11. Give `family` its password, leave it as the shared couch-facing account, and sign into it once so `/home/family` is created.
 
 For this project, the goal is not custom partition design. The goal is a clean, reproducible install that is easy to repeat on the next identical machine.
 
 ### Enable Auto-Login
 
-After first boot, sign in as `family` and enable auto-login in KDE settings.
+While logged into your personal admin account, enable auto-login for `family` in KDE settings.
 
 Use KDE System Settings to:
 
@@ -99,7 +111,7 @@ Use KDE System Settings to:
 2. enable automatic login
 3. set the `family` user as the auto-login account
 4. apply the change
-5. reboot once to confirm it works
+5. reboot once to confirm it works, and let the machine land in `family`
 
 A successful result means the machine boots straight into the `family` desktop session without stopping for credentials.
 
@@ -109,6 +121,7 @@ Before moving on, confirm:
 
 - the system boots normally
 - the `family` account logs in automatically
+- your personal admin account still signs in normally when you need it
 - Wi-Fi works for the initial deployment
 - audio output appears correctly on the TV
 - the desktop is stable enough to continue
@@ -120,6 +133,8 @@ Once those checks pass, the base installation is ready.
 After installation, the first goal is to establish a clean, repeatable baseline. On Bazzite, Flatpak matters because many user-facing applications are delivered that way, including media and gaming tools. Flatpak also helps novice users because applications are more isolated from the base OS, which reduces the chance that one app install will destabilize the whole system.
 
 Bazzite's ostree-style model matters because the base operating system is more controlled than on a traditional mutable Linux install. That is useful for stability, but it also means updates and system-level changes should be done deliberately. The safest pattern is to keep the base system lean, prefer Flatpak for apps, and use host package layering only when a system-level tool is truly needed.
+
+From this point forward, use a simple rule unless a section tells you otherwise: log into your personal admin account for OS updates, sudo/admin commands, firmware work, rollback, recovery, and troubleshooting. Log into `family` for Steam, streaming launchers, `.desktop` files, autostart entries, and normal couch-facing configuration. When this guide uses `~` for those couch-facing files, assume you are logged into `family`, so `~` means `/home/family`.
 
 If you are following this exact Lenovo M720q + Bazzite KDE guide, use the Bazzite steps below and ignore the Debian/Ubuntu reference block.
 
@@ -264,6 +279,8 @@ Even if the most common first action is launching a streaming app, Steam Big Pic
 
 Flatpak Steam is the preferred install path because it fits the overall model of keeping apps isolated and easier to manage. On Bazzite, do not stop here to install Feral GameMode first. Bazzite already applies its own gaming-oriented tuning, and this guide does not depend on `gamemoderun` or `gamemoded` for the first working box. The day-one job is getting Steam, autostart, and controller navigation working reliably.
 
+Before you start this section, sign into the Linux `family` account. Steam's day-to-day data, autostart file, and later non-Steam shortcuts should all live in the same shared couch-facing profile that auto-logs in.
+
 ### Install Steam
 
 ```bash
@@ -318,9 +335,9 @@ This autostarts Steam directly into Big Picture mode at login. That is a major p
 
 After installing Steam:
 
-1. open Steam once manually
+1. open Steam once manually from the `family` desktop session
 2. let it complete first-run setup and updates
-3. sign in
+3. sign in long enough to finish setup; Section 7 decides which Steam account stays on the HTPC every day
 4. confirm Big Picture launches correctly
 5. reboot once to verify autostart behavior
 
@@ -330,16 +347,18 @@ Controller navigation matters because if the family has to reach for a mouse and
 
 A dedicated family Steam account is safer than leaving the main purchasing account permanently logged into a shared living-room machine. That matters because a family box should be easy to use but hard to misuse. If the shared account has fewer privileges, fewer purchases attached, and a limited view of the library, small mistakes stay small.
 
+Do this section while still logged into the Linux `family` account. The main purchasing Steam account should appear on this HTPC one time only for library-sharing authorization. The dedicated family Steam account should be the everyday Steam login that remains signed in on the auto-logged-in `family` Linux session.
+
 Family Library Sharing protects the main account because it lets the HTPC borrow access without turning the family room into the control center for the primary Steam wallet. Family View matters because it puts a PIN between casual controller use and accidental purchases, store browsing, or account settings changes. Autologin matters because the HTPC should boot into the family experience, not into an account selection ritual.
 
 1. Create a dedicated Steam account for the HTPC if you do not already have one. Use an address that the household controls, verify it, and do not add payment details unless you intentionally want purchasing available from the couch.
-2. Log into Steam on the HTPC with the main account one time only so the machine can be authorized for library sharing.
+2. Log into Steam on the HTPC, still inside the Linux `family` session, with the main purchasing account one time only so the machine can be authorized for library sharing.
 3. In Steam settings, open the Family or library-sharing area. Steam has renamed this flow over time, so use the current equivalent if the wording has shifted. The important job is still the same: authorize this computer and allow the `family` account to use the library you want exposed on the HTPC.
-4. Sign out of the main account and sign into the dedicated family account.
+4. Sign out of the main purchasing account and sign into the dedicated family Steam account that should stay on the HTPC every day.
 5. Confirm the shared library appears correctly. If the box is going to be used by children or guests, remove anything you do not want visible from the shared selection before you call the setup done.
 6. Enable Family View from Steam settings. Hide the Store, Community, and other areas that do not belong in a simple couch UI, then set a PIN that the adults in the house can remember.
-7. Turn on the normal Steam account persistence options so the `family` account stays signed in on this machine. The goal is a controller-first boot path, not repeated credential entry.
-8. Reboot the box and make sure Steam returns directly to the same family account without asking for manual sign-in. If it does not, fix that before moving on. A living-room account flow that breaks on every reboot is not finished.
+7. Turn on the normal Steam account persistence options so the dedicated family Steam account stays signed in on this machine. The goal is a controller-first boot path, not repeated credential entry.
+8. Reboot the box and make sure Steam returns directly to that same dedicated family Steam account without asking for manual sign-in. If it does not, fix that before moving on. A living-room account flow that breaks on every reboot is not finished.
 
 ## Section 8: Streaming Apps
 
@@ -359,13 +378,15 @@ Install the browser used by the launchers:
 flatpak install -y flathub org.chromium.Chromium
 ```
 
+Stay logged into the Linux `family` account for this entire section. These scripts, `.desktop` files, and Steam shortcuts belong to the shared couch-facing home directory.
+
 Create the launcher directories before you start:
 
 ```bash
 mkdir -p ~/bin ~/.local/share/applications ~/.config/autostart
 ```
 
-This guide assumes the Linux username is `family`, so the `.desktop` files below use `/home/family/bin/...` as their executable path. If you intentionally used a different username, replace `/home/family/` consistently in every `.desktop` file.
+This guide assumes the shared couch-facing Linux username is `family`, so the `.desktop` files below intentionally use `/home/family/bin/...` as their executable path. Because you should be logged into `family` here, the `~` paths in this section also mean `/home/family`.
 
 Do not add a generic browser tile on day one. Keep ordinary web browsing as a desktop fallback with the K400+ so the main launcher surface stays focused and simple.
 
@@ -840,7 +861,7 @@ If you eventually want a Home Assistant view from the couch, treat it as another
 
 Cloning matters because identical Lenovo M720q units are one of the biggest advantages of this project. Once one system is correct, you should not have to manually rebuild every detail from scratch on the next unit. Clonezilla is chosen because it is reliable, common, and good at whole-disk imaging for identical hardware. Ostree-style replication is also an option because Bazzite's immutable base means a lot of your real customization lives in user configuration and Flatpak state instead of a deeply hand-crafted host.
 
-The safest cloning strategy is to create one "golden" box first, but stop before you fill it with room-specific chaos. In practice, that means you should finish Bazzite, Steam, the day-one streaming launchers, and the general controller flow, but think carefully before cloning active browser sessions, stale DRM tokens, room-specific Bluetooth pairings, or later add-ons that are not truly universal. The best golden image is polished but not overly personalized.
+The safest cloning strategy is to create one "golden" box first, but stop before you fill it with room-specific chaos. In practice, that means you should finish Bazzite, Steam, the day-one streaming launchers, and the general controller flow, but think carefully before cloning active browser sessions, stale DRM tokens, room-specific Bluetooth pairings, or later add-ons that are not truly universal. The best golden image is polished but not overly personalized. Keep the same two-account model on every box: your personal Linux account for admin work and `family` as the shared auto-login couch account.
 
 1. Finish one M720q until it is the exact baseline you want to reproduce.
 2. Update it, reboot it, and test the core flows one last time: boot, Steam Big Picture, at least one streaming launcher, and at least one controller.
@@ -852,11 +873,13 @@ The safest cloning strategy is to create one "golden" box first, but stop before
 8. Re-pair Bluetooth controllers if needed, because controller pairing is often room-specific even when the rest of the image is identical.
 9. Sign into streaming services where necessary and validate audio, display, and network on the target TV.
 
-If you do not want full-disk imaging every time, ostree-style replication can be lighter. In that model, you install the same Bazzite image on each M720q, then copy the shared `family` configuration directories, reinstall the same Flatpaks, and reuse the same launcher files. That is slower than Clonezilla for identical hardware, but it is cleaner when you want a less frozen image and more per-box flexibility.
+If you do not want full-disk imaging every time, ostree-style replication can be lighter. In that model, you install the same Bazzite image on each M720q, recreate the same two Linux accounts, then copy the shared `family` configuration directories, reinstall the same Flatpaks, and reuse the same launcher files. That is slower than Clonezilla for identical hardware, but it is cleaner when you want a less frozen image and more per-box flexibility.
 
 ## Section 14: Disaster Recovery
 
 Rollback matters because one of the main promises of an immutable-style system is that bad updates do not have to become a rebuilding marathon. Restoring configs matters because most of the HTPC personality lives in launchers, `.desktop` files, autostart entries, and a handful of app settings. Re-pairing controllers matters because controller state is one of the first things a family notices when it breaks. Reinstalling Flatpaks matters because app-layer repairs are often much easier than host-level surgery. Browser DRM resets matter because streaming services can fail in frustrating ways that look dramatic but are sometimes just bad site state.
+
+Use your personal admin account for rollback, updates, and host-level repairs. Use the `family` account for the backup and restore scripts below, because those scripts are meant to capture the couch-facing files that live in `/home/family`.
 
 If a Bazzite update clearly broke a previously working machine, start with rollback:
 
@@ -952,6 +975,8 @@ Launch Kodi: If configured later, open Kodi from Steam or from the KDE applicati
 
 Controller basics: `A` selects, `B` backs out, the D-pad or left stick moves focus, and the Xbox button is your home or attention button. Keep the K400+ nearby for admin work or fallback browsing.
 
+Admin tasks: Normal couch use should stay on the `family` Linux account. If you need passwords, updates, recovery, firmware work, or deeper troubleshooting, sign into the personal admin Linux account instead.
+
 Troubleshooting: If an app looks frozen, back out and reopen it. If the whole box changed after an update, reboot once. If wake-from-sleep stops behaving well, use a full shutdown until it is stable again. If it was working yesterday and broke today, use rollback before doing anything dramatic.
 
 Family View PIN: ____________________
@@ -959,6 +984,8 @@ Family View PIN: ____________________
 ## Section 17: Appendix
 
 This appendix repeats the exact file contents and wrapper content from earlier sections so everything important is in one place when you are rebuilding a box.
+
+Unless a step above explicitly says otherwise, the `~` paths in this appendix are meant to be created while logged into the Linux `family` account, so `~` means `/home/family`.
 
 ### Steam autostart desktop file
 
