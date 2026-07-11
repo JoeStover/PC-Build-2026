@@ -8,6 +8,7 @@ A comprehensive home infrastructure project documenting everything from a new PC
 - **Surface Pro (ARM)** — Windows 11, used as thin client via Moonlight
 - **Lenovo ThinkPad P1 Gen 1** — Mobile workstation, Linux experiment candidate
 - **ASUS Handheld Gaming PC** — Portable gaming, Bazzite target
+- **Lenovo M720q Tiny HTPC** — Bazzite KDE streaming and retro gaming appliance target
 - **UniFi Network Gear** — UDM-Pro, Pro 24 PoE, UNAS Pro, 2x U7 Pro, UniFi 6+
 - **TrueNAS (Dell T30)** — 4x4TB ZFS pool, Plex + Syncthing
 - **Mini PCs** — Home Assistant, AdGuard Home
@@ -20,6 +21,7 @@ A comprehensive home infrastructure project documenting everything from a new PC
 |--------|-------------|
 | [`pc-build/`](./pc-build/) | Hardware component list and full assembly guide for the new desktop |
 | [`os/`](./os/) | OS strategy: Bazzite Linux primary, Windows minimized, dual-boot setup, gaming, remote access |
+| [`htpc/`](./htpc/) | Lenovo M720q Tiny Bazzite KDE HTPC guide with streaming, Steam Big Picture, controllers, cloning, and recovery |
 | [`network/`](./network/) | UniFi gear inventory, topology, switch port assignments, camera plan, AP placement, shopping list |
 | [`physical-buildout/`](./physical-buildout/) | Server closet spec, rack layout, cable runs, basement protection, electrical plan, blueprint guide |
 | [`storage/`](./storage/) | TrueNAS setup, UNAS Pro backup vault, 3-2-1 backup strategy, device storage map, scripts |
