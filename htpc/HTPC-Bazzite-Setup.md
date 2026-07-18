@@ -48,7 +48,7 @@ The main goals are simplicity, reproducibility, stability, and clear recovery wh
 
 This HTPC intentionally uses two Linux accounts. `JMStover` is the admin account. The shared `family` Linux account is the non-admin couch-facing auto-login account. That split keeps passwords, updates, recovery, and setup work separate from the everyday TV experience.
 
-When a step says to use the admin account, log into `JMStover`. Use it for installer choices, sudo/admin tasks, firmware work, rollback, recovery, and occasional desktop troubleshooting. When a step says to use `family`, log into the shared `family` Linux account. Use it for Steam Big Picture, Chromium PWA installs, fallback launchers, non-Steam shortcuts, and anything stored under `/home/family`.
+When a step says to use the admin account, log into `JMStover`. Use it for installer choices, sudo/admin tasks, firmware work, rollback, recovery, and occasional desktop troubleshooting. When a step says to use `family`, log into the shared `family` Linux account. Use it for Steam Big Picture, Chromium PWA installs, fallback launchers, non-Steam shortcuts, and anything stored under `/var/home/family`.
 
 ## Section 2: Hardware Overview
 
@@ -118,7 +118,7 @@ This quick check matters because it confirms that the Lenovo, display, and Bazzi
 8. Remove the USB drive when the system restarts.
 9. After first boot, sign in with `JMStover`.
 10. Open KDE user management, usually **System Settings -> Users**, and create a second Linux account named `family`.
-11. Give `family` its password, leave it as the shared couch-facing account, and sign into it once so `/home/family` is created.
+11. Give `family` its password, leave it as the shared couch-facing account, and sign into it once so `/var/home/family` is created.
 
 For this project, the goal is not custom partition design. The goal is a clean, reproducible install that is easy to repeat on the next identical machine.
 
@@ -155,7 +155,7 @@ After installation, the first goal is to establish a clean, repeatable baseline.
 
 Bazzite's ostree-style model matters because the base operating system is more controlled than on a traditional mutable Linux install. That is useful for stability, but it also means updates and system-level changes should be done deliberately. The safest pattern is to keep the base system lean, prefer Flatpak for apps, and use host package layering only when a system-level tool is truly needed.
 
-From this point forward, use a simple rule unless a section tells you otherwise: log into `JMStover` for OS updates, sudo/admin commands, firmware work, rollback, recovery, and troubleshooting. Log into `family` for Steam, streaming apps, `.desktop` files, autostart entries, and normal couch-facing configuration. When this guide uses `~` for those couch-facing files, assume you are logged into `family`, so `~` means `/home/family`.
+From this point forward, use a simple rule unless a section tells you otherwise: log into `JMStover` for OS updates, sudo/admin commands, firmware work, rollback, recovery, and troubleshooting. Log into `family` for Steam, streaming apps, `.desktop` files, autostart entries, and normal couch-facing configuration. When this guide uses `~` for those couch-facing files, assume you are logged into `family`, so `~` means `/var/home/family`.
 
 If you are following this exact Lenovo M720q + Bazzite KDE guide, use the Bazzite steps below and ignore the Debian/Ubuntu reference block.
 
@@ -628,7 +628,7 @@ File path: `~/.local/share/applications/xbox-cloud.desktop`
 [Desktop Entry]
 Type=Application
 Name=Xbox Cloud Gaming
-Exec=/home/family/bin/launch-xbox-cloud.sh
+Exec=/var/home/family/bin/launch-xbox-cloud.sh
 Icon=applications-games
 Terminal=false
 Categories=Game;Network;
@@ -649,7 +649,7 @@ File path: `~/.local/share/applications/geforcenow.desktop`
 [Desktop Entry]
 Type=Application
 Name=GeForce NOW
-Exec=/home/family/bin/launch-geforcenow.sh
+Exec=/var/home/family/bin/launch-geforcenow.sh
 Icon=applications-games
 Terminal=false
 Categories=Game;Network;
@@ -670,7 +670,7 @@ File path: `~/.local/share/applications/luna.desktop`
 [Desktop Entry]
 Type=Application
 Name=Amazon Luna
-Exec=/home/family/bin/launch-luna.sh
+Exec=/var/home/family/bin/launch-luna.sh
 Icon=applications-games
 Terminal=false
 Categories=Game;Network;
@@ -707,7 +707,7 @@ File path: `~/.local/share/applications/plex.desktop`
 [Desktop Entry]
 Type=Application
 Name=Plex
-Exec=/home/family/bin/launch-plex.sh
+Exec=/var/home/family/bin/launch-plex.sh
 Icon=applications-multimedia
 Terminal=false
 Categories=AudioVideo;Video;
@@ -739,7 +739,7 @@ If you do not want full-disk imaging every time, ostree-style replication can be
 
 Rollback matters because one of the main promises of an immutable-style system is that bad updates do not have to become a rebuilding marathon. Restoring configs matters because most of the HTPC personality now lives in PWA launcher entries, Steam Non-Steam shortcut metadata, collections, artwork, autostart files, and the Chromium Flatpak profile under `~/.var/app/org.chromium.Chromium`. Re-pairing controllers matters because controller state is one of the first things a family notices when it breaks. Reinstalling Flatpaks matters because app-layer repairs are often much easier than host-level surgery. Browser DRM resets matter because streaming services can fail in frustrating ways that look dramatic but are sometimes just bad site state.
 
-Use `JMStover` for rollback, updates, and host-level repairs. Use the `family` account for the backup and restore scripts below, because those scripts are meant to capture the couch-facing files that live in `/home/family`, including the Chromium app profile and the Steam user data that hold the streaming PWA and Big Picture state.
+Use `JMStover` for rollback, updates, and host-level repairs. Use the `family` account for the backup and restore scripts below, because those scripts are meant to capture the couch-facing files that live in `/var/home/family`, including the Chromium app profile and the Steam user data that hold the streaming PWA and Big Picture state.
 
 If a Bazzite update clearly broke a previously working machine, start with rollback:
 
@@ -910,7 +910,7 @@ Family View PIN: ____________________
 
 This appendix keeps the exact fallback file contents and recovery helpers in one place when you are rebuilding a box. Section 8 remains the primary deployment path: install each service as a Chromium app/PWA first, then use the material below only when you need repair tools or custom wrappers.
 
-Unless a step above explicitly says otherwise, the `~` paths in this appendix are meant to be created while logged into the Linux `family` account, so `~` means `/home/family`.
+Unless a step above explicitly says otherwise, the `~` paths in this appendix are meant to be created while logged into the Linux `family` account, so `~` means `/var/home/family`.
 
 ### Steam autostart desktop file
 
@@ -1001,7 +1001,7 @@ File path: `~/.local/share/applications/netflix.desktop`
 [Desktop Entry]
 Type=Application
 Name=Netflix
-Exec=/home/family/bin/launch-netflix.sh
+Exec=/var/home/family/bin/launch-netflix.sh
 Icon=applications-multimedia
 Terminal=false
 Categories=AudioVideo;Video;
@@ -1013,7 +1013,7 @@ File path: `~/.local/share/applications/hulu.desktop`
 [Desktop Entry]
 Type=Application
 Name=Hulu
-Exec=/home/family/bin/launch-hulu.sh
+Exec=/var/home/family/bin/launch-hulu.sh
 Icon=applications-multimedia
 Terminal=false
 Categories=AudioVideo;Video;
@@ -1025,7 +1025,7 @@ File path: `~/.local/share/applications/max.desktop`
 [Desktop Entry]
 Type=Application
 Name=Max
-Exec=/home/family/bin/launch-max.sh
+Exec=/var/home/family/bin/launch-max.sh
 Icon=applications-multimedia
 Terminal=false
 Categories=AudioVideo;Video;
@@ -1037,7 +1037,7 @@ File path: `~/.local/share/applications/disney-plus.desktop`
 [Desktop Entry]
 Type=Application
 Name=Disney+
-Exec=/home/family/bin/launch-disney-plus.sh
+Exec=/var/home/family/bin/launch-disney-plus.sh
 Icon=applications-multimedia
 Terminal=false
 Categories=AudioVideo;Video;
@@ -1049,7 +1049,7 @@ File path: `~/.local/share/applications/apple-tv-plus.desktop`
 [Desktop Entry]
 Type=Application
 Name=Apple TV+
-Exec=/home/family/bin/launch-apple-tv-plus.sh
+Exec=/var/home/family/bin/launch-apple-tv-plus.sh
 Icon=applications-multimedia
 Terminal=false
 Categories=AudioVideo;Video;
@@ -1061,7 +1061,7 @@ File path: `~/.local/share/applications/youtube.desktop`
 [Desktop Entry]
 Type=Application
 Name=YouTube
-Exec=/home/family/bin/launch-youtube.sh
+Exec=/var/home/family/bin/launch-youtube.sh
 Icon=applications-multimedia
 Terminal=false
 Categories=AudioVideo;Video;
@@ -1073,7 +1073,7 @@ File path: `~/.local/share/applications/paramount-plus.desktop`
 [Desktop Entry]
 Type=Application
 Name=Paramount+
-Exec=/home/family/bin/launch-paramount-plus.sh
+Exec=/var/home/family/bin/launch-paramount-plus.sh
 Icon=applications-multimedia
 Terminal=false
 Categories=AudioVideo;Video;
@@ -1085,7 +1085,7 @@ File path: `~/.local/share/applications/peacock.desktop`
 [Desktop Entry]
 Type=Application
 Name=Peacock
-Exec=/home/family/bin/launch-peacock.sh
+Exec=/var/home/family/bin/launch-peacock.sh
 Icon=applications-multimedia
 Terminal=false
 Categories=AudioVideo;Video;
@@ -1097,7 +1097,7 @@ File path: `~/.local/share/applications/history.desktop`
 [Desktop Entry]
 Type=Application
 Name=History
-Exec=/home/family/bin/launch-history.sh
+Exec=/var/home/family/bin/launch-history.sh
 Icon=applications-multimedia
 Terminal=false
 Categories=AudioVideo;Video;
@@ -1214,7 +1214,7 @@ File path: `~/.local/share/applications/xbox-cloud.desktop`
 [Desktop Entry]
 Type=Application
 Name=Xbox Cloud Gaming
-Exec=/home/family/bin/launch-xbox-cloud.sh
+Exec=/var/home/family/bin/launch-xbox-cloud.sh
 Icon=applications-games
 Terminal=false
 Categories=Game;Network;
@@ -1226,7 +1226,7 @@ File path: `~/.local/share/applications/geforcenow.desktop`
 [Desktop Entry]
 Type=Application
 Name=GeForce NOW
-Exec=/home/family/bin/launch-geforcenow.sh
+Exec=/var/home/family/bin/launch-geforcenow.sh
 Icon=applications-games
 Terminal=false
 Categories=Game;Network;
@@ -1238,7 +1238,7 @@ File path: `~/.local/share/applications/luna.desktop`
 [Desktop Entry]
 Type=Application
 Name=Amazon Luna
-Exec=/home/family/bin/launch-luna.sh
+Exec=/var/home/family/bin/launch-luna.sh
 Icon=applications-games
 Terminal=false
 Categories=Game;Network;
@@ -1250,7 +1250,7 @@ File path: `~/.local/share/applications/plex.desktop`
 [Desktop Entry]
 Type=Application
 Name=Plex
-Exec=/home/family/bin/launch-plex.sh
+Exec=/var/home/family/bin/launch-plex.sh
 Icon=applications-multimedia
 Terminal=false
 Categories=AudioVideo;Video;
