@@ -613,6 +613,12 @@ printf 'Steam Target: %s\n' "$output"
 printf 'Steam Start In: %s\n' "$wrapper_dir"
 ```
 
+Usage:
+
+```bash
+~/bin/create-steam-webapp-wrapper.sh <service-slug> <desktop-id>
+```
+
 ### Deterministic validation commands
 
 ```bash
@@ -1299,6 +1305,8 @@ Categories=AudioVideo;Video;
 
 ### Advanced app-entry scripts and recovery helpers
 
+Section 8 is the canonical operational workflow for launcher discovery, Portal-versus-wrapper decisions, and Steam shortcut binding. Keep the helpers below aligned to that workflow.
+
 File path: `~/bin/create-steam-webapp-wrapper.sh`
 
 ```bash
@@ -1325,6 +1333,12 @@ chmod +x "$output"
 
 printf 'Steam Target: %s\n' "$output"
 printf 'Steam Start In: %s\n' "$wrapper_dir"
+```
+
+Usage:
+
+```bash
+~/bin/create-steam-webapp-wrapper.sh <service-slug> <desktop-id>
 ```
 
 File path: `~/bin/tv-on-cec.sh`
