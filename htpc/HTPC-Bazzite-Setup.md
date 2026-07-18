@@ -479,6 +479,140 @@ Use this path only when the service is missing from Portal or the Portal entry i
 
 KDE should now have one launchable entry per service under the `family` account, and Steam should point either at the working Portal entry or at the stable Chromium desktop-ID wrapper, never both.
 
+### Portal launcher locations, discovery, and canonical wrapper workflow
+
+For this build, launcher files can live in these locations:
+
+- `~/.local/share/applications/`
+- `/usr/share/applications/`
+- `~/.local/share/flatpak/exports/share/applications/`
+- `/var/lib/flatpak/exports/share/applications/`
+
+The canonical wrapper location is:
+
+- `/var/home/family/bin/steam-webapps/`
+
+The canonical wrapper naming is:
+
+- `launch-<service>.sh`
+
+Use the following discovery commands when you need to locate the current launcher entry for a service:
+
+```bash
+find \
+  ~/.local/share/applications \
+  /usr/share/applications \
+  ~/.local/share/flatpak/exports/share/applications \
+  /var/lib/flatpak/exports/share/applications \
+  -maxdepth 1 -type f -name '*.desktop' 2>/dev/null | sort
+```
+
+```bash
+service_pattern='netflix|hulu|max|disney|apple|youtube|paramount|peacock|history'
+find \
+  ~/.local/share/applications \
+  /usr/share/applications \
+  ~/.local/share/flatpak/exports/share/applications \
+  /var/lib/flatpak/exports/share/applications \
+  -maxdepth 1 -type f -name '*.desktop' 2>/dev/null | grep -Ei "$service_pattern"
+```
+
+```bash
+desktop_file="$HOME/.local/share/applications/org.chromium.Chromium.flextop.chrome-<id>-Default.desktop"
+grep -E '^(Name|Exec|Icon)=' "$desktop_file"
+```
+
+```bash
+kbuildsycoca6 --noincremental
+```
+
+Use this decision flow every time:
+
+1. If a service exists and works via the Portal or normal KDE launcher, launch it once from KDE first.
+2. If that launcher works cleanly, either keep it as the single Steam entry for the service or wrap it deterministically with `gtk-launch` and use only that wrapper in Steam.
+3. If the service does not exist in Portal, create the Chromium app-window entry, find the generated desktop file in `~/.local/share/applications`, extract the desktop ID, and create the canonical wrapper in `/var/home/family/bin/steam-webapps/`.
+
+When the service already exists and works from Portal or KDE, a deterministic wrapper looks like this:
+
+```bash
+service_slug='netflix'
+desktop_id='org.chromium.Chromium.flextop.chrome-<id>-Default'
+wrapper_dir='/var/home/family/bin/steam-webapps'
+wrapper_path="$wrapper_dir/launch-${service_slug}.sh"
+
+mkdir -p "$wrapper_dir"
+{
+  printf '%s\n' '#!/usr/bin/env bash'
+  printf '%s\n' 'set -euo pipefail'
+  printf 'gtk-launch %s\n' "$desktop_id"
+} > "$wrapper_path"
+chmod +x "$wrapper_path"
+
+printf 'Steam Target: %s\n' "$wrapper_path"
+printf 'Steam Start In: %s\n' "$wrapper_dir"
+```
+
+When the service is missing from Portal and you must create the Chromium app entry first, use this flow:
+
+```bash
+find ~/.local/share/applications -maxdepth 1 -type f -name 'org.chromium.Chromium.flextop.chrome-*-Default.desktop' | sort
+```
+
+```bash
+desktop_file="$HOME/.local/share/applications/org.chromium.Chromium.flextop.chrome-<id>-Default.desktop"
+desktop_id="$(basename "$desktop_file" .desktop)"
+service_slug='netflix'
+wrapper_dir='/var/home/family/bin/steam-webapps'
+wrapper_path="$wrapper_dir/launch-${service_slug}.sh"
+
+mkdir -p "$wrapper_dir"
+{
+  printf '%s\n' '#!/usr/bin/env bash'
+  printf '%s\n' 'set -euo pipefail'
+  printf 'gtk-launch %s\n' "$desktop_id"
+} > "$wrapper_path"
+chmod +x "$wrapper_path"
+
+printf 'Steam Target: %s\n' "$wrapper_path"
+printf 'Steam Start In: %s\n' "$wrapper_dir"
+```
+
+Guardrails for the authoritative workflow:
+
+1. Keep one Steam entry per service: Portal or wrapper, never both.
+2. Never use `/run/user/.../doc/...` as the persistent Steam target.
+3. Keep wrappers only in `/var/home/family/bin/steam-webapps/`.
+
+#### Optional helper script: create-steam-webapp-wrapper.sh
+
+File path: `~/bin/create-steam-webapp-wrapper.sh`
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ "$#" -ne 2 ]; then
+  echo "Usage: $0 <service-slug> <desktop-id>" >&2
+  exit 1
+fi
+
+service_slug="$1"
+desktop_id="$2"
+wrapper_dir="/var/home/family/bin/steam-webapps"
+output="$wrapper_dir/launch-${service_slug}.sh"
+
+mkdir -p "$wrapper_dir"
+{
+  printf '%s\n' '#!/usr/bin/env bash'
+  printf '%s\n' 'set -euo pipefail'
+  printf 'gtk-launch %s\n' "$desktop_id"
+} > "$output"
+chmod +x "$output"
+
+printf 'Steam Target: %s\n' "$output"
+printf 'Steam Start In: %s\n' "$wrapper_dir"
+```
+
 ### Deterministic validation commands
 
 ```bash
@@ -497,13 +631,14 @@ find ~/.local/share/Steam/userdata -type f -name shortcuts.vdf 2>/dev/null
 2. Choose **Games > Add a Non-Steam Game to My Library**.
 3. Add Netflix, Hulu, Max, Disney+, Apple TV+, YouTube, Paramount+, Peacock, and History from the app list, choosing the Portal entry when it exists and the wrapper entry only when Portal does not.
 4. Remove duplicate entries so there is only one Steam shortcut per service.
-5. Return to Big Picture mode and launch each entry once from the library to confirm the Steam shortcut points at the correct app.
-6. Create or maintain Steam collections named **Streaming**, **Media**, and **Emulators**.
-7. Put the nine streaming services in **Streaming**.
-8. If installed later, put Kodi, Jellyfin, and Plex in **Media**.
-9. If installed later, put RetroArch, Dolphin, and any emulator front end such as EmulationStation Desktop Edition in **Emulators**.
-10. Mark the services your household uses most often as favorites so they are easiest to reach from the couch.
-11. Optional polish: add custom Steam artwork for the streaming entries so Big Picture reads like a dedicated media shelf instead of a generic shortcut list.
+5. If you need to discover launcher files, build a deterministic wrapper, or confirm the correct Steam target and Start In values, use the authoritative workflow in **Portal launcher locations, discovery, and canonical wrapper workflow** above.
+6. Return to Big Picture mode and launch each entry once from the library to confirm the Steam shortcut points at the correct app.
+7. Create or maintain Steam collections named **Streaming**, **Media**, and **Emulators**.
+8. Put the nine streaming services in **Streaming**.
+9. If installed later, put Kodi, Jellyfin, and Plex in **Media**.
+10. If installed later, put RetroArch, Dolphin, and any emulator front end such as EmulationStation Desktop Edition in **Emulators**.
+11. Mark the services your household uses most often as favorites so they are easiest to reach from the couch.
+12. Optional polish: add custom Steam artwork for the streaming entries so Big Picture reads like a dedicated media shelf instead of a generic shortcut list.
 
 At that point, the preferred launch path is controller-first: boot into Steam Big Picture, open the relevant collection or favorites row, and launch the streaming app without touching the KDE desktop.
 
@@ -518,7 +653,7 @@ Steam stores the Non-Steam shortcut definitions, collection membership, and cust
 
 ### Fallback path: manual Chromium launchers
 
-Use the manual `~/bin` + `.desktop` path only if a service is missing from Portal, the Portal entry is unreliable, or the installed Chromium app needs a stable `gtk-launch` wrapper for Steam. Apple TV+ is still one of the first services to validate carefully. The fallback scripts and desktop-file templates are kept in Section 17 and should be treated as the second tier after Portal, not as the first thing to reach for.
+Use the manual wrapper path only if a service is missing from Portal, the Portal entry is unreliable, or the installed Chromium app needs a stable `gtk-launch` wrapper for Steam. Apple TV+ is still one of the first services to validate carefully. Build and place those wrappers exactly as described in **Portal launcher locations, discovery, and canonical wrapper workflow** above. The fallback scripts and desktop-file templates in Section 17 are the reusable examples, not a separate operational model.
 
 For already-installed Chromium apps, the preferred wrapper form is:
 
@@ -979,65 +1114,65 @@ Comment=Start Steam in Big Picture mode for couch use
 
 ### Streaming fallback launcher scripts
 
-Use these only if the Portal path is unavailable and you need a stable wrapper for an already-installed Chromium app. Replace the `<id>` placeholder with the real Chromium flextop desktop ID from `~/.local/share/applications`.
+Section 8 contains the canonical operational workflow for discovering launcher files, choosing Portal versus wrapper, and setting Steam Target and Start In values. Use these only if the Portal path is unavailable and you need a stable wrapper for an already-installed Chromium app. Replace the `<id>` placeholder with the real Chromium flextop desktop ID from `~/.local/share/applications`.
 
-File path: `~/bin/launch-netflix.sh`
-
-```bash
-#!/bin/bash
-gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
-```
-
-File path: `~/bin/launch-hulu.sh`
+File path: `/var/home/family/bin/steam-webapps/launch-netflix.sh`
 
 ```bash
 #!/bin/bash
 gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
 ```
 
-File path: `~/bin/launch-max.sh`
+File path: `/var/home/family/bin/steam-webapps/launch-hulu.sh`
 
 ```bash
 #!/bin/bash
 gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
 ```
 
-File path: `~/bin/launch-disney-plus.sh`
+File path: `/var/home/family/bin/steam-webapps/launch-max.sh`
 
 ```bash
 #!/bin/bash
 gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
 ```
 
-File path: `~/bin/launch-apple-tv-plus.sh`
+File path: `/var/home/family/bin/steam-webapps/launch-disney-plus.sh`
 
 ```bash
 #!/bin/bash
 gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
 ```
 
-File path: `~/bin/launch-youtube.sh`
+File path: `/var/home/family/bin/steam-webapps/launch-apple-tv-plus.sh`
 
 ```bash
 #!/bin/bash
 gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
 ```
 
-File path: `~/bin/launch-paramount-plus.sh`
+File path: `/var/home/family/bin/steam-webapps/launch-youtube.sh`
 
 ```bash
 #!/bin/bash
 gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
 ```
 
-File path: `~/bin/launch-peacock.sh`
+File path: `/var/home/family/bin/steam-webapps/launch-paramount-plus.sh`
 
 ```bash
 #!/bin/bash
 gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
 ```
 
-File path: `~/bin/launch-history.sh`
+File path: `/var/home/family/bin/steam-webapps/launch-peacock.sh`
+
+```bash
+#!/bin/bash
+gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
+```
+
+File path: `/var/home/family/bin/steam-webapps/launch-history.sh`
 
 ```bash
 #!/bin/bash
@@ -1060,7 +1195,7 @@ File path: `~/.local/share/applications/netflix.desktop`
 [Desktop Entry]
 Type=Application
 Name=Netflix
-Exec=/var/home/family/bin/launch-netflix.sh
+Exec=/var/home/family/bin/steam-webapps/launch-netflix.sh
 Icon=applications-multimedia
 Terminal=false
 Categories=AudioVideo;Video;
@@ -1072,7 +1207,7 @@ File path: `~/.local/share/applications/hulu.desktop`
 [Desktop Entry]
 Type=Application
 Name=Hulu
-Exec=/var/home/family/bin/launch-hulu.sh
+Exec=/var/home/family/bin/steam-webapps/launch-hulu.sh
 Icon=applications-multimedia
 Terminal=false
 Categories=AudioVideo;Video;
@@ -1084,7 +1219,7 @@ File path: `~/.local/share/applications/max.desktop`
 [Desktop Entry]
 Type=Application
 Name=Max
-Exec=/var/home/family/bin/launch-max.sh
+Exec=/var/home/family/bin/steam-webapps/launch-max.sh
 Icon=applications-multimedia
 Terminal=false
 Categories=AudioVideo;Video;
@@ -1096,7 +1231,7 @@ File path: `~/.local/share/applications/disney-plus.desktop`
 [Desktop Entry]
 Type=Application
 Name=Disney+
-Exec=/var/home/family/bin/launch-disney-plus.sh
+Exec=/var/home/family/bin/steam-webapps/launch-disney-plus.sh
 Icon=applications-multimedia
 Terminal=false
 Categories=AudioVideo;Video;
@@ -1108,7 +1243,7 @@ File path: `~/.local/share/applications/apple-tv-plus.desktop`
 [Desktop Entry]
 Type=Application
 Name=Apple TV+
-Exec=/var/home/family/bin/launch-apple-tv-plus.sh
+Exec=/var/home/family/bin/steam-webapps/launch-apple-tv-plus.sh
 Icon=applications-multimedia
 Terminal=false
 Categories=AudioVideo;Video;
@@ -1120,7 +1255,7 @@ File path: `~/.local/share/applications/youtube.desktop`
 [Desktop Entry]
 Type=Application
 Name=YouTube
-Exec=/var/home/family/bin/launch-youtube.sh
+Exec=/var/home/family/bin/steam-webapps/launch-youtube.sh
 Icon=applications-multimedia
 Terminal=false
 Categories=AudioVideo;Video;
@@ -1132,7 +1267,7 @@ File path: `~/.local/share/applications/paramount-plus.desktop`
 [Desktop Entry]
 Type=Application
 Name=Paramount+
-Exec=/var/home/family/bin/launch-paramount-plus.sh
+Exec=/var/home/family/bin/steam-webapps/launch-paramount-plus.sh
 Icon=applications-multimedia
 Terminal=false
 Categories=AudioVideo;Video;
@@ -1144,7 +1279,7 @@ File path: `~/.local/share/applications/peacock.desktop`
 [Desktop Entry]
 Type=Application
 Name=Peacock
-Exec=/var/home/family/bin/launch-peacock.sh
+Exec=/var/home/family/bin/steam-webapps/launch-peacock.sh
 Icon=applications-multimedia
 Terminal=false
 Categories=AudioVideo;Video;
@@ -1156,13 +1291,41 @@ File path: `~/.local/share/applications/history.desktop`
 [Desktop Entry]
 Type=Application
 Name=History
-Exec=/var/home/family/bin/launch-history.sh
+Exec=/var/home/family/bin/steam-webapps/launch-history.sh
 Icon=applications-multimedia
 Terminal=false
 Categories=AudioVideo;Video;
 ```
 
 ### Advanced app-entry scripts and recovery helpers
+
+File path: `~/bin/create-steam-webapp-wrapper.sh`
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ "$#" -ne 2 ]; then
+  echo "Usage: $0 <service-slug> <desktop-id>" >&2
+  exit 1
+fi
+
+service_slug="$1"
+desktop_id="$2"
+wrapper_dir="/var/home/family/bin/steam-webapps"
+output="$wrapper_dir/launch-${service_slug}.sh"
+
+mkdir -p "$wrapper_dir"
+{
+  printf '%s\n' '#!/usr/bin/env bash'
+  printf '%s\n' 'set -euo pipefail'
+  printf 'gtk-launch %s\n' "$desktop_id"
+} > "$output"
+chmod +x "$output"
+
+printf 'Steam Target: %s\n' "$output"
+printf 'Steam Start In: %s\n' "$wrapper_dir"
+```
 
 File path: `~/bin/tv-on-cec.sh`
 
