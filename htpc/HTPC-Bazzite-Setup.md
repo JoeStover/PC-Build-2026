@@ -470,24 +470,28 @@ When the Portal entry works, stop there. That is the preferred path for this bui
 
 ### Portal launcher locations, discovery, and canonical wrapper workflow
 
-Use this path only when the service is missing from Portal or the Portal entry is unreliable on this box.
+For this HTPC build, treat launcher discovery and wrapper creation as a deterministic workflow.
 
-For this build, launcher files can live in these locations:
+**Launcher and wrapper locations**
+
+Primary launcher locations to inspect:
 
 - `~/.local/share/applications/`
 - `/usr/share/applications/`
 - `~/.local/share/flatpak/exports/share/applications/`
 - `/var/lib/flatpak/exports/share/applications/`
 
-The canonical wrapper location is:
+Canonical wrapper storage for this guide:
 
 - `/var/home/family/bin/steam-webapps/`
 
-The canonical wrapper naming is:
+Canonical wrapper naming:
 
 - `launch-<service>.sh`
 
-Use the following discovery commands when you need to locate the current launcher entry for a service:
+**Discover candidate launchers (Portal or Chromium app entries)**
+
+List likely launchers from all standard locations:
 
 ```bash
 find \
@@ -495,92 +499,64 @@ find \
   /usr/share/applications \
   ~/.local/share/flatpak/exports/share/applications \
   /var/lib/flatpak/exports/share/applications \
-  -maxdepth 1 -type f -name '*.desktop' 2>/dev/null | sort
+  -maxdepth 1 -type f -name "*.desktop" 2>/dev/null \
+| sort \
+| grep -Ei 'chromium|chrome|netflix|hulu|max|disney|apple|youtube|paramount|peacock|history'
 ```
 
-```bash
-service_pattern='netflix|hulu|max|disney|apple|youtube|paramount|peacock|history'
-find \
-  ~/.local/share/applications \
-  /usr/share/applications \
-  ~/.local/share/flatpak/exports/share/applications \
-  /var/lib/flatpak/exports/share/applications \
-  -maxdepth 1 -type f -name '*.desktop' 2>/dev/null | grep -Ei "$service_pattern"
-```
+Inspect launcher metadata:
 
 ```bash
-desktop_file="$HOME/.local/share/applications/org.chromium.Chromium.flextop.chrome-<id>-Default.desktop"
-grep -E '^(Name|Exec|Icon)=' "$desktop_file"
+grep -E '^(Name|Exec|Icon)=' /path/to/file.desktop
 ```
+
+If launcher visibility is stale after cleanup:
 
 ```bash
 kbuildsycoca6 --noincremental
 ```
 
-Use this decision flow every time:
+**Decision flow**
 
-A) If the service exists and works via the Portal or normal KDE launcher, launch it once from KDE first, then either keep it as the single Steam entry for the service or wrap it deterministically with `gtk-launch` and use only that wrapper in Steam.
+If a service exists as a working Portal/KDE launcher:
 
-B) If the service does not exist in Portal, create the Chromium app-window entry, find the generated desktop file in `~/.local/share/applications`, extract the desktop ID, and create the canonical wrapper in `/var/home/family/bin/steam-webapps/`.
+1. Launch once from KDE and validate playback.
+2. Keep that as the single Steam entry OR wrap it deterministically with `gtk-launch`.
 
-When the service already exists and works from Portal or KDE, a deterministic wrapper looks like this:
+If a service does not exist in Portal:
 
-```bash
-service_slug='netflix'
-desktop_id='org.chromium.Chromium.flextop.chrome-<id>-Default'
-wrapper_dir='/var/home/family/bin/steam-webapps'
-wrapper_path="$wrapper_dir/launch-${service_slug}.sh"
+1. Create/install a Chromium app-window entry from the service URL.
+2. Confirm it launches from KDE.
+3. Find its `.desktop` file in `~/.local/share/applications/`.
+4. Derive the desktop ID as the filename without `.desktop`.
+5. Create a wrapper in `/var/home/family/bin/steam-webapps/launch-<service>.sh`.
+6. Use that wrapper as the Steam shortcut target.
 
-mkdir -p "$wrapper_dir"
-{
-  printf '%s\n' '#!/usr/bin/env bash'
-  printf '%s\n' 'set -euo pipefail'
-  printf 'exec gtk-launch %s\n' "$desktop_id"
-} > "$wrapper_path"
-chmod +x "$wrapper_path"
-
-printf 'Steam Target: %s\n' "$wrapper_path"
-printf 'Steam Start In: %s\n' "$wrapper_dir"
-printf 'Steam Launch Options: %s\n' 'leave empty'
-```
-
-When the service is missing from Portal and you must create the Chromium app entry first, use this flow:
+**Canonical wrapper creation**
 
 ```bash
-find ~/.local/share/applications -maxdepth 1 -type f -name 'org.chromium.Chromium.flextop.chrome-*-Default.desktop' | sort
+mkdir -p /var/home/family/bin/steam-webapps
+
+cat > /var/home/family/bin/steam-webapps/launch-<service>.sh <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+exec gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
+EOF
+
+chmod +x /var/home/family/bin/steam-webapps/launch-<service>.sh
 ```
 
-```bash
-desktop_file="$HOME/.local/share/applications/org.chromium.Chromium.flextop.chrome-<id>-Default.desktop"
-desktop_id="$(basename "$desktop_file" .desktop)"
-service_slug='netflix'
-wrapper_dir='/var/home/family/bin/steam-webapps'
-wrapper_path="$wrapper_dir/launch-${service_slug}.sh"
-
-mkdir -p "$wrapper_dir"
-{
-  printf '%s\n' '#!/usr/bin/env bash'
-  printf '%s\n' 'set -euo pipefail'
-  printf 'exec gtk-launch %s\n' "$desktop_id"
-} > "$wrapper_path"
-chmod +x "$wrapper_path"
-
-printf 'Steam Target: %s\n' "$wrapper_path"
-printf 'Steam Start In: %s\n' "$wrapper_dir"
-printf 'Steam Launch Options: %s\n' 'leave empty'
-```
-
-Guardrails for the authoritative workflow:
-
-1. Keep one Steam entry per service: Portal or wrapper, never both.
-2. Never use `/run/user/.../doc/...` as the persistent Steam target.
-3. Keep wrappers only in `/var/home/family/bin/steam-webapps/`.
-
-Steam fields for the canonical wrapper path:
+Steam shortcut fields for wrappers:
 
 - **Target:** `/var/home/family/bin/steam-webapps/launch-<service>.sh`
 - **Start In:** `/var/home/family/bin/steam-webapps/`
-- **Launch Options:** leave empty
+- **Launch Options:** empty
+
+**Guardrails**
+
+- Keep exactly one Steam entry per service (Portal entry OR wrapper, never both).
+- Never use `/run/user/.../doc/...` targets as persistent Steam shortcuts.
+- Keep persistent wrappers only in `/var/home/family/bin/steam-webapps/`.
 
 #### Optional helper script: create-steam-webapp-wrapper.sh
 
@@ -591,32 +567,30 @@ File path: `~/bin/create-steam-webapp-wrapper.sh`
 set -euo pipefail
 
 if [ "$#" -ne 2 ]; then
-  echo "Usage: $0 <service-slug> <desktop-id>" >&2
+  echo "Usage: $0 <service-slug> <desktop-id>"
+  echo "Example: $0 history org.chromium.Chromium.flextop.chrome-abc123-Default"
   exit 1
 fi
 
-service_slug="$1"
+service="$1"
 desktop_id="$2"
-wrapper_dir="/var/home/family/bin/steam-webapps"
-output="$wrapper_dir/launch-${service_slug}.sh"
+dest_dir="/var/home/family/bin/steam-webapps"
+dest="$dest_dir/launch-${service}.sh"
 
-mkdir -p "$wrapper_dir"
-{
-  printf '%s\n' '#!/usr/bin/env bash'
-  printf '%s\n' 'set -euo pipefail'
-  printf 'exec gtk-launch %s\n' "$desktop_id"
-} > "$output"
-chmod +x "$output"
+mkdir -p "$dest_dir"
 
-printf 'Steam Target: %s\n' "$output"
-printf 'Steam Start In: %s\n' "$wrapper_dir"
-printf 'Steam Launch Options: %s\n' 'leave empty'
-```
+cat > "$dest" <<EOF
+#!/usr/bin/env bash
+set -euo pipefail
+exec gtk-launch ${desktop_id}
+EOF
 
-Usage:
+chmod +x "$dest"
 
-```bash
-~/bin/create-steam-webapp-wrapper.sh <service-slug> <desktop-id>
+echo "Created: $dest"
+echo "Steam Target: $dest"
+echo "Steam Start In: ${dest_dir}/"
+echo "Launch Options: (empty)"
 ```
 
 ### Deterministic validation commands
@@ -1120,7 +1094,7 @@ Comment=Start Steam in Big Picture mode for couch use
 
 ### Streaming fallback launcher scripts
 
-Section 8 is the canonical operational workflow for launcher discovery and wrapper creation.
+Section 8 is the canonical operational workflow for launcher discovery and wrapper creation; Appendix entries below are templates/reference snippets.
 Use these only if the Portal path is unavailable and you need a stable wrapper for an already-installed Chromium app. Replace the `<id>` placeholder with the real Chromium flextop desktop ID from `~/.local/share/applications`.
 
 File path: `/var/home/family/bin/steam-webapps/launch-netflix.sh`
@@ -1306,8 +1280,6 @@ Categories=AudioVideo;Video;
 
 ### Advanced app-entry scripts and recovery helpers
 
-Section 8 is the canonical operational workflow for launcher discovery and wrapper creation.
-
 File path: `~/bin/create-steam-webapp-wrapper.sh`
 
 ```bash
@@ -1315,32 +1287,30 @@ File path: `~/bin/create-steam-webapp-wrapper.sh`
 set -euo pipefail
 
 if [ "$#" -ne 2 ]; then
-  echo "Usage: $0 <service-slug> <desktop-id>" >&2
+  echo "Usage: $0 <service-slug> <desktop-id>"
+  echo "Example: $0 history org.chromium.Chromium.flextop.chrome-abc123-Default"
   exit 1
 fi
 
-service_slug="$1"
+service="$1"
 desktop_id="$2"
-wrapper_dir="/var/home/family/bin/steam-webapps"
-output="$wrapper_dir/launch-${service_slug}.sh"
+dest_dir="/var/home/family/bin/steam-webapps"
+dest="$dest_dir/launch-${service}.sh"
 
-mkdir -p "$wrapper_dir"
-{
-  printf '%s\n' '#!/usr/bin/env bash'
-  printf '%s\n' 'set -euo pipefail'
-  printf 'exec gtk-launch %s\n' "$desktop_id"
-} > "$output"
-chmod +x "$output"
+mkdir -p "$dest_dir"
 
-printf 'Steam Target: %s\n' "$output"
-printf 'Steam Start In: %s\n' "$wrapper_dir"
-printf 'Steam Launch Options: %s\n' 'leave empty'
-```
+cat > "$dest" <<EOF
+#!/usr/bin/env bash
+set -euo pipefail
+exec gtk-launch ${desktop_id}
+EOF
 
-Usage:
+chmod +x "$dest"
 
-```bash
-~/bin/create-steam-webapp-wrapper.sh <service-slug> <desktop-id>
+echo "Created: $dest"
+echo "Steam Target: $dest"
+echo "Steam Start In: ${dest_dir}/"
+echo "Launch Options: (empty)"
 ```
 
 File path: `~/bin/tv-on-cec.sh`
