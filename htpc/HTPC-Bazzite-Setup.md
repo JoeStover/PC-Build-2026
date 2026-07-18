@@ -387,6 +387,8 @@ Widevine DRM matters because major streaming services use it to decide whether p
 
 For this guide, the clear primary path is **Chromium PWA/app-window installs first**, then **KDE launcher verification**, then **Steam Non-Steam shortcuts**. Manual `~/bin` wrapper scripts and custom `.desktop` files are still useful, but only as fallback or troubleshooting tools when a service refuses to behave.
 
+**Re-validated on July 18, 2026.**
+
 Flatpak Chromium is still the browser baseline because it is easy to reinstall and consistent across multiple boxes. Chromium-created launcher entries matter because they land in KDE automatically, can be added into Steam cleanly, and store their app state inside `~/.var/app/org.chromium.Chromium`, which is now part of the backup plan.
 
 This is the day-one heart of the box. The required streaming set for this build is Netflix, Hulu, Max, Disney+, Apple TV+, YouTube, Paramount+, Peacock, and History. Validate those services over Wi-Fi first. Wired Ethernet can come later with the broader Cat6a plan and should be treated as an upgrade path for heavier future use such as NAS media and main-PC game streaming.
@@ -414,6 +416,25 @@ On this box, reserve Chromium on the `family` account for streaming PWAs and ser
 | Paramount+ | `https://www.paramountplus.com/` | Standard browser path |
 | Peacock | `https://www.peacocktv.com/` | Standard browser path |
 | History | `https://play.history.com/` | Test sign-in early |
+
+### Stability guardrails during setup and testing
+
+1. Avoid fast user switching while you are setting up, signing into services, or testing launch behavior. Finish the current test pass on one session before changing users.
+2. Test launchers one-by-one. Do not bulk-add or bulk-validate the whole catalog before the current app is confirmed stable.
+3. If the Steam UI degrades, fully restart Steam and clear any lingering `steamwebhelper` or Chromium processes before you keep debugging the launcher itself.
+
+### Cleanup and migration notes
+
+If you are migrating from an older version of this guide or an earlier launcher experiment:
+
+1. Remove old Steam Non-Steam streaming entries before adding the current set again.
+2. Archive or remove legacy `open-*` and old streaming `launch-*` scripts that are no longer part of the active setup.
+3. Clear stale user `.desktop` launchers from `~/.local/share/applications` so KDE does not keep surfacing dead entries.
+4. Rebuild the KDE app database after cleanup:
+
+```bash
+kbuildsycoca6 --noincremental
+```
 
 ### Primary path: install each service as a Chromium app/PWA
 
@@ -443,9 +464,18 @@ At that point, the preferred launch path is controller-first: boot into Steam Bi
 
 Steam stores the Non-Steam shortcut definitions, collection membership, and custom artwork in its own user data. Treat that metadata as part of the real HTPC state, not as disposable polish.
 
+#### Phase G acceptance checklist
+
+- [ ] The app launches from the KDE desktop.
+- [ ] The same app launches from Steam Big Picture.
+- [ ] Exiting the app returns cleanly to Steam.
+- [ ] YouTube, Netflix, and Apple TV+ all pass before you scale the full catalog.
+
 ### Fallback path: manual Chromium launchers
 
 Use the manual `~/bin` + `.desktop` path only if a service refuses to install cleanly as a Chromium app, loses its launcher entry, or needs custom flags during troubleshooting. Apple TV+ is the most likely candidate. The fallback scripts and desktop-file templates are kept in Section 17 and should be treated as repair tools, not as the primary deployment path.
+
+If you experiment with the Bazzite Portal media app flow, treat it as an optional and experimental fallback only. The canonical path for this guide remains Chromium app-window or PWA installs first.
 
 ## Section 9: Kodi + Jellyfin
 
