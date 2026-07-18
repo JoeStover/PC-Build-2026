@@ -8,7 +8,7 @@ This guide turns a Lenovo M720q Tiny into a simple, family-friendly HTPC that fe
 
 1. For this exact build, keep `JMStover` as the personal admin account and `family` as the non-admin shared account. Later file paths assume the shared account name stays `family`.
 2. Use `JMStover` for setup, sudo/admin work, recovery, firmware tasks, updates, and occasional desktop/admin use.
-3. Use `family` for KDE auto-login, Steam Big Picture, Chromium PWAs, fallback launchers, `.desktop` files, and normal day-to-day HTPC use from the couch.
+3. Use `family` for KDE auto-login, Steam Big Picture, Portal entries, Chromium fallback launchers, `.desktop` files, and normal day-to-day HTPC use from the couch.
 4. Keep the everyday couch Steam account set to `the_stover_family`.
 5. For this exact build, use the **Bazzite / Fedora Atomic** command blocks and ignore the **Debian / Ubuntu** reference blocks unless you are intentionally adapting the guide.
 6. Run Bazzite-specific commands from the normal KDE terminal on the HTPC itself, not from a distrobox or container shell.
@@ -48,7 +48,7 @@ The main goals are simplicity, reproducibility, stability, and clear recovery wh
 
 This HTPC intentionally uses two Linux accounts. `JMStover` is the admin account. The shared `family` Linux account is the non-admin couch-facing auto-login account. That split keeps passwords, updates, recovery, and setup work separate from the everyday TV experience.
 
-When a step says to use the admin account, log into `JMStover`. Use it for installer choices, sudo/admin tasks, firmware work, rollback, recovery, and occasional desktop troubleshooting. When a step says to use `family`, log into the shared `family` Linux account. Use it for Steam Big Picture, Chromium PWA installs, fallback launchers, non-Steam shortcuts, and anything stored under `/var/home/family`.
+When a step says to use the admin account, log into `JMStover`. Use it for installer choices, sudo/admin tasks, firmware work, rollback, recovery, and occasional desktop troubleshooting. When a step says to use `family`, log into the shared `family` Linux account. Use it for Steam Big Picture, Portal entries, Chromium fallback launchers, non-Steam shortcuts, and anything stored under `/var/home/family`.
 
 ## Section 2: Hardware Overview
 
@@ -408,7 +408,7 @@ Stay logged into the Linux `family` account for this entire section. These app i
 
 Do not add a generic browser tile on day one. Keep ordinary web browsing as a desktop fallback with the K400+ so the main launcher surface stays focused and simple.
 
-On this box, reserve Chromium on the `family` account for streaming PWAs and service sign-ins. For casual web browsing, prefer Firefox or another separate browser/profile so the streaming app profile stays cleaner and more predictable.
+On this box, reserve Chromium on the `family` account for streaming fallback apps and service sign-ins. For casual web browsing, prefer Firefox or another separate browser/profile so the streaming app profile stays cleaner and more predictable.
 
 ### Canonical operating model for this build
 
@@ -482,14 +482,13 @@ KDE should now have one launchable entry per service under the `family` account,
 ### Deterministic validation commands
 
 ```bash
-flatpak list --app | grep -Ei 'chromium|chrome|steam' || true
-if flatpak list --app | grep -Fq 'com.valvesoftware.Steam'; then echo 'Unexpected Flatpak Steam present'; else echo 'No Flatpak Steam app installed'; fi
+flatpak list --app --columns=application | grep -E 'com.valvesoftware.Steam|org.chromium.Chromium|com.google.Chrome' || true
 command -v steam
 readlink -f "$(command -v steam)"
-grep -n '^Exec=' ~/.config/autostart/steam-bigpicture.desktop
-find ~/.local/share/applications -maxdepth 1 -type f -name 'org.chromium.Chromium.flextop.chrome-*-Default.desktop' | sort
-find ~/.local/share/applications -maxdepth 1 -type f -name 'org.chromium.Chromium.flextop.chrome-*-Default.desktop' | wc -l
-find ~/.local/share/Steam/userdata ~/.steam/steam/userdata -type f -name shortcuts.vdf 2>/dev/null
+grep -E '^Exec=' ~/.config/autostart/steam-bigpicture.desktop
+find ~/.local/share/applications -maxdepth 1 -name 'org.chromium.Chromium.flextop.chrome-*-Default.desktop' | sort
+find ~/.local/share/applications -maxdepth 1 -name 'org.chromium.Chromium.flextop.chrome-*-Default.desktop' | wc -l
+find ~/.local/share/Steam/userdata -type f -name shortcuts.vdf 2>/dev/null
 ```
 
 ### Phase G: Big Picture App Integration
@@ -773,10 +772,10 @@ If you eventually want a Home Assistant view from the couch, treat it as another
 
 Cloning matters because identical Lenovo M720q units are one of the biggest advantages of this project. Once one system is correct, you should not have to manually rebuild every detail from scratch on the next unit. Clonezilla is chosen because it is reliable, common, and good at whole-disk imaging for identical hardware. Ostree-style replication is also an option because Bazzite's immutable base means a lot of your real customization lives in user configuration and Flatpak state instead of a deeply hand-crafted host.
 
-The safest cloning strategy is to create one "golden" box first, but stop before you fill it with room-specific chaos. In practice, that means you should finish Bazzite, Steam, the day-one streaming PWAs, Phase G Big Picture integration, and the general controller flow, but think carefully before cloning active browser sessions, stale DRM tokens, room-specific Bluetooth pairings, or later add-ons that are not truly universal. The best golden image is polished but not overly personalized. Keep the same two-account model on every box: `JMStover` for admin work and `family` as the shared auto-login couch account.
+The safest cloning strategy is to create one "golden" box first, but stop before you fill it with room-specific chaos. In practice, that means you should finish Bazzite, Steam, the day-one streaming launcher flow, Phase G Big Picture integration, and the general controller flow, but think carefully before cloning active browser sessions, stale DRM tokens, room-specific Bluetooth pairings, or later add-ons that are not truly universal. The best golden image is polished but not overly personalized. Keep the same two-account model on every box: `JMStover` for admin work and `family` as the shared auto-login couch account.
 
 1. Finish one M720q until it is the exact baseline you want to reproduce.
-2. Update it, reboot it, and test the core flows one last time: boot, Steam Big Picture, at least one streaming PWA from KDE, the same app from Steam Big Picture, and at least one controller.
+2. Update it, reboot it, and test the core flows one last time: boot, Steam Big Picture, at least one streaming launcher from KDE, the same app from Steam Big Picture, and at least one controller.
 3. Decide whether you want to clone logged-in browser sessions and app credentials. If not, sign out of room-specific services before imaging so the new boxes start cleanly. If yes, remember that you are cloning Chromium app state, not just launcher icons.
 4. Boot the golden unit from your Ventoy USB and launch Clonezilla.
 5. Choose the device-image workflow and save the entire internal SSD to an external drive or network share. Name the image in a way that describes the room role and Bazzite state, such as `m720q-htpc-golden-01`.
@@ -789,9 +788,9 @@ If you do not want full-disk imaging every time, ostree-style replication can be
 
 ## Section 14: Disaster Recovery
 
-Rollback matters because one of the main promises of an immutable-style system is that bad updates do not have to become a rebuilding marathon. Restoring configs matters because most of the HTPC personality now lives in PWA launcher entries, Steam Non-Steam shortcut metadata, collections, artwork, autostart files, and the Chromium Flatpak profile under `~/.var/app/org.chromium.Chromium`. Re-pairing controllers matters because controller state is one of the first things a family notices when it breaks. Reinstalling Flatpaks matters because app-layer repairs are often much easier than host-level surgery. Browser DRM resets matter because streaming services can fail in frustrating ways that look dramatic but are sometimes just bad site state.
+Rollback matters because one of the main promises of an immutable-style system is that bad updates do not have to become a rebuilding marathon. Restoring configs matters because most of the HTPC personality now lives in streaming launcher entries, Steam Non-Steam shortcut metadata, collections, artwork, autostart files, and the Chromium Flatpak profile under `~/.var/app/org.chromium.Chromium`. Re-pairing controllers matters because controller state is one of the first things a family notices when it breaks. Reinstalling Flatpaks matters because app-layer repairs are often much easier than host-level surgery. Browser DRM resets matter because streaming services can fail in frustrating ways that look dramatic but are sometimes just bad site state.
 
-Use `JMStover` for rollback, updates, and host-level repairs. Use the `family` account for the backup and restore scripts below, because those scripts are meant to capture the couch-facing files that live in `/var/home/family`, including the Chromium app profile and the Steam user data that hold the streaming PWA and Big Picture state.
+Use `JMStover` for rollback, updates, and host-level repairs. Use the `family` account for the backup and restore scripts below, because those scripts are meant to capture the couch-facing files that live in `/var/home/family`, including the Chromium app profile and the Steam user data that hold the streaming launcher and Big Picture state.
 
 If a Bazzite update clearly broke a previously working machine, start with rollback:
 
@@ -808,7 +807,7 @@ rpm-ostree status
 flatpak list --system
 ```
 
-To make PWA and launcher recovery easy, back up the HTPC-specific config files, Chromium profile data, and Steam shortcut metadata:
+To make streaming launcher and profile recovery easy, back up the HTPC-specific config files, Chromium profile data, and Steam shortcut metadata:
 
 If `~/bin` does not exist yet, create it first:
 
@@ -870,7 +869,7 @@ fi
 
 The most important backup targets are `~/.local/share/applications`, `~/.config/autostart`, `~/.var/app/org.chromium.Chromium`, and `~/.local/share/Steam/userdata`. That Steam path is where the Non-Steam shortcuts, collections, and custom artwork live. Keep `~/bin` in the archive too so any fallback wrappers, power helpers, or recovery scripts come back with the rest of the couch-facing environment.
 
-Run the backup script after the PWAs, Steam shortcuts, collections, artwork, and sign-ins are stable, then copy the resulting archive to a NAS share, external SSD, or recovery USB. If the box is reinstalled later, run the restore script before you start rebuilding app entries by hand.
+Run the backup script after the Portal entries, Chromium fallback launchers, Steam shortcuts, collections, artwork, and sign-ins are stable, then copy the resulting archive to a NAS share, external SSD, or recovery USB. If the box is reinstalled later, run the restore script before you start rebuilding app entries by hand.
 
 If controllers stop reconnecting, treat them as pairing state problems first, not as "Linux is broken" problems. If you use the official Xbox Wireless Adapter, unplug it once, reconnect it, and repeat the adapter test flow from Section 11. If you use Bluetooth, remove the old controller entry and repeat the `bluetoothctl` flow. If both paths suddenly start failing, check Secure Boot and the `xone` module before you start changing unrelated parts of the box.
 
@@ -880,7 +879,7 @@ If Chromium-based streaming breaks, start small. Sign out of the affected servic
 
 If only one service is broken, repair that one app before you touch the whole profile: remove the broken Chromium app entry, recreate it from the service URL, retest it from the KDE launcher, and then re-add or relink just that one Steam Non-Steam shortcut if needed. If you use custom artwork, re-attach it only for that entry.
 
-If the problem survives that, restore the `family` backup so the PWA entries, Steam shortcut metadata, and Chromium profile come back in one shot. Only reset the Chromium Flatpak profile as a last resort. The reason to leave that step late is simple: profile resets are effective, but they also wipe the accumulated convenience of a working living-room box.
+If the problem survives that, restore the `family` backup so the streaming launcher entries, Steam shortcut metadata, and Chromium profile come back in one shot. Only reset the Chromium Flatpak profile as a last resort. The reason to leave that step late is simple: profile resets are effective, but they also wipe the accumulated convenience of a working living-room box.
 
 If suspend or wake behavior becomes flaky after an update, treat power management as a recovery target too: reboot once, test a clean suspend and resume cycle, and fall back to full shutdown until behavior is trustworthy again.
 
@@ -1422,7 +1421,7 @@ rpm-ostree rollback
 
 ## Section 18: Final Requirements
 
-This file is one continuous Markdown document intended to stay copy/pasteable, self-contained, and ready for GitHub commit. It is meant to be used as a reproducible HTPC build guide for identical Lenovo M720q Tiny systems, with the full setup, recovery, streaming-PWA, and bug-awareness story preserved in one place instead of scattered across chat history or memory.
+This file is one continuous Markdown document intended to stay copy/pasteable, self-contained, and ready for GitHub commit. It is meant to be used as a reproducible HTPC build guide for identical Lenovo M720q Tiny systems, with the full setup, recovery, streaming-launcher, and bug-awareness story preserved in one place instead of scattered across chat history or memory.
 
 ### Pass/fail validation checklist
 
