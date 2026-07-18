@@ -298,17 +298,22 @@ If playback is choppy or `vainfo` is broken, do not assume the browser or app is
 
 Even if the most common first action is launching a streaming app, Steam Big Picture is still the best controller-first shell for this build because it can surface streaming shortcuts, games, emulators, and later media apps in one familiar place. That makes it easier for the household to navigate from the couch and keeps the desktop hidden unless it is actually needed.
 
-Flatpak Steam is the preferred install path because it fits the overall model of keeping apps isolated and easier to manage. On Bazzite, do not stop here to install Feral GameMode first. Bazzite already applies its own gaming-oriented tuning, and this guide does not depend on `gamemoderun` or `gamemoded` for the first working box. The day-one job is getting Steam, autostart, and controller navigation working reliably.
+Native host Steam is the intended runtime for this build. On the validated July 18, 2026 setup, `command -v steam` resolves to `/usr/bin/steam` and the real target resolves to `/usr/lib/steam/bin_steam.sh`. Do not install or use Flatpak Steam for the day-to-day HTPC workflow. Flatpak Chromium remains correct for the web launchers in Section 8, but Steam itself should stay native on the host. On Bazzite, do not stop here to install Feral GameMode first. Bazzite already applies its own gaming-oriented tuning, and this guide does not depend on `gamemoderun` or `gamemoded` for the first working box. The day-one job is getting Steam, autostart, and controller navigation working reliably.
 
 Before you start this section, sign into the Linux `family` account. Steam's day-to-day data, autostart file, and later non-Steam shortcuts should all live in the same shared couch-facing profile that auto-logs in.
 
 ### Install Steam
 
+On the Bazzite image used for this build, Steam should already exist as the native host runtime. Verify it before you continue:
+
 ```bash
-flatpak install -y flathub com.valvesoftware.Steam
+command -v steam
+readlink -f "$(command -v steam)"
 ```
 
-This installs Steam from Flathub. For this build, Steam is both a gaming platform and a front-end shell for couch navigation.
+If those commands do not resolve to the normal host Steam path, fix that state before you continue.
+
+For this build, Steam is both a gaming platform and a front-end shell for couch navigation.
 
 ### Optional GameMode reference for non-Bazzite systems
 
@@ -343,7 +348,7 @@ File path: `~/.config/autostart/steam-bigpicture.desktop`
 ```ini
 [Desktop Entry]
 Type=Application
-Exec=flatpak run com.valvesoftware.Steam -tenfoot
+Exec=steam -tenfoot
 Hidden=false
 X-GNOME-Autostart-enabled=true
 Name=Steam Big Picture
@@ -385,11 +390,11 @@ Family Library Sharing protects the main account because it lets the HTPC borrow
 
 Widevine DRM matters because major streaming services use it to decide whether protected playback is allowed. If Widevine is missing or confused, services may refuse playback, drop quality, or behave unpredictably. That is why this section standardizes on one browser path instead of treating every service differently.
 
-For this guide, the clear primary path is **Chromium PWA/app-window installs first**, then **KDE launcher verification**, then **Steam Non-Steam shortcuts**. Manual `~/bin` wrapper scripts and custom `.desktop` files are still useful, but only as fallback or troubleshooting tools when a service refuses to behave.
+For this guide, the clear primary path is **Bazzite Portal app entries first**, then **Chromium app desktop IDs launched through `gtk-launch` wrappers when a service is missing from Portal or the Portal entry is unreliable**. Manual wrapper scripts are still useful, but only as the second tier after the Portal path is ruled out.
 
 **Re-validated on July 18, 2026.**
 
-Flatpak Chromium is still the browser baseline because it is easy to reinstall and consistent across multiple boxes. Chromium-created launcher entries matter because they land in KDE automatically, can be added into Steam cleanly, and store their app state inside `~/.var/app/org.chromium.Chromium`, which is now part of the backup plan.
+Flatpak Chromium is still the browser baseline because it is easy to reinstall and consistent across multiple boxes. Bazzite Portal entries are preferred when they already expose a working service launcher. Chromium-created launcher entries still matter because they land in KDE automatically, can be wrapped into stable Steam shortcuts when Portal is missing the service, and store their app state inside `~/.var/app/org.chromium.Chromium`, which is now part of the backup plan.
 
 This is the day-one heart of the box. The required streaming set for this build is Netflix, Hulu, Max, Disney+, Apple TV+, YouTube, Paramount+, Peacock, and History. Validate those services over Wi-Fi first. Wired Ethernet can come later with the broader Cat6a plan and should be treated as an upgrade path for heavier future use such as NAS media and main-PC game streaming.
 
@@ -405,13 +410,21 @@ Do not add a generic browser tile on day one. Keep ordinary web browsing as a de
 
 On this box, reserve Chromium on the `family` account for streaming PWAs and service sign-ins. For casual web browsing, prefer Firefox or another separate browser/profile so the streaming app profile stays cleaner and more predictable.
 
+### Canonical operating model for this build
+
+1. The Linux `family` account is the canonical runtime account for day-to-day HTPC operations.
+2. Native host Steam is the only Steam runtime for this build. Do not use Flatpak Steam for the living-room workflow.
+3. Use Bazzite Portal app entries first when they exist and launch cleanly.
+4. Use a Chromium app desktop ID launched through a wrapper script second when Portal does not provide the service or the Portal entry is unreliable.
+5. Keep one Steam entry per service and periodically remove duplicates from the library.
+
 | Service | URL | Notes |
 |------|-----|-------|
 | Netflix | `https://www.netflix.com/browse` | Core day-one service |
 | Hulu | `https://www.hulu.com/` | Core day-one service |
 | Max | `https://play.max.com/` | Replaces the old HBO Max naming |
 | Disney+ | `https://www.disneyplus.com/` | Core day-one service |
-| Apple TV+ | `https://tv.apple.com/` | Prefer the PWA path first |
+| Apple TV+ | `https://tv.apple.com/` | Prefer Portal if present; otherwise use the Chromium fallback path |
 | YouTube | `https://www.youtube.com/tv` | TV UI is better for couch use |
 | Paramount+ | `https://www.paramountplus.com/` | Standard browser path |
 | Peacock | `https://www.peacocktv.com/` | Standard browser path |
@@ -423,12 +436,18 @@ On this box, reserve Chromium on the `family` account for streaming PWAs and ser
 2. Test launchers one-by-one. Do not bulk-add or bulk-validate the whole catalog before the current app is confirmed stable.
 3. If the Steam UI degrades, fully restart Steam and clear any lingering `steamwebhelper` or Chromium processes before you keep debugging the launcher itself.
 
+### Anti-patterns and shortcut guardrails
+
+1. Never use `/run/user/.../doc/...` targets as persistent Steam shortcuts.
+2. Never keep both a Portal entry and a manual wrapper entry for the same service in Steam at the same time.
+3. If a service launches correctly from the terminal or KDE but fails from Steam, treat it as a Steam shortcut binding or duplicate-entry problem first.
+
 ### Cleanup and migration notes
 
 If you are migrating from an older version of this guide or an earlier launcher experiment:
 
 1. Remove old Steam Non-Steam streaming entries before adding the current set again.
-2. Archive or remove legacy `open-*` and old streaming `launch-*` scripts that are no longer part of the active setup.
+2. Archive or remove legacy `open-*` scripts and any old streaming `launch-*` scripts that no longer match the current Portal-first and `gtk-launch` fallback model.
 3. Clear stale user `.desktop` launchers from `~/.local/share/applications` so KDE does not keep surfacing dead entries.
 4. Rebuild the KDE app database after cleanup:
 
@@ -436,29 +455,56 @@ If you are migrating from an older version of this guide or an earlier launcher 
 kbuildsycoca6 --noincremental
 ```
 
-### Primary path: install each service as a Chromium app/PWA
+Use the URLs below for Chromium fallback installation and troubleshooting. They are not the first thing to prefer when Bazzite Portal already provides a clean service entry.
+
+### Tier 1 (preferred): Bazzite Portal app entries
+
+1. Stay logged into `family` and prefer the existing Bazzite Portal entry for a service when it is present in KDE and launches correctly.
+2. Launch the Portal entry once from the desktop, sign in if needed, confirm protected playback, and exit cleanly.
+3. Add that Portal entry to Steam as the single Non-Steam shortcut for the service.
+4. Repeat one service at a time so each chosen Steam entry is deliberate and duplicate-free.
+
+When the Portal entry works, stop there. That is the preferred path for this build.
+
+### Tier 2 (fallback): Chromium app desktop ID wrapper
+
+Use this path only when the service is missing from Portal or the Portal entry is unreliable on this box.
 
 1. Open Chromium from KDE while logged into `family`.
 2. Visit one service URL from the table above.
 3. If Chromium offers **Install**, use it. If not, use the current equivalent such as **Create shortcut** or **Install page as app**, and make sure it opens in its own app/window mode.
-4. Launch the new app once from the KDE launcher and confirm it opens as a standalone app window, not as a tab in a general browser session.
-5. Sign in, start protected playback, and close the app cleanly.
-6. Repeat for the remaining services until all nine have their own launcher entries.
+4. Confirm the installed Chromium app launches once from KDE before you bind anything to Steam.
+5. Create the matching wrapper script so it calls the installed desktop ID through `gtk-launch` instead of pointing Steam at a transient browser process.
+6. Add that wrapper to Steam as the single entry for the service.
 
-KDE should now have one launchable entry per service under the `family` account, and those entries should be backed by Chromium's own app/window handling rather than by hand-built launchers.
+KDE should now have one launchable entry per service under the `family` account, and Steam should point either at the working Portal entry or at the stable Chromium desktop-ID wrapper, never both.
+
+### Deterministic validation commands
+
+```bash
+flatpak list --app | grep -Ei 'chromium|chrome|steam' || true
+if flatpak list --app | grep -Fq 'com.valvesoftware.Steam'; then echo 'Unexpected Flatpak Steam present'; else echo 'No Flatpak Steam app installed'; fi
+command -v steam
+readlink -f "$(command -v steam)"
+grep -n '^Exec=' ~/.config/autostart/steam-bigpicture.desktop
+find ~/.local/share/applications -maxdepth 1 -type f -name 'org.chromium.Chromium.flextop.chrome-*-Default.desktop' | sort
+find ~/.local/share/applications -maxdepth 1 -type f -name 'org.chromium.Chromium.flextop.chrome-*-Default.desktop' | wc -l
+find ~/.local/share/Steam/userdata ~/.steam/steam/userdata -type f -name shortcuts.vdf 2>/dev/null
+```
 
 ### Phase G: Big Picture App Integration
 
 1. Open Steam once from the KDE desktop while logged into `family` and signed into `the_stover_family`.
 2. Choose **Games > Add a Non-Steam Game to My Library**.
-3. Add Netflix, Hulu, Max, Disney+, Apple TV+, YouTube, Paramount+, Peacock, and History from the app list.
-4. Return to Big Picture mode and launch each entry once from the library to confirm the Steam shortcut points at the correct app.
-5. Create or maintain Steam collections named **Streaming**, **Media**, and **Emulators**.
-6. Put the nine streaming services in **Streaming**.
-7. If installed later, put Kodi, Jellyfin, and Plex in **Media**.
-8. If installed later, put RetroArch, Dolphin, and any emulator front end such as EmulationStation Desktop Edition in **Emulators**.
-9. Mark the services your household uses most often as favorites so they are easiest to reach from the couch.
-10. Optional polish: add custom Steam artwork for the streaming entries so Big Picture reads like a dedicated media shelf instead of a generic shortcut list.
+3. Add Netflix, Hulu, Max, Disney+, Apple TV+, YouTube, Paramount+, Peacock, and History from the app list, choosing the Portal entry when it exists and the wrapper entry only when Portal does not.
+4. Remove duplicate entries so there is only one Steam shortcut per service.
+5. Return to Big Picture mode and launch each entry once from the library to confirm the Steam shortcut points at the correct app.
+6. Create or maintain Steam collections named **Streaming**, **Media**, and **Emulators**.
+7. Put the nine streaming services in **Streaming**.
+8. If installed later, put Kodi, Jellyfin, and Plex in **Media**.
+9. If installed later, put RetroArch, Dolphin, and any emulator front end such as EmulationStation Desktop Edition in **Emulators**.
+10. Mark the services your household uses most often as favorites so they are easiest to reach from the couch.
+11. Optional polish: add custom Steam artwork for the streaming entries so Big Picture reads like a dedicated media shelf instead of a generic shortcut list.
 
 At that point, the preferred launch path is controller-first: boot into Steam Big Picture, open the relevant collection or favorites row, and launch the streaming app without touching the KDE desktop.
 
@@ -473,9 +519,15 @@ Steam stores the Non-Steam shortcut definitions, collection membership, and cust
 
 ### Fallback path: manual Chromium launchers
 
-Use the manual `~/bin` + `.desktop` path only if a service refuses to install cleanly as a Chromium app, loses its launcher entry, or needs custom flags during troubleshooting. Apple TV+ is the most likely candidate. The fallback scripts and desktop-file templates are kept in Section 17 and should be treated as repair tools, not as the primary deployment path.
+Use the manual `~/bin` + `.desktop` path only if a service is missing from Portal, the Portal entry is unreliable, or the installed Chromium app needs a stable `gtk-launch` wrapper for Steam. Apple TV+ is still one of the first services to validate carefully. The fallback scripts and desktop-file templates are kept in Section 17 and should be treated as the second tier after Portal, not as the first thing to reach for.
 
-If you experiment with the Bazzite Portal media app flow, treat it as an optional and experimental fallback only. The canonical path for this guide remains Chromium app-window or PWA installs first.
+For already-installed Chromium apps, the preferred wrapper form is:
+
+```bash
+gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
+```
+
+Do not use a direct `--app=https://...` command as the persistent Steam target for an app that already has an installed Chromium desktop entry. Keep the direct URL form only as a secondary troubleshooting tool.
 
 ## Section 9: Kodi + Jellyfin
 
@@ -733,7 +785,7 @@ The safest cloning strategy is to create one "golden" box first, but stop before
 8. Re-pair Bluetooth controllers if needed, because controller pairing is often room-specific even when the rest of the image is identical.
 9. Sign into streaming services where necessary, or restore the saved Chromium profile data if you intentionally kept it, then validate audio, display, and network on the target TV.
 
-If you do not want full-disk imaging every time, ostree-style replication can be lighter. In that model, you install the same Bazzite image on each M720q, recreate the same two Linux accounts, then copy the shared `family` configuration directories, especially `~/.local/share/applications`, `~/.config/autostart`, `~/.var/app/org.chromium.Chromium`, `~/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata`, and `~/bin` if you use fallback scripts. Reinstall the same Flatpaks and reuse the same fallback launcher files only where they are actually needed. That is slower than Clonezilla for identical hardware, but it is cleaner when you want a less frozen image and more per-box flexibility.
+If you do not want full-disk imaging every time, ostree-style replication can be lighter. In that model, you install the same Bazzite image on each M720q, recreate the same two Linux accounts, then copy the shared `family` configuration directories, especially `~/.local/share/applications`, `~/.config/autostart`, `~/.var/app/org.chromium.Chromium`, `~/.local/share/Steam/userdata`, and `~/bin` if you use fallback scripts. Reinstall the same Flatpaks and reuse the same fallback launcher files only where they are actually needed. That is slower than Clonezilla for identical hardware, but it is cleaner when you want a less frozen image and more per-box flexibility.
 
 ## Section 14: Disaster Recovery
 
@@ -776,7 +828,7 @@ required_paths=(
   ".config/autostart"
   ".local/share/applications"
   ".var/app/org.chromium.Chromium"
-  ".var/app/com.valvesoftware.Steam/.local/share/Steam/userdata"
+  ".local/share/Steam/userdata"
 )
 
 for path in "${required_paths[@]}"; do
@@ -793,7 +845,7 @@ tar -czf "$archive" \
   .config/autostart \
   .local/share/applications \
   .var/app/org.chromium.Chromium \
-  .var/app/com.valvesoftware.Steam/.local/share/Steam/userdata
+  .local/share/Steam/userdata
 ```
 
 File path: `~/bin/restore-htpc-config.sh`
@@ -816,7 +868,7 @@ if [ -d "$HOME/bin" ]; then
 fi
 ```
 
-The most important backup targets are `~/.local/share/applications`, `~/.config/autostart`, `~/.var/app/org.chromium.Chromium`, and `~/.var/app/com.valvesoftware.Steam/.local/share/Steam/userdata`. That Steam path is where the Non-Steam shortcuts, collections, and custom artwork live. Keep `~/bin` in the archive too so any fallback wrappers, power helpers, or recovery scripts come back with the rest of the couch-facing environment.
+The most important backup targets are `~/.local/share/applications`, `~/.config/autostart`, `~/.var/app/org.chromium.Chromium`, and `~/.local/share/Steam/userdata`. That Steam path is where the Non-Steam shortcuts, collections, and custom artwork live. Keep `~/bin` in the archive too so any fallback wrappers, power helpers, or recovery scripts come back with the rest of the couch-facing environment.
 
 Run the backup script after the PWAs, Steam shortcuts, collections, artwork, and sign-ins are stable, then copy the resulting archive to a NAS share, external SSD, or recovery USB. If the box is reinstalled later, run the restore script before you start rebuilding app entries by hand.
 
@@ -860,7 +912,7 @@ Chromium may also log Wayland or Vulkan warnings even when playback and app-wind
 
 ### Streaming service quirks
 
-Apple TV+ is the first service to test with the PWA path and the last one you should force back to manual wrappers. Prefer the Chromium-installed app/window entry. If Apple TV+ refuses to install or launch cleanly that way, use the fallback script-and-desktop path from Section 17 for that service only.
+Apple TV+ is one of the first services to test with the Portal path when it exists and one of the last services you should force back to manual wrappers. Prefer the Portal entry first, then the installed Chromium app entry, and only then the fallback script-and-desktop path from Section 17 for that service.
 
 The practical lesson is simple: after major updates, test lock behavior, autostart, Steam launch flow, and streaming playback before assuming the HTPC is still fully appliance-ready.
 
@@ -908,7 +960,7 @@ Family View PIN: ____________________
 
 ## Section 17: Appendix
 
-This appendix keeps the exact fallback file contents and recovery helpers in one place when you are rebuilding a box. Section 8 remains the primary deployment path: install each service as a Chromium app/PWA first, then use the material below only when you need repair tools or custom wrappers.
+This appendix keeps the exact fallback file contents and recovery helpers in one place when you are rebuilding a box. Section 8 remains the primary deployment path: use Bazzite Portal entries first, then use the material below only when you need Chromium wrapper fallbacks or repair tools.
 
 Unless a step above explicitly says otherwise, the `~` paths in this appendix are meant to be created while logged into the Linux `family` account, so `~` means `/var/home/family`.
 
@@ -919,7 +971,7 @@ File path: `~/.config/autostart/steam-bigpicture.desktop`
 ```ini
 [Desktop Entry]
 Type=Application
-Exec=flatpak run com.valvesoftware.Steam -tenfoot
+Exec=steam -tenfoot
 Hidden=false
 X-GNOME-Autostart-enabled=true
 Name=Steam Big Picture
@@ -928,69 +980,77 @@ Comment=Start Steam in Big Picture mode for couch use
 
 ### Streaming fallback launcher scripts
 
-Use these only if the PWA install route from Section 8 fails or a service needs custom Chromium flags during troubleshooting.
+Use these only if the Portal path is unavailable and you need a stable wrapper for an already-installed Chromium app. Replace the `<id>` placeholder with the real Chromium flextop desktop ID from `~/.local/share/applications`.
 
 File path: `~/bin/launch-netflix.sh`
 
 ```bash
 #!/bin/bash
-flatpak run org.chromium.Chromium --app=https://www.netflix.com/browse
+gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
 ```
 
 File path: `~/bin/launch-hulu.sh`
 
 ```bash
 #!/bin/bash
-flatpak run org.chromium.Chromium --app=https://www.hulu.com/
+gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
 ```
 
 File path: `~/bin/launch-max.sh`
 
 ```bash
 #!/bin/bash
-flatpak run org.chromium.Chromium --app=https://play.max.com/
+gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
 ```
 
 File path: `~/bin/launch-disney-plus.sh`
 
 ```bash
 #!/bin/bash
-flatpak run org.chromium.Chromium --app=https://www.disneyplus.com/
+gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
 ```
 
 File path: `~/bin/launch-apple-tv-plus.sh`
 
 ```bash
 #!/bin/bash
-flatpak run org.chromium.Chromium --app=https://tv.apple.com/
+gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
 ```
 
 File path: `~/bin/launch-youtube.sh`
 
 ```bash
 #!/bin/bash
-flatpak run org.chromium.Chromium --app=https://www.youtube.com/tv
+gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
 ```
 
 File path: `~/bin/launch-paramount-plus.sh`
 
 ```bash
 #!/bin/bash
-flatpak run org.chromium.Chromium --app=https://www.paramountplus.com/
+gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
 ```
 
 File path: `~/bin/launch-peacock.sh`
 
 ```bash
 #!/bin/bash
-flatpak run org.chromium.Chromium --app=https://www.peacocktv.com/
+gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
 ```
 
 File path: `~/bin/launch-history.sh`
 
 ```bash
 #!/bin/bash
-flatpak run org.chromium.Chromium --app=https://play.history.com/
+gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
+```
+
+### Secondary troubleshooting-only URL wrapper pattern
+
+Use this only to prove that a raw service URL still opens in Chromium. Do not use it as the persistent Steam shortcut target for an already-installed Chromium app.
+
+```bash
+flatpak run org.chromium.Chromium --app=https://example.com/
 ```
 
 ### Streaming fallback desktop files
@@ -1166,7 +1226,7 @@ required_paths=(
   ".config/autostart"
   ".local/share/applications"
   ".var/app/org.chromium.Chromium"
-  ".var/app/com.valvesoftware.Steam/.local/share/Steam/userdata"
+  ".local/share/Steam/userdata"
 )
 
 for path in "${required_paths[@]}"; do
@@ -1183,7 +1243,7 @@ tar -czf "$archive" \
   .config/autostart \
   .local/share/applications \
   .var/app/org.chromium.Chromium \
-  .var/app/com.valvesoftware.Steam/.local/share/Steam/userdata
+  .local/share/Steam/userdata
 ```
 
 File path: `~/bin/restore-htpc-config.sh`
@@ -1305,7 +1365,8 @@ sudo apt install -y vainfo libva2 libva-utils i965-va-driver-shaders intel-media
 ```
 
 ```bash
-flatpak install -y flathub com.valvesoftware.Steam
+command -v steam
+readlink -f "$(command -v steam)"
 ```
 
 ```bash
