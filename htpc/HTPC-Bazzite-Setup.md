@@ -468,18 +468,9 @@ When the Portal entry works, stop there. That is the preferred path for this bui
 
 ### Tier 2 (fallback): Chromium app desktop ID wrapper
 
-Use this path only when the service is missing from Portal or the Portal entry is unreliable on this box.
-
-1. Open Chromium from KDE while logged into `family`.
-2. Visit one service URL from the table above.
-3. If Chromium offers **Install**, use it. If not, use the current equivalent such as **Create shortcut** or **Install page as app**, and make sure it opens in its own app/window mode.
-4. Confirm the installed Chromium app launches once from KDE before you bind anything to Steam.
-5. Create the matching wrapper script so it calls the installed desktop ID through `gtk-launch` instead of pointing Steam at a transient browser process.
-6. Add that wrapper to Steam as the single entry for the service.
-
-KDE should now have one launchable entry per service under the `family` account, and Steam should point either at the working Portal entry or at the stable Chromium desktop-ID wrapper, never both.
-
 ### Portal launcher locations, discovery, and canonical wrapper workflow
+
+Use this path only when the service is missing from Portal or the Portal entry is unreliable on this box.
 
 For this build, launcher files can live in these locations:
 
@@ -528,9 +519,9 @@ kbuildsycoca6 --noincremental
 
 Use this decision flow every time:
 
-1. If a service exists and works via the Portal or normal KDE launcher, launch it once from KDE first.
-2. If that launcher works cleanly, either keep it as the single Steam entry for the service or wrap it deterministically with `gtk-launch` and use only that wrapper in Steam.
-3. If the service does not exist in Portal, create the Chromium app-window entry, find the generated desktop file in `~/.local/share/applications`, extract the desktop ID, and create the canonical wrapper in `/var/home/family/bin/steam-webapps/`.
+A) If the service exists and works via the Portal or normal KDE launcher, launch it once from KDE first, then either keep it as the single Steam entry for the service or wrap it deterministically with `gtk-launch` and use only that wrapper in Steam.
+
+B) If the service does not exist in Portal, create the Chromium app-window entry, find the generated desktop file in `~/.local/share/applications`, extract the desktop ID, and create the canonical wrapper in `/var/home/family/bin/steam-webapps/`.
 
 When the service already exists and works from Portal or KDE, a deterministic wrapper looks like this:
 
@@ -544,12 +535,13 @@ mkdir -p "$wrapper_dir"
 {
   printf '%s\n' '#!/usr/bin/env bash'
   printf '%s\n' 'set -euo pipefail'
-  printf 'gtk-launch %s\n' "$desktop_id"
+  printf 'exec gtk-launch %s\n' "$desktop_id"
 } > "$wrapper_path"
 chmod +x "$wrapper_path"
 
 printf 'Steam Target: %s\n' "$wrapper_path"
 printf 'Steam Start In: %s\n' "$wrapper_dir"
+printf 'Steam Launch Options: %s\n' 'leave empty'
 ```
 
 When the service is missing from Portal and you must create the Chromium app entry first, use this flow:
@@ -569,12 +561,13 @@ mkdir -p "$wrapper_dir"
 {
   printf '%s\n' '#!/usr/bin/env bash'
   printf '%s\n' 'set -euo pipefail'
-  printf 'gtk-launch %s\n' "$desktop_id"
+  printf 'exec gtk-launch %s\n' "$desktop_id"
 } > "$wrapper_path"
 chmod +x "$wrapper_path"
 
 printf 'Steam Target: %s\n' "$wrapper_path"
 printf 'Steam Start In: %s\n' "$wrapper_dir"
+printf 'Steam Launch Options: %s\n' 'leave empty'
 ```
 
 Guardrails for the authoritative workflow:
@@ -582,6 +575,12 @@ Guardrails for the authoritative workflow:
 1. Keep one Steam entry per service: Portal or wrapper, never both.
 2. Never use `/run/user/.../doc/...` as the persistent Steam target.
 3. Keep wrappers only in `/var/home/family/bin/steam-webapps/`.
+
+Steam fields for the canonical wrapper path:
+
+- **Target:** `/var/home/family/bin/steam-webapps/launch-<service>.sh`
+- **Start In:** `/var/home/family/bin/steam-webapps/`
+- **Launch Options:** leave empty
 
 #### Optional helper script: create-steam-webapp-wrapper.sh
 
@@ -605,12 +604,13 @@ mkdir -p "$wrapper_dir"
 {
   printf '%s\n' '#!/usr/bin/env bash'
   printf '%s\n' 'set -euo pipefail'
-  printf 'gtk-launch %s\n' "$desktop_id"
+  printf 'exec gtk-launch %s\n' "$desktop_id"
 } > "$output"
 chmod +x "$output"
 
 printf 'Steam Target: %s\n' "$output"
 printf 'Steam Start In: %s\n' "$wrapper_dir"
+printf 'Steam Launch Options: %s\n' 'leave empty'
 ```
 
 Usage:
@@ -1120,7 +1120,8 @@ Comment=Start Steam in Big Picture mode for couch use
 
 ### Streaming fallback launcher scripts
 
-Section 8 contains the canonical operational workflow for discovering launcher files, choosing Portal versus wrapper, and setting Steam Target and Start In values. Use these only if the Portal path is unavailable and you need a stable wrapper for an already-installed Chromium app. Replace the `<id>` placeholder with the real Chromium flextop desktop ID from `~/.local/share/applications`.
+Section 8 is the canonical operational workflow for launcher discovery and wrapper creation.
+Use these only if the Portal path is unavailable and you need a stable wrapper for an already-installed Chromium app. Replace the `<id>` placeholder with the real Chromium flextop desktop ID from `~/.local/share/applications`.
 
 File path: `/var/home/family/bin/steam-webapps/launch-netflix.sh`
 
@@ -1305,7 +1306,7 @@ Categories=AudioVideo;Video;
 
 ### Advanced app-entry scripts and recovery helpers
 
-Section 8 is the canonical operational workflow for launcher discovery, Portal-versus-wrapper decisions, and Steam shortcut binding. Keep the helpers below aligned to that workflow.
+Section 8 is the canonical operational workflow for launcher discovery and wrapper creation.
 
 File path: `~/bin/create-steam-webapp-wrapper.sh`
 
@@ -1327,12 +1328,13 @@ mkdir -p "$wrapper_dir"
 {
   printf '%s\n' '#!/usr/bin/env bash'
   printf '%s\n' 'set -euo pipefail'
-  printf 'gtk-launch %s\n' "$desktop_id"
+  printf 'exec gtk-launch %s\n' "$desktop_id"
 } > "$output"
 chmod +x "$output"
 
 printf 'Steam Target: %s\n' "$output"
 printf 'Steam Start In: %s\n' "$wrapper_dir"
+printf 'Steam Launch Options: %s\n' 'leave empty'
 ```
 
 Usage:
