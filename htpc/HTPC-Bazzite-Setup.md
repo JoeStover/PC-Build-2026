@@ -302,6 +302,15 @@ Native host Steam is the intended runtime for this build. On the validated July 
 
 Before you start this section, sign into the Linux `family` account. Steam's day-to-day data, manual launcher, and any later optional non-Steam shortcuts should all live in the same shared couch-facing profile that auto-logs in.
 
+### Startup mode selection for this build
+
+This guide now documents two valid startup modes for the `family` account:
+
+1. **Mode A: Steam-first (default console shell)** — `family` auto-logs in and Steam reaches Big Picture as the primary couch shell.
+2. **Mode B: Kodi-first (current living-room mode on this box)** — `family` auto-logs in, Kodi autostarts, Steam does not autostart, and Steam Big Picture is launched manually when needed.
+
+The current validated box state uses **Mode B**.
+
 ### Install Steam
 
 On the Bazzite image used for this build, Steam should already exist as the native host runtime. Verify it before you continue:
@@ -346,8 +355,13 @@ Create the following launcher script so Steam Big Picture is always available wi
 File path: `/var/home/family/bin/launch-steam-bigpicture.sh`
 
 ```bash
-#!/bin/bash
-steam -tenfoot
+#!/usr/bin/env bash
+set -euo pipefail
+exec /usr/bin/steam -tenfoot
+```
+
+```bash
+chmod +x /var/home/family/bin/launch-steam-bigpicture.sh
 ```
 
 Create the following desktop entry for manual launch from the `family` account.
@@ -366,6 +380,19 @@ Categories=Game;
 
 This keeps Steam Big Picture one click away for gaming without overriding the Kodi-first startup flow.
 
+### Kodi-first enforcement
+
+If you want this box to stay in the currently validated Kodi-first mode, clean up the user-level Steam autostart entries and confirm the remaining `family` autostart state:
+
+```bash
+mkdir -p ~/.config/autostart
+rm -f ~/.config/autostart/steam.desktop
+rm -f ~/.config/autostart/steam-bigpicture.desktop
+ls -la ~/.config/autostart
+```
+
+Expected result: `kodi.desktop` is present, and no Steam autostart desktop entries remain.
+
 ### First launch checks
 
 After installing Steam:
@@ -375,7 +402,7 @@ After installing Steam:
 3. sign in long enough to finish setup; Section 7 decides which Steam account stays on the HTPC every day
 4. confirm Big Picture launches correctly
 5. launch **Steam Big Picture (Manual)** once from KDE and confirm it returns cleanly after exit
-6. reboot once to verify the box still lands in Kodi instead of Steam
+6. reboot once to verify the box lands in the startup mode you selected; on the current validated box, that means Kodi instead of Steam
 
 Controller navigation still matters for gaming, but the HTPC no longer depends on Steam opening by itself. Once the streaming apps from Section 8 exist as launcher tiles and wrappers, Steam-side shortcuts become optional convenience instead of the primary day-one path.
 
@@ -1054,6 +1081,13 @@ Lock-screen behavior on Bazzite KDE has had regressions, including [issue #2856]
 
 KDE session startup and autostart behavior on Bazzite has also had known issues, including [issue #2044](https://github.com/ublue-os/bazzite/issues/2044) (`Sunshine service failing to autostart on Bazzite gnome desktop images`) and [issue #4624](https://github.com/ublue-os/bazzite/issues/4624) (`Exiting KDE to go back to game mode doesn't stop KDE user services`). This matters directly for Kodi autostart and any custom launcher flow.
 
+When startup behavior is wrong, troubleshoot the user-level autostart entries first:
+
+- `~/.config/autostart/steam.desktop`
+- `~/.config/autostart/steam-bigpicture.desktop`
+
+On this box, the root lesson learned was that user-level autostart in `~/.config/autostart` took precedence over system-level `/etc/xdg/autostart`. Removing `/etc/xdg/autostart/steam.desktop` by itself may not change the observed behavior if either user-level Steam entry still exists.
+
 A brief flash of the KDE desktop before Kodi opens on `family` auto-login is acceptable on this build. Treat it as optional polish work for later, not as a blocker, as long as Kodi reliably opens without manual input.
 
 ### Steam and Big Picture quirks
@@ -1102,11 +1136,11 @@ If you already own Xbox controllers and want to start with Bluetooth, that is st
 
 Power on: If wake-from-sleep is configured and reliable, use the remote or wake path you set up. Otherwise press the Lenovo power button and wait for the box to boot.
 
-Kodi: It should open automatically after `family` signs in. If it does not, open Kodi from the KDE launcher.
+Startup mode: This box currently uses Kodi-first mode, so Kodi should open automatically after `family` signs in. If you later switch to Steam-first mode, Steam Big Picture becomes the auto-start shell instead.
 
 Launch streaming apps: Use the launcher tiles or wrappers first. Day-one priority services are Netflix, Hulu, Max, Disney+, Apple TV+, YouTube, Paramount+, Peacock, and History.
 
-Launch Steam Big Picture: Open **Steam Big Picture (Manual)** when you want games or optional Steam-side shortcuts.
+Launch Steam Big Picture: In the current Kodi-first mode, open **Steam Big Picture (Manual)** when you want games or optional Steam-side shortcuts.
 
 Controller basics: `A` selects, `B` backs out, the D-pad or left stick moves focus, and the Xbox button is your home or attention button. Keep the K400+ nearby for admin work or fallback browsing.
 
@@ -1141,8 +1175,13 @@ Comment=Start Kodi automatically for the living-room shell
 File path: `/var/home/family/bin/launch-steam-bigpicture.sh`
 
 ```bash
-#!/bin/bash
-steam -tenfoot
+#!/usr/bin/env bash
+set -euo pipefail
+exec /usr/bin/steam -tenfoot
+```
+
+```bash
+chmod +x /var/home/family/bin/launch-steam-bigpicture.sh
 ```
 
 File path: `~/.local/share/applications/steam-bigpicture-manual.desktop`
@@ -1639,7 +1678,8 @@ This file is one continuous Markdown document intended to stay copy/pasteable, s
 
 ### Pass/fail validation checklist
 
-- [ ] `family` auto-logs into KDE and Kodi opens automatically without manual repair.
+- [ ] If Steam-first mode is selected, `family` auto-logs into KDE and Steam reaches Big Picture without manual repair.
+- [ ] If Kodi-first mode is selected, `family` auto-logs into KDE, Kodi opens automatically, and Steam does not autostart.
 - [ ] `the_stover_family` stays signed into Steam and the shared library is visible.
 - [ ] VA-API remains healthy with the Intel `iHD` driver.
 - [ ] Netflix, Hulu, Max, Disney+, Apple TV+, YouTube, Paramount+, Peacock, and History each launch from the KDE launcher and play protected video.
