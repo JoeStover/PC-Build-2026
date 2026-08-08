@@ -8,7 +8,7 @@ This guide turns a Lenovo M720q Tiny into a simple, family-friendly HTPC that fe
 
 1. For this exact build, keep `JMStover` as the personal admin account and `family` as the non-admin shared account. Later file paths assume the shared account name stays `family`.
 2. Use `JMStover` for setup, sudo/admin work, recovery, firmware tasks, updates, and occasional desktop/admin use.
-3. Use `family` for KDE auto-login, Kodi autostart, Chromium app-mode launcher tiles and wrappers, manual Steam launchers, `.desktop` files, and normal day-to-day HTPC use from the couch.
+3. Use `family` for KDE auto-login, Kodi autostart, the Pegasus streaming catalog, direct Chromium app-mode wrappers, manual Steam launchers, `.desktop` files, and normal day-to-day HTPC use from the couch.
 4. Keep the everyday couch Steam account set to `the_stover_family`.
 5. For this exact build, use the **Bazzite / Fedora Atomic** command blocks and ignore the **Debian / Ubuntu** reference blocks unless you are intentionally adapting the guide.
 6. Run Bazzite-specific commands from the normal KDE terminal on the HTPC itself, not from a distrobox or container shell.
@@ -20,10 +20,14 @@ This guide turns a Lenovo M720q Tiny into a simple, family-friendly HTPC that fe
 
 | Item | Value |
 |------|-------|
+| Hostname | `jms-htpc-livingroom` |
+| Observed deployment | `Bazzite 44.20260802` dated August 2, 2026 |
 | OS profile | Bazzite KDE HTPC |
+| Desktop session | KDE on Wayland |
 | Admin Linux account | `JMStover` |
 | Auto-login Linux account | `family` (non-admin) |
 | Couch Steam account | `the_stover_family` |
+| Manual streaming catalog | Pegasus (`org.pegasus_frontend.Pegasus`) |
 
 ### Current build status
 
@@ -33,22 +37,22 @@ This guide turns a Lenovo M720q Tiny into a simple, family-friendly HTPC that fe
 | Phase B | ✅ | Post-install baseline complete |
 | Phase C | ✅ | VA-API healthy on `Intel iHD` |
 | Phase D | ✅ | Steam baseline complete |
-| Backup / snapshots | ✅ | Recovery archive and host snapshots in scope |
+| Backup / snapshots | ⏳ | Existing archives predate the August 8, 2026 Pegasus launcher changes |
 | Controller validation | ⏳ | Official Xbox adapter validation still pending |
 
 ## Section 1: Introduction and Goals
 
-This guide converts a Lenovo M720q Tiny with an i5-8400T, 16GB RAM, and 256GB SSD into a Bazzite KDE HTPC for Kodi-first streaming, manual Steam Big Picture gaming, later emulators, and Xbox controller use.
+This guide converts a Lenovo M720q Tiny with an i5-8400T, 16GB RAM, and 256GB SSD into a Bazzite KDE HTPC for Kodi-first streaming, a Pegasus-launched direct Chromium service catalog, manual Steam Big Picture gaming, later emulators, and Xbox controller use.
 
 It is written for a Linux novice who is also a .NET developer: technical enough to follow structured steps, but not interested in constant churn or avoidable Linux maintenance. Because the household already uses Firestick and Xbox, the system should feel familiar, controller-friendly, remote-friendly, and simple for the whole family. Routine use should work from a controller or HTPC-friendly remote, while the KDE desktop stays mostly in the background as an admin tool and occasional web-browsing fallback with a nearby Logitech K400+.
 
-The main goals are simplicity, reproducibility, stability, and clear recovery when something breaks. Day-one success means the box boots into the `family` account, opens Kodi automatically, and reliably launches Netflix, Hulu, Max, Disney+, Apple TV+, YouTube, Paramount+, Peacock, and History from Chromium app/window launcher tiles and wrappers over the initial Wi-Fi setup. Steam Big Picture remains available as a manual gaming path, not the default shell. Jellyfin, NAS-hosted files and ROMs, and game streaming from the main gaming PC remain later additions when the network and media-server side are ready. Wired Ethernet and Cat6a are later upgrades that should improve NAS-backed media and in-home game streaming, not prerequisites for the first working box. Each of those goals matters because this HTPC is meant to work as a dependable living-room device, not just as a successful one-time setup.
+The main goals are simplicity, reproducibility, stability, and clear recovery when something breaks. Day-one success means the box boots into the `family` account, opens Kodi automatically, and reliably launches the active Pegasus catalog of Apple TV+, Disney+, Hulu, Max, Netflix, Paramount+, Peacock, Plex, Prime Video, Sling, Tubi, and YouTube TV through direct Chromium app/window wrappers over the initial Wi-Fi setup. Steam Big Picture remains available as a manual gaming path, not the default shell. Jellyfin, NAS-hosted files and ROMs, and game streaming from the main gaming PC remain later additions when the network and media-server side are ready. Wired Ethernet and Cat6a are later upgrades that should improve NAS-backed media and in-home game streaming, not prerequisites for the first working box. Each of those goals matters because this HTPC is meant to work as a dependable living-room device, not just as a successful one-time setup.
 
 ### Account model for this build
 
 This HTPC intentionally uses two Linux accounts. `JMStover` is the admin account. The shared `family` Linux account is the non-admin couch-facing auto-login account. That split keeps passwords, updates, recovery, and setup work separate from the everyday TV experience.
 
-When a step says to use the admin account, log into `JMStover`. Use it for installer choices, sudo/admin tasks, firmware work, rollback, recovery, and occasional desktop troubleshooting. When a step says to use `family`, log into the shared `family` Linux account. Use it for Kodi autostart, Chromium app-mode launchers, manual Steam launchers, optional non-Steam shortcuts, and anything stored under `/var/home/family`.
+When a step says to use the admin account, log into `JMStover`. Use it for installer choices, sudo/admin tasks, firmware work, rollback, recovery, and occasional desktop troubleshooting. When a step says to use `family`, log into the shared `family` Linux account. Use it for Kodi autostart, the Pegasus catalog, direct Chromium app-mode launchers, manual Steam launchers, optional non-Steam shortcuts, and anything stored under `/var/home/family`.
 
 ## Section 2: Hardware Overview
 
@@ -64,7 +68,7 @@ Ventoy is a good fit for this build because it keeps USB setup simple and reusab
 
 Bazzite KDE is the target OS because it is gaming-focused, Steam-friendly, Flatpak-friendly, and closer in spirit to a console-like Linux experience than a general-purpose desktop distro. KDE is the preferred edition because it is flexible, works well on TV-oriented setups, and gives you more control over session behavior, autologin, and launcher integration.
 
-For this build, do not treat `family` as the only Linux user. Your personal Linux account should be the admin/sudo account, and `family` should be the shared couch-facing account. `family` should be the auto-login session because it owns the Kodi autostart, streaming launcher, Steam launcher, and desktop files that make the HTPC feel like a simple living-room appliance.
+For this build, do not treat `family` as the only Linux user. Your personal Linux account should be the admin/sudo account, and `family` should be the shared couch-facing account. `family` should be the auto-login session because it owns the Kodi autostart, Pegasus metadata, streaming launcher wrappers, Steam launcher, and desktop files that make the HTPC feel like a simple living-room appliance.
 
 ### Create the Ventoy USB
 
@@ -427,13 +431,13 @@ Family Library Sharing protects the main account because it lets the HTPC borrow
 
 Widevine DRM matters because major streaming services use it to decide whether protected playback is allowed. If Widevine is missing or confused, services may refuse playback, drop quality, or behave unpredictably. That is why this section standardizes on one browser path instead of treating every service differently.
 
-For this guide, the clear primary path is **Chromium app-mode launchers exposed through `.desktop` entries and wrapper scripts**, with **Bazzite Portal app entries kept only as an optional secondary path when a service already launches cleanly there**. Steam Non-Steam shortcuts can still mirror those launchers later, but they are no longer the canonical day-one requirement.
+For the currently deployed August 8, 2026 living-room box, the clear primary path is **Pegasus launching persistent direct Chromium app-mode wrappers**. Bazzite Portal entries, Chromium desktop-ID wrappers, and `gtk-launch` flows can still exist as alternate or legacy approaches, but they are not the validated canonical implementation for this machine.
 
-**Re-validated on July 18, 2026.**
+**Re-validated on August 8, 2026.**
 
-Flatpak Chromium is still the browser baseline because it is easy to reinstall and consistent across multiple boxes. Chromium-created launcher entries now matter most because they land in KDE automatically, can be wrapped into stable launcher tiles and optional Steam shortcuts, and store their app state inside `~/.var/app/org.chromium.Chromium`, which is now part of the backup plan. Portal entries can stay in the mix when they already work well, but they are not the required baseline for this build.
+Flatpak Chromium is still the browser baseline because it is easy to reinstall and consistent across multiple boxes. On this box, Pegasus is the validated manual streaming catalog, and each active Pegasus entry points to a persistent wrapper under `/var/home/family/bin/steam-webapps/` that launches Chromium directly with a service URL and fullscreen mode. Portal entries can stay in the mix when they already work well, but they are not the required baseline for this build.
 
-This is the day-one heart of the box. The required streaming set for this build is Netflix, Hulu, Max, Disney+, Apple TV+, YouTube, Paramount+, Peacock, and History. Validate those services over Wi-Fi first. Wired Ethernet can come later with the broader Cat6a plan and should be treated as an upgrade path for heavier future use such as NAS media and main-PC game streaming.
+This is the day-one heart of the box. The active verified Pegasus catalog for this build is Apple TV+, Disney+, Hulu, Max, Netflix, Paramount+, Peacock, Plex, Prime Video, Sling, Tubi, and YouTube TV. Validate those services over Wi-Fi first. Wired Ethernet can come later with the broader Cat6a plan and should be treated as an upgrade path for heavier future use such as NAS media and main-PC game streaming.
 
 Install the browser used by the apps:
 
@@ -441,7 +445,13 @@ Install the browser used by the apps:
 flatpak install -y flathub org.chromium.Chromium
 ```
 
-Stay logged into the Linux `family` account for this entire section. These app installs, launcher entries, wrapper scripts, and any later optional Steam shortcuts belong to the shared couch-facing home directory.
+Install Pegasus:
+
+```bash
+flatpak install -y flathub org.pegasus_frontend.Pegasus
+```
+
+Stay logged into the Linux `family` account for this entire section. These app installs, Pegasus metadata files, wrapper scripts, and any later optional Steam shortcuts belong to the shared couch-facing home directory.
 
 Do not add a generic browser tile on day one. Keep ordinary web browsing as a desktop fallback with the K400+ so the main launcher surface stays focused and simple.
 
@@ -451,41 +461,110 @@ On this box, reserve Chromium on the `family` account for streaming apps and ser
 
 1. The Linux `family` account is the canonical runtime account for day-to-day HTPC operations.
 2. `family` should auto-log in and Kodi should open automatically as the primary shell.
-3. Launch streaming services from Chromium app-mode launcher tiles and wrappers as the canonical day-one path.
-4. Keep Bazzite Portal entries only as optional secondary launchers when they already exist and stay reliable.
+3. Pegasus is the validated manual streaming launcher and catalog for the currently deployed box.
+4. Each active Pegasus entry should resolve to a persistent direct Chromium app-mode wrapper in `/var/home/family/bin/steam-webapps/`.
 5. Native host Steam is the only Steam runtime for this build, but Steam Big Picture is launched manually when you want gaming.
 6. If you later mirror services into Steam, keep one Steam entry per service and periodically remove duplicates from the library.
 
+### Pegasus manual streaming catalog
+
+Pegasus is the validated manual streaming launcher for this HTPC. The actual front-door hierarchy on this box is:
+
+1. `family` auto-login
+2. Kodi autostarts as the boot-time living-room shell
+3. Pegasus is the validated manual streaming launcher and catalog
+4. Steam Big Picture is launched manually for gaming
+
+Document the active Pegasus install like this:
+
+- **Flatpak app ID:** `org.pegasus_frontend.Pegasus`
+- **User desktop entry:** `~/.local/share/applications/org.pegasus_frontend.Pegasus.desktop`
+- **Launcher command:** `flatpak run org.pegasus_frontend.Pegasus`
+
+From KDE, the family can find Pegasus in the application menu and pin it to the taskbar or favorites for faster access.
+
+### Active validated Pegasus catalog
+
 | Service | URL | Notes |
 |------|-----|-------|
-| Netflix | `https://www.netflix.com/browse` | Core day-one service |
-| Hulu | `https://www.hulu.com/` | Core day-one service |
-| Max | `https://play.max.com/` | Replaces the old HBO Max naming |
-| Disney+ | `https://www.disneyplus.com/` | Core day-one service |
-| Apple TV+ | `https://tv.apple.com/` | Validate carefully; keep Portal only if it is clearly cleaner than the Chromium launcher path |
-| YouTube | `https://www.youtube.com/tv` | TV UI is better for couch use |
-| Paramount+ | `https://www.paramountplus.com/` | Standard browser path |
-| Peacock | `https://www.peacocktv.com/` | Standard browser path |
-| History | `https://play.history.com/` | Test sign-in early |
+| Apple TV+ | `https://tv.apple.com/` | Active Pegasus entry |
+| Disney+ | `https://www.disneyplus.com/` | Active Pegasus entry |
+| Hulu | `https://www.hulu.com/` | Active Pegasus entry |
+| Max | `https://play.max.com/` | Active Pegasus entry |
+| Netflix | `https://www.netflix.com/browse` | Active Pegasus entry |
+| Paramount+ | `https://www.paramountplus.com/` | Active Pegasus entry |
+| Peacock | `https://www.peacocktv.com/` | Active Pegasus entry |
+| Plex | `https://app.plex.tv/` | Active Pegasus entry |
+| Prime Video | `https://www.amazon.com/gp/video/storefront/` | Active Pegasus entry |
+| Sling | `https://watch.sling.com/` | Active Pegasus entry |
+| Tubi | `https://tubitv.com/` | Active Pegasus entry |
+| YouTube TV | `https://tv.youtube.com/` | Active Pegasus entry |
+
+### Pegasus metadata and wrapper layout
+
+Pegasus reads its active streaming metadata from:
+
+- `/var/home/family/Games/streaming/metadata.pegasus.txt`
+
+Each `launch:` entry in that metadata file should point to a persistent wrapper in:
+
+- `/var/home/family/bin/steam-webapps/`
+
+The validated direct Chromium wrapper form for this box is:
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+exec flatpak run org.chromium.Chromium --app="SERVICE_URL" --start-fullscreen
+```
+
+The active Pegasus metadata uses these launcher filenames:
+
+- `launch-appletvplus.sh`
+- `launch-disneyplus.sh`
+- `launch-hulu.sh`
+- `launch-max.sh`
+- `launch-netflix.sh`
+- `launch-paramountplus.sh`
+- `launch-peacock.sh`
+- `launch-plex.sh`
+- `launch-primevideo.sh`
+- `launch-sling.sh`
+- `launch-tubi.sh`
+- `launch-youtubetv.sh`
+
+The compact-name compatibility symlinks below are intentional and should be retained while Pegasus metadata keeps using the compact names:
+
+- `launch-appletvplus.sh` -> `launch-apple-tv-plus.sh`
+- `launch-disneyplus.sh` -> `launch-disney-plus.sh`
+- `launch-paramountplus.sh` -> `launch-paramount-plus.sh`
+- `launch-primevideo.sh` -> `launch-prime-video.sh`
+- `launch-youtubetv.sh` -> `launch-youtube-tv.sh`
+
+Legacy and unreferenced wrapper files may still exist and should be reviewed before removal, but do not treat them as active Pegasus entries:
+
+- `launch-history.sh`
+- `launch-moviesanywhere.sh`
+- `launch-youtube.sh`
 
 ### Stability guardrails during setup and testing
 
 1. Avoid fast user switching while you are setting up, signing into services, or testing launch behavior. Finish the current test pass on one session before changing users.
 2. Test launchers one-by-one. Do not bulk-add or bulk-validate the whole catalog before the current app is confirmed stable.
-3. If the Steam UI degrades, fully restart Steam and clear any lingering `steamwebhelper` or Chromium processes before you keep debugging the launcher itself.
+3. If Pegasus or Steam feels stale after wrapper changes, fully restart the launcher you are testing and clear any lingering Chromium processes before you keep debugging the wrapper itself.
 
 ### Anti-patterns and shortcut guardrails
 
 1. Never use `/run/user/.../doc/...` targets as persistent Steam shortcuts.
-2. Never keep both a Portal entry and a manual wrapper entry for the same service in Steam at the same time.
-3. If a service launches correctly from the terminal or KDE but fails from Steam, treat it as a Steam shortcut binding or duplicate-entry problem first.
+2. Never keep both a legacy `gtk-launch` wrapper and the validated direct-URL wrapper active for the same Pegasus entry at the same time.
+3. If a service launches correctly from Pegasus or the terminal but fails from Steam, treat it as a Steam shortcut binding or duplicate-entry problem first.
 
 ### Cleanup and migration notes
 
 If you are migrating from an older version of this guide or an earlier launcher experiment:
 
 1. Remove old Steam Non-Steam streaming entries before adding the current set again.
-2. Archive or remove legacy `open-*` scripts and any old streaming `launch-*` scripts that no longer match the current Chromium-launcher and wrapper model.
+2. Review legacy `open-*` scripts, old `launch-*` scripts, and any unreferenced wrapper files before deciding whether they still serve a purpose.
 3. Clear stale user `.desktop` launchers from `~/.local/share/applications` so KDE does not keep surfacing dead entries.
 4. Rebuild the KDE app database after cleanup:
 
@@ -493,7 +572,7 @@ If you are migrating from an older version of this guide or an earlier launcher 
 kbuildsycoca6 --noincremental
 ```
 
-Use the URLs below for Chromium app-mode installation and troubleshooting. They are the canonical day-one streaming path for this revised build.
+Use the wrapper and metadata model below as the canonical day-one streaming path for the validated Pegasus build.
 
 ### Migration from Steam-first plan (rollback + cleanup)
 
@@ -506,7 +585,7 @@ rm -f ~/.config/autostart/steam-bigpicture.desktop ~/.config/autostart/steam.des
 ```
 
 2. Ensure the Kodi autostart desktop file exists for `family`. If `~/.config/autostart/kodi.desktop` is missing, recreate it from Section 17 before continuing.
-3. Open Steam manually, review the **Streaming** collection and other Non-Steam entries, and remove duplicate streaming shortcuts so only one entry per service remains.
+3. Open Pegasus manually, confirm the metadata-backed streaming catalog appears, and then open Steam only if you need to clean up duplicate Non-Steam streaming shortcuts.
 4. Review old experimental scripts first:
 
 ```bash
@@ -520,31 +599,24 @@ After review, remove only the stale experimental copies you no longer need.
 kbuildsycoca6 --noincremental
 ```
 
-6. Reboot and validate the revised boot flow: `family` auto-login, Kodi autostart, streaming launchers still play correctly, and Steam remains a manual launch.
+6. Reboot and validate the revised boot flow: `family` auto-login, Kodi autostart, Pegasus still opens the expected catalog, and Steam remains a manual launch.
 
-### Optional secondary path: Bazzite Portal app entries
+### Legacy or alternate path: Bazzite Portal app entries
 
 1. Stay logged into `family` and use the existing Bazzite Portal entry for a service only when it is present in KDE and launches correctly.
 2. Launch the Portal entry once from the desktop, sign in if needed, confirm protected playback, and exit cleanly.
-3. Keep it as a secondary launcher only if it remains cleaner than the Chromium app-mode path for that service.
+3. Keep it as an alternate launcher only if it remains cleaner than the validated Pegasus wrapper for that service.
 4. If you also mirror the service into Steam later, add only one Steam entry and keep duplicates out of the library.
 
 When the Portal entry works well, you can keep it, but it is not the canonical baseline for this build.
 
-### Canonical day-one path: Chromium app desktop ID wrapper
+### Legacy or alternate path: Chromium desktop-ID wrappers and `gtk-launch`
 
-### Portal launcher locations, discovery, and canonical wrapper workflow
+If you still maintain older Chromium desktop-ID wrappers, label them clearly as legacy or alternate launchers. They are not the validated canonical Pegasus implementation on this box.
 
-For this HTPC build, treat launcher discovery and wrapper creation as a deterministic workflow for the primary streaming tiles, with optional Steam reuse later.
+Desktop-ID wrappers can still be useful when you are adapting this guide to another box, but they should not replace the direct URL wrappers in the active Pegasus metadata for this machine.
 
-**Launcher and wrapper locations**
-
-Primary launcher locations to inspect:
-
-- `~/.local/share/applications/`
-- `/usr/share/applications/`
-- `~/.local/share/flatpak/exports/share/applications/`
-- `/var/lib/flatpak/exports/share/applications/`
+### Canonical wrapper workflow for the validated Pegasus build
 
 Canonical wrapper storage for this guide:
 
@@ -554,50 +626,13 @@ Canonical wrapper naming:
 
 - `launch-<service>.sh`
 
-**Discover candidate launchers (Portal or Chromium app entries)**
+**Create or maintain direct Chromium wrappers**
 
-List likely launchers from all standard locations:
-
-```bash
-find \
-  ~/.local/share/applications \
-  /usr/share/applications \
-  ~/.local/share/flatpak/exports/share/applications \
-  /var/lib/flatpak/exports/share/applications \
-  -maxdepth 1 -type f -name "*.desktop" 2>/dev/null \
-| sort \
-| grep -Ei 'chromium|chrome|netflix|hulu|max|disney|apple|youtube|paramount|peacock|history'
-```
-
-Inspect launcher metadata:
-
-```bash
-grep -E '^(Name|Exec|Icon)=' /path/to/file.desktop
-```
-
-If launcher visibility is stale after cleanup:
-
-```bash
-kbuildsycoca6 --noincremental
-```
-
-**Decision flow**
-
-If a service already exists as a working Chromium app launcher:
-
-1. Launch once from KDE and validate playback.
-2. Keep that launcher tile for day-one use.
-3. If you want a deterministic wrapper, build it with `gtk-launch` and pair it with the matching `.desktop` template from Section 17.
-
-If a service does not yet exist as a Chromium app launcher:
-
-1. Create/install a Chromium app-window entry from the service URL.
-2. Confirm it launches from KDE.
-3. Find its `.desktop` file in `~/.local/share/applications/`.
-4. Derive the desktop ID as the filename without `.desktop`.
-5. Create a wrapper in `/var/home/family/bin/steam-webapps/launch-<service>.sh`.
-6. Create or keep the matching `.desktop` launcher that calls the wrapper.
-7. Use that wrapper as the optional Steam shortcut target only if you later want the same service in Big Picture.
+1. Keep the Pegasus metadata file at `/var/home/family/Games/streaming/metadata.pegasus.txt`.
+2. Keep each active `launch:` entry pointed at a persistent wrapper under `/var/home/family/bin/steam-webapps/`.
+3. Use the direct Chromium wrapper template below for each active service URL.
+4. Retain the compact-name compatibility symlinks if the metadata still references them.
+5. Use Steam mirroring only after Pegasus itself is stable.
 
 **Canonical wrapper creation**
 
@@ -607,7 +642,7 @@ mkdir -p /var/home/family/bin/steam-webapps
 cat > /var/home/family/bin/steam-webapps/launch-<service>.sh <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
-exec gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
+exec flatpak run org.chromium.Chromium --app="SERVICE_URL" --start-fullscreen
 EOF
 
 chmod +x /var/home/family/bin/steam-webapps/launch-<service>.sh
@@ -621,7 +656,8 @@ Optional Steam shortcut fields for wrappers:
 
 **Guardrails**
 
-- Keep exactly one Steam entry per service (Portal entry OR wrapper, never both).
+- Keep exactly one active Pegasus wrapper per service URL.
+- Keep exactly one Steam entry per service if you mirror launchers into Steam later.
 - Never use `/run/user/.../doc/...` targets as persistent Steam shortcuts.
 - Keep persistent wrappers only in `/var/home/family/bin/steam-webapps/`.
 
@@ -634,13 +670,13 @@ File path: `~/bin/create-steam-webapp-wrapper.sh`
 set -euo pipefail
 
 if [ "$#" -ne 2 ]; then
-  echo "Usage: $0 <service-slug> <desktop-id>"
-  echo "Example: $0 history org.chromium.Chromium.flextop.chrome-abc123-Default"
+  echo "Usage: $0 <service-slug> <service-url>"
+  echo "Example: $0 tubi https://tubitv.com/"
   exit 1
 fi
 
 service="$1"
-desktop_id="$2"
+service_url="$2"
 dest_dir="/var/home/family/bin/steam-webapps"
 dest="$dest_dir/launch-${service}.sh"
 
@@ -649,13 +685,14 @@ mkdir -p "$dest_dir"
 cat > "$dest" <<EOF
 #!/usr/bin/env bash
 set -euo pipefail
-exec gtk-launch ${desktop_id}
+exec flatpak run org.chromium.Chromium --app="${service_url}" --start-fullscreen
 EOF
 
 chmod +x "$dest"
 
 echo "Created: $dest"
-echo "Steam Target: $dest"
+echo "Pegasus launch path: $dest"
+echo "Steam Target (optional): $dest"
 echo "Steam Start In: ${dest_dir}/"
 echo "Launch Options: (empty)"
 ```
@@ -663,14 +700,26 @@ echo "Launch Options: (empty)"
 ### Deterministic validation commands
 
 ```bash
+metadata=/var/home/family/Games/streaming/metadata.pegasus.txt
+
+test -f "$metadata"
+awk -F': ' '/^[[:space:]]*launch:[[:space:]]*/ {print $2}' "$metadata"
+
+while IFS= read -r launcher; do
+  readlink -f "$launcher"
+  grep -F 'flatpak run org.chromium.Chromium --app=' "$launcher"
+  grep -F -- '--start-fullscreen' "$launcher"
+done < <(awk -F': ' '/^[[:space:]]*launch:[[:space:]]*/ {print $2}' "$metadata")
+
 flatpak list --app --columns=application | grep -E 'com.valvesoftware.Steam|org.chromium.Chromium|com.google.Chrome' || true
+flatpak list --app --columns=application | grep -F 'org.pegasus_frontend.Pegasus'
 command -v steam
 readlink -f "$(command -v steam)"
 grep -E '^Exec=' ~/.config/autostart/kodi.desktop
-find ~/.local/share/applications -maxdepth 1 -name 'org.chromium.Chromium.flextop.chrome-*-Default.desktop' | sort
-find ~/.local/share/applications -maxdepth 1 -name 'org.chromium.Chromium.flextop.chrome-*-Default.desktop' | wc -l
 find ~/.local/share/Steam/userdata -type f -name shortcuts.vdf 2>/dev/null
 ```
+
+All 12 active launcher paths and commands were verified for this build. Several streaming services were launched from Pegasus and behaved as expected. The remaining services should still be individually playback-tested before you call the whole catalog finished.
 
 ### Phase G: Optional Big Picture App Integration
 
@@ -678,13 +727,13 @@ Only do this phase if you want the same services reachable from Steam as a secon
 
 1. Open Steam once from the KDE desktop while logged into `family` and signed into `the_stover_family`.
 2. Choose **Games > Add a Non-Steam Game to My Library**.
-3. Add Netflix, Hulu, Max, Disney+, Apple TV+, YouTube, Paramount+, Peacock, and History from the app list, choosing the Chromium launcher or wrapper entry you actually kept for the service and using the Portal entry only when you intentionally decided to keep that secondary path.
+3. Add Apple TV+, Disney+, Hulu, Max, Netflix, Paramount+, Peacock, Plex, Prime Video, Sling, Tubi, and YouTube TV from the wrapper scripts you actually kept active for Pegasus.
 4. Remove duplicate entries so there is only one Steam shortcut per service.
-5. If you need to discover launcher files, build a deterministic wrapper, or confirm the correct Steam target and Start In values, use the authoritative workflow in **Portal launcher locations, discovery, and canonical wrapper workflow** above.
+5. If you need to confirm the active wrapper paths, metadata layout, or correct Steam target and Start In values, use the authoritative workflow in **Canonical wrapper workflow for the validated Pegasus build** above.
 6. Return to Big Picture mode and launch each entry once from the library to confirm the Steam shortcut points at the correct app.
 7. Create or maintain Steam collections named **Streaming**, **Media**, and **Emulators**.
-8. Put the nine streaming services in **Streaming**.
-9. If installed later, put Kodi, Jellyfin, and Plex in **Media**.
+8. Put the active Pegasus streaming services in **Streaming**.
+9. If installed later, put Kodi and Jellyfin in **Media**.
 10. If installed later, put RetroArch, Dolphin, and any emulator front end such as EmulationStation Desktop Edition in **Emulators**.
 11. Mark the services your household uses most often as favorites so they are easiest to reach from the couch.
 12. Optional polish: add custom Steam artwork for the streaming entries so Big Picture reads like a dedicated media shelf instead of a generic shortcut list.
@@ -697,22 +746,22 @@ Steam stores the Non-Steam shortcut definitions, collection membership, and cust
 
 Use this checklist only if you choose to mirror streaming apps into Steam.
 
-- [ ] The app launches from the KDE desktop.
+- [ ] The Pegasus-backed wrapper launches from the expected path.
 - [ ] The same app launches from Steam Big Picture.
 - [ ] Exiting the app returns cleanly to Steam.
-- [ ] YouTube, Netflix, and Apple TV+ all pass before you scale the full catalog.
+- [ ] Remaining mirrored services are individually playback-tested before you scale the full catalog.
 
-### Canonical path: manual Chromium launchers
+### Canonical path: Pegasus direct Chromium launchers
 
-Use the manual wrapper path as the standard launcher model for this revised build. Apple TV+ is still one of the first services to validate carefully. Build and place those wrappers exactly as described in **Portal launcher locations, discovery, and canonical wrapper workflow** above, then use the matching desktop-file templates from Section 17 so KDE surfaces them as normal launcher tiles. Portal remains secondary and Steam integration remains optional.
+Use the direct wrapper path as the standard launcher model for this validated build. Apple TV+ is still one of the first services to validate carefully. Build and place those wrappers exactly as described in **Canonical wrapper workflow for the validated Pegasus build** above, keep the Pegasus metadata pointed at them, and treat Steam integration as optional.
 
-For already-installed Chromium apps, the preferred wrapper form is:
+For the current box, the preferred wrapper form is:
 
 ```bash
-gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
+flatpak run org.chromium.Chromium --app="SERVICE_URL" --start-fullscreen
 ```
 
-Do not use a direct `--app=https://...` command as the persistent Steam target for an app that already has an installed Chromium desktop entry. Keep the direct URL form only as a secondary troubleshooting tool.
+This direct `--app="SERVICE_URL" --start-fullscreen` form is the validated persistent launcher model for Pegasus on this HTPC, not merely a troubleshooting shortcut.
 
 ## Section 9: Kodi + Jellyfin
 
@@ -935,7 +984,7 @@ File path: `~/bin/launch-plex.sh`
 
 ```bash
 #!/bin/bash
-flatpak run org.chromium.Chromium --app=https://app.plex.tv/desktop
+flatpak run org.chromium.Chromium --app=https://app.plex.tv/ --start-fullscreen
 ```
 
 File path: `~/.local/share/applications/plex.desktop`
@@ -958,10 +1007,10 @@ If you eventually want a Home Assistant view from the couch, treat it as another
 
 Cloning matters because identical Lenovo M720q units are one of the biggest advantages of this project. Once one system is correct, you should not have to manually rebuild every detail from scratch on the next unit. Clonezilla is chosen because it is reliable, common, and good at whole-disk imaging for identical hardware. Ostree-style replication is also an option because Bazzite's immutable base means a lot of your real customization lives in user configuration and Flatpak state instead of a deeply hand-crafted host.
 
-The safest cloning strategy is to create one "golden" box first, but stop before you fill it with room-specific chaos. In practice, that means you should finish Bazzite, Kodi autostart, the day-one streaming launcher flow, any optional Phase G Steam integration you actually want to keep, and the general controller flow, but think carefully before cloning active browser sessions, stale DRM tokens, room-specific Bluetooth pairings, or later add-ons that are not truly universal. The best golden image is polished but not overly personalized. Keep the same two-account model on every box: `JMStover` for admin work and `family` as the shared auto-login couch account.
+The safest cloning strategy is to create one "golden" box first, but stop before you fill it with room-specific chaos. In practice, that means you should finish Bazzite, Kodi autostart, the validated Pegasus streaming catalog, any optional Phase G Steam integration you actually want to keep, and the general controller flow, but think carefully before cloning active browser sessions, stale DRM tokens, room-specific Bluetooth pairings, or later add-ons that are not truly universal. The best golden image is polished but not overly personalized. Keep the same two-account model on every box: `JMStover` for admin work and `family` as the shared auto-login couch account.
 
 1. Finish one M720q until it is the exact baseline you want to reproduce.
-2. Update it, reboot it, and test the core flows one last time: boot into Kodi, launch at least one streaming launcher from the normal surface, confirm manual Steam Big Picture still works if you kept it, and validate at least one controller.
+2. Update it, reboot it, and test the core flows one last time: boot into Kodi, open Pegasus and launch at least one active streaming entry, confirm manual Steam Big Picture still works if you kept it, and validate at least one controller.
 3. Decide whether you want to clone logged-in browser sessions and app credentials. If not, sign out of room-specific services before imaging so the new boxes start cleanly. If yes, remember that you are cloning Chromium app state, not just launcher icons.
 4. Boot the golden unit from your Ventoy USB and launch Clonezilla.
 5. Choose the device-image workflow and save the entire internal SSD to an external drive or network share. Name the image in a way that describes the room role and Bazzite state, such as `m720q-htpc-golden-01`.
@@ -970,13 +1019,13 @@ The safest cloning strategy is to create one "golden" box first, but stop before
 8. Re-pair Bluetooth controllers if needed, because controller pairing is often room-specific even when the rest of the image is identical.
 9. Sign into streaming services where necessary, or restore the saved Chromium profile data if you intentionally kept it, then validate audio, display, and network on the target TV.
 
-If you do not want full-disk imaging every time, ostree-style replication can be lighter. In that model, you install the same Bazzite image on each M720q, recreate the same two Linux accounts, then copy the shared `family` configuration directories, especially `~/.local/share/applications`, `~/.config/autostart`, `~/.var/app/org.chromium.Chromium`, `~/.local/share/Steam/userdata`, and `~/bin` if you use fallback scripts. Reinstall the same Flatpaks and reuse the same fallback launcher files only where they are actually needed. That is slower than Clonezilla for identical hardware, but it is cleaner when you want a less frozen image and more per-box flexibility.
+If you do not want full-disk imaging every time, ostree-style replication can be lighter. In that model, you install the same Bazzite image on each M720q, recreate the same two Linux accounts, then copy the shared `family` configuration directories, especially `~/.local/share/applications`, `~/.config/autostart`, `~/.var/app/org.chromium.Chromium`, `~/Games/streaming`, `~/.local/share/Steam/userdata`, and `~/bin` if you use Pegasus wrappers. Reinstall the same Flatpaks and reuse the same wrapper files only where they are actually needed. That is slower than Clonezilla for identical hardware, but it is cleaner when you want a less frozen image and more per-box flexibility.
 
 ## Section 14: Disaster Recovery
 
-Rollback matters because one of the main promises of an immutable-style system is that bad updates do not have to become a rebuilding marathon. Restoring configs matters because most of the HTPC personality now lives in streaming launcher entries, Steam Non-Steam shortcut metadata, collections, artwork, autostart files, and the Chromium Flatpak profile under `~/.var/app/org.chromium.Chromium`. Re-pairing controllers matters because controller state is one of the first things a family notices when it breaks. Reinstalling Flatpaks matters because app-layer repairs are often much easier than host-level surgery. Browser DRM resets matter because streaming services can fail in frustrating ways that look dramatic but are sometimes just bad site state.
+Rollback matters because one of the main promises of an immutable-style system is that bad updates do not have to become a rebuilding marathon. Restoring configs matters because most of the HTPC personality now lives in Pegasus metadata, direct Chromium wrapper scripts, Steam Non-Steam shortcut metadata, collections, artwork, autostart files, and the Chromium Flatpak profile under `~/.var/app/org.chromium.Chromium`. Re-pairing controllers matters because controller state is one of the first things a family notices when it breaks. Reinstalling Flatpaks matters because app-layer repairs are often much easier than host-level surgery. Browser DRM resets matter because streaming services can fail in frustrating ways that look dramatic but are sometimes just bad site state.
 
-Use `JMStover` for rollback, updates, and host-level repairs. Use the `family` account for the backup and restore scripts below, because those scripts are meant to capture the couch-facing files that live in `/var/home/family`, including the Chromium app profile and the Steam user data that hold the streaming launcher and Big Picture state.
+Use `JMStover` for rollback, updates, and host-level repairs. Use the `family` account for the backup and restore scripts below, because those scripts are meant to capture the couch-facing files that live in `/var/home/family`, including the Pegasus metadata, the Chromium app profile, and the Steam user data that hold the streaming launcher and Big Picture state.
 
 If a Bazzite update clearly broke a previously working machine, start with rollback:
 
@@ -993,7 +1042,7 @@ rpm-ostree status
 flatpak list --system
 ```
 
-To make streaming launcher and profile recovery easy, back up the HTPC-specific config files, Chromium profile data, and Steam shortcut metadata:
+To make streaming launcher and profile recovery easy, back up the HTPC-specific config files, Pegasus metadata, Chromium profile data, and Steam shortcut metadata:
 
 If `~/bin` does not exist yet, create it first:
 
@@ -1012,6 +1061,7 @@ required_paths=(
   "bin"
   ".config/autostart"
   ".local/share/applications"
+  "Games/streaming/metadata.pegasus.txt"
   ".var/app/org.chromium.Chromium"
   ".local/share/Steam/userdata"
 )
@@ -1029,6 +1079,7 @@ tar -czf "$archive" \
   bin \
   .config/autostart \
   .local/share/applications \
+  Games/streaming/metadata.pegasus.txt \
   .var/app/org.chromium.Chromium \
   .local/share/Steam/userdata
 ```
@@ -1053,9 +1104,9 @@ if [ -d "$HOME/bin" ]; then
 fi
 ```
 
-The most important backup targets are `~/.local/share/applications`, `~/.config/autostart`, `~/.var/app/org.chromium.Chromium`, and `~/.local/share/Steam/userdata`. That Steam path is where the Non-Steam shortcuts, collections, and custom artwork live. Keep `~/bin` in the archive too so any fallback wrappers, power helpers, or recovery scripts come back with the rest of the couch-facing environment.
+The most important backup targets are `~/.local/share/applications`, `~/.config/autostart`, `~/.var/app/org.chromium.Chromium`, `/var/home/family/Games/streaming/metadata.pegasus.txt`, and `~/.local/share/Steam/userdata`. That Steam path is where the Non-Steam shortcuts, collections, and custom artwork live. Keep `~/bin` in the archive too so the Pegasus wrappers, power helpers, and recovery scripts come back with the rest of the couch-facing environment.
 
-Run the backup script after the Chromium launcher tiles and wrappers, any optional Portal entries, Steam shortcuts, collections, artwork, and sign-ins are stable, then copy the resulting archive to a NAS share, external SSD, or recovery USB. If the box is reinstalled later, run the restore script before you start rebuilding app entries by hand.
+Run the backup script after the Pegasus metadata, direct Chromium wrappers, any optional Steam shortcuts, collections, artwork, and sign-ins are stable, then copy the resulting archive to a NAS share, external SSD, or recovery USB. The currently observed backup archives predate the August 8, 2026 Pegasus and direct-launcher changes, so create a fresh `family` backup before you call this box current. If the box is reinstalled later, run the restore script before you start rebuilding app entries by hand.
 
 If controllers stop reconnecting, treat them as pairing state problems first, not as "Linux is broken" problems. If you use the official Xbox Wireless Adapter, unplug it once, reconnect it, and repeat the adapter test flow from Section 11. If you use Bluetooth, remove the old controller entry and repeat the `bluetoothctl` flow. If both paths suddenly start failing, check Secure Boot and the `xone` module before you start changing unrelated parts of the box.
 
@@ -1104,7 +1155,7 @@ Chromium may also log Wayland or Vulkan warnings even when playback and app-wind
 
 ### Streaming service quirks
 
-Apple TV+ is one of the first services to test carefully. Start with the installed Chromium app entry and wrapper model from Section 8, keep a Portal entry only if it is obviously more reliable on your box, and use the troubleshooting-only URL pattern from Section 17 only when you are diagnosing a broken app entry.
+Apple TV+ is one of the first services to test carefully. Start with the validated Pegasus direct-wrapper model from Section 8, keep a Portal entry only if it is obviously more reliable on your box, and use the Appendix examples to confirm the exact URL and wrapper format when you are rebuilding a broken entry.
 
 The practical lesson is simple: after major updates, test lock behavior, Kodi autostart, manual Steam launch flow, and streaming playback before assuming the HTPC is still fully appliance-ready.
 
@@ -1138,7 +1189,7 @@ Power on: If wake-from-sleep is configured and reliable, use the remote or wake 
 
 Startup mode: This box currently uses Kodi-first mode, so Kodi should open automatically after `family` signs in. If you later switch to Steam-first mode, Steam Big Picture becomes the auto-start shell instead.
 
-Launch streaming apps: Use the launcher tiles or wrappers first. Day-one priority services are Netflix, Hulu, Max, Disney+, Apple TV+, YouTube, Paramount+, Peacock, and History.
+Launch streaming apps: Open Pegasus from KDE, then choose from the active catalog: Apple TV+, Disney+, Hulu, Max, Netflix, Paramount+, Peacock, Plex, Prime Video, Sling, Tubi, or YouTube TV.
 
 Launch Steam Big Picture: In the current Kodi-first mode, open **Steam Big Picture (Manual)** when you want games or optional Steam-side shortcuts.
 
@@ -1152,7 +1203,7 @@ Family View PIN: ____________________
 
 ## Section 17: Appendix
 
-This appendix keeps the exact fallback file contents and recovery helpers in one place when you are rebuilding a box. Section 8 remains the primary deployment path: use Chromium app-mode launchers and wrappers first, keep Portal as an optional secondary path, and use the material below when you need the exact reusable files again.
+This appendix keeps the exact launcher file contents and recovery helpers in one place when you are rebuilding a box. Section 8 remains the primary deployment path: use the Pegasus metadata plus direct Chromium app-mode wrappers first, keep Portal as an optional secondary path, and use the material below when you need the exact reusable files again.
 
 Unless a step above explicitly says otherwise, the `~` paths in this appendix are meant to be created while logged into the Linux `family` account, so `~` means `/var/home/family`.
 
@@ -1198,185 +1249,135 @@ Categories=Game;
 
 ### Streaming launcher scripts
 
-Section 8 is the canonical operational workflow for launcher discovery and wrapper creation; Appendix entries below are templates/reference snippets.
-Use these as the normal `.desktop` and wrapper model for Chromium app-mode launchers. Replace the `<id>` placeholder with the real Chromium flextop desktop ID from `~/.local/share/applications`.
+Section 8 is the canonical operational workflow for Pegasus metadata and wrapper creation; Appendix entries below capture the validated direct Chromium wrapper shape for this box.
 
-File path: `/var/home/family/bin/steam-webapps/launch-netflix.sh`
+Pegasus metadata currently uses compact launcher names in `/var/home/family/Games/streaming/metadata.pegasus.txt`. The compact-name compatibility symlinks below are intentional and should be preserved:
 
-```bash
-#!/bin/bash
-gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
-```
+- `launch-appletvplus.sh` -> `launch-apple-tv-plus.sh`
+- `launch-disneyplus.sh` -> `launch-disney-plus.sh`
+- `launch-paramountplus.sh` -> `launch-paramount-plus.sh`
+- `launch-primevideo.sh` -> `launch-prime-video.sh`
+- `launch-youtubetv.sh` -> `launch-youtube-tv.sh`
 
-File path: `/var/home/family/bin/steam-webapps/launch-hulu.sh`
-
-```bash
-#!/bin/bash
-gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
-```
-
-File path: `/var/home/family/bin/steam-webapps/launch-max.sh`
+File path: `/var/home/family/bin/steam-webapps/launch-apple-tv-plus.sh`
 
 ```bash
-#!/bin/bash
-gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
+#!/usr/bin/env bash
+set -euo pipefail
+exec flatpak run org.chromium.Chromium --app="https://tv.apple.com/" --start-fullscreen
 ```
 
 File path: `/var/home/family/bin/steam-webapps/launch-disney-plus.sh`
 
 ```bash
-#!/bin/bash
-gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
+#!/usr/bin/env bash
+set -euo pipefail
+exec flatpak run org.chromium.Chromium --app="https://www.disneyplus.com/" --start-fullscreen
 ```
 
-File path: `/var/home/family/bin/steam-webapps/launch-apple-tv-plus.sh`
+File path: `/var/home/family/bin/steam-webapps/launch-hulu.sh`
 
 ```bash
-#!/bin/bash
-gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
+#!/usr/bin/env bash
+set -euo pipefail
+exec flatpak run org.chromium.Chromium --app="https://www.hulu.com/" --start-fullscreen
 ```
 
-File path: `/var/home/family/bin/steam-webapps/launch-youtube.sh`
+File path: `/var/home/family/bin/steam-webapps/launch-max.sh`
 
 ```bash
-#!/bin/bash
-gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
+#!/usr/bin/env bash
+set -euo pipefail
+exec flatpak run org.chromium.Chromium --app="https://play.max.com/" --start-fullscreen
+```
+
+File path: `/var/home/family/bin/steam-webapps/launch-netflix.sh`
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+exec flatpak run org.chromium.Chromium --app="https://www.netflix.com/browse" --start-fullscreen
 ```
 
 File path: `/var/home/family/bin/steam-webapps/launch-paramount-plus.sh`
 
 ```bash
-#!/bin/bash
-gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
+#!/usr/bin/env bash
+set -euo pipefail
+exec flatpak run org.chromium.Chromium --app="https://www.paramountplus.com/" --start-fullscreen
 ```
 
 File path: `/var/home/family/bin/steam-webapps/launch-peacock.sh`
 
 ```bash
-#!/bin/bash
-gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
+#!/usr/bin/env bash
+set -euo pipefail
+exec flatpak run org.chromium.Chromium --app="https://www.peacocktv.com/" --start-fullscreen
 ```
 
-File path: `/var/home/family/bin/steam-webapps/launch-history.sh`
+File path: `/var/home/family/bin/steam-webapps/launch-plex.sh`
 
 ```bash
-#!/bin/bash
-gtk-launch org.chromium.Chromium.flextop.chrome-<id>-Default
+#!/usr/bin/env bash
+set -euo pipefail
+exec flatpak run org.chromium.Chromium --app="https://app.plex.tv/" --start-fullscreen
 ```
 
-### Secondary troubleshooting-only URL wrapper pattern
-
-Use this only to prove that a raw service URL still opens in Chromium. Do not use it as the persistent Steam shortcut target for an already-installed Chromium app.
+File path: `/var/home/family/bin/steam-webapps/launch-prime-video.sh`
 
 ```bash
-flatpak run org.chromium.Chromium --app=https://example.com/
+#!/usr/bin/env bash
+set -euo pipefail
+exec flatpak run org.chromium.Chromium --app="https://www.amazon.com/gp/video/storefront/" --start-fullscreen
+```
+
+File path: `/var/home/family/bin/steam-webapps/launch-sling.sh`
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+exec flatpak run org.chromium.Chromium --app="https://watch.sling.com/" --start-fullscreen
+```
+
+File path: `/var/home/family/bin/steam-webapps/launch-tubi.sh`
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+exec flatpak run org.chromium.Chromium --app="https://tubitv.com/" --start-fullscreen
+```
+
+File path: `/var/home/family/bin/steam-webapps/launch-youtube-tv.sh`
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+exec flatpak run org.chromium.Chromium --app="https://tv.youtube.com/" --start-fullscreen
+```
+
+Legacy wrapper files such as `launch-history.sh`, `launch-moviesanywhere.sh`, and `launch-youtube.sh` may still exist, but they are not part of the current validated Pegasus catalog.
+
+### Direct Chromium wrapper pattern
+
+This is the canonical persistent wrapper form for the validated Pegasus build:
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+exec flatpak run org.chromium.Chromium --app="https://example.com/" --start-fullscreen
 ```
 
 ### Streaming launcher desktop files
 
-File path: `~/.local/share/applications/netflix.desktop`
+Pegasus metadata is the canonical catalog on this box. Standalone KDE desktop files are optional convenience launchers. If you want one, point it directly at the matching wrapper:
+
+File path: `~/.local/share/applications/<service>.desktop`
 
 ```ini
 [Desktop Entry]
 Type=Application
-Name=Netflix
-Exec=/var/home/family/bin/steam-webapps/launch-netflix.sh
-Icon=applications-multimedia
-Terminal=false
-Categories=AudioVideo;Video;
-```
-
-File path: `~/.local/share/applications/hulu.desktop`
-
-```ini
-[Desktop Entry]
-Type=Application
-Name=Hulu
-Exec=/var/home/family/bin/steam-webapps/launch-hulu.sh
-Icon=applications-multimedia
-Terminal=false
-Categories=AudioVideo;Video;
-```
-
-File path: `~/.local/share/applications/max.desktop`
-
-```ini
-[Desktop Entry]
-Type=Application
-Name=Max
-Exec=/var/home/family/bin/steam-webapps/launch-max.sh
-Icon=applications-multimedia
-Terminal=false
-Categories=AudioVideo;Video;
-```
-
-File path: `~/.local/share/applications/disney-plus.desktop`
-
-```ini
-[Desktop Entry]
-Type=Application
-Name=Disney+
-Exec=/var/home/family/bin/steam-webapps/launch-disney-plus.sh
-Icon=applications-multimedia
-Terminal=false
-Categories=AudioVideo;Video;
-```
-
-File path: `~/.local/share/applications/apple-tv-plus.desktop`
-
-```ini
-[Desktop Entry]
-Type=Application
-Name=Apple TV+
-Exec=/var/home/family/bin/steam-webapps/launch-apple-tv-plus.sh
-Icon=applications-multimedia
-Terminal=false
-Categories=AudioVideo;Video;
-```
-
-File path: `~/.local/share/applications/youtube.desktop`
-
-```ini
-[Desktop Entry]
-Type=Application
-Name=YouTube
-Exec=/var/home/family/bin/steam-webapps/launch-youtube.sh
-Icon=applications-multimedia
-Terminal=false
-Categories=AudioVideo;Video;
-```
-
-File path: `~/.local/share/applications/paramount-plus.desktop`
-
-```ini
-[Desktop Entry]
-Type=Application
-Name=Paramount+
-Exec=/var/home/family/bin/steam-webapps/launch-paramount-plus.sh
-Icon=applications-multimedia
-Terminal=false
-Categories=AudioVideo;Video;
-```
-
-File path: `~/.local/share/applications/peacock.desktop`
-
-```ini
-[Desktop Entry]
-Type=Application
-Name=Peacock
-Exec=/var/home/family/bin/steam-webapps/launch-peacock.sh
-Icon=applications-multimedia
-Terminal=false
-Categories=AudioVideo;Video;
-```
-
-File path: `~/.local/share/applications/history.desktop`
-
-```ini
-[Desktop Entry]
-Type=Application
-Name=History
-Exec=/var/home/family/bin/steam-webapps/launch-history.sh
+Name=<Service Name>
+Exec=/var/home/family/bin/steam-webapps/launch-<service>.sh
 Icon=applications-multimedia
 Terminal=false
 Categories=AudioVideo;Video;
@@ -1391,13 +1392,13 @@ File path: `~/bin/create-steam-webapp-wrapper.sh`
 set -euo pipefail
 
 if [ "$#" -ne 2 ]; then
-  echo "Usage: $0 <service-slug> <desktop-id>"
-  echo "Example: $0 history org.chromium.Chromium.flextop.chrome-abc123-Default"
+  echo "Usage: $0 <service-slug> <service-url>"
+  echo "Example: $0 tubi https://tubitv.com/"
   exit 1
 fi
 
 service="$1"
-desktop_id="$2"
+service_url="$2"
 dest_dir="/var/home/family/bin/steam-webapps"
 dest="$dest_dir/launch-${service}.sh"
 
@@ -1406,13 +1407,14 @@ mkdir -p "$dest_dir"
 cat > "$dest" <<EOF
 #!/usr/bin/env bash
 set -euo pipefail
-exec gtk-launch ${desktop_id}
+exec flatpak run org.chromium.Chromium --app="${service_url}" --start-fullscreen
 EOF
 
 chmod +x "$dest"
 
 echo "Created: $dest"
-echo "Steam Target: $dest"
+echo "Pegasus launch path: $dest"
+echo "Steam Target (optional): $dest"
 echo "Steam Start In: ${dest_dir}/"
 echo "Launch Options: (empty)"
 ```
@@ -1463,7 +1465,7 @@ File path: `~/bin/launch-plex.sh`
 
 ```bash
 #!/bin/bash
-flatpak run org.chromium.Chromium --app=https://app.plex.tv/desktop
+flatpak run org.chromium.Chromium --app=https://app.plex.tv/ --start-fullscreen
 ```
 
 File path: `~/bin/backup-htpc-config.sh`
@@ -1631,6 +1633,10 @@ flatpak install -y flathub org.chromium.Chromium
 ```
 
 ```bash
+flatpak install -y flathub org.pegasus_frontend.Pegasus
+```
+
+```bash
 mkdir -p ~/bin ~/.local/share/applications ~/.config/autostart
 ```
 
@@ -1682,18 +1688,20 @@ This file is one continuous Markdown document intended to stay copy/pasteable, s
 - [ ] If Kodi-first mode is selected, `family` auto-logs into KDE, Kodi opens automatically, and Steam does not autostart.
 - [ ] `the_stover_family` stays signed into Steam and the shared library is visible.
 - [ ] VA-API remains healthy with the Intel `iHD` driver.
-- [ ] Netflix, Hulu, Max, Disney+, Apple TV+, YouTube, Paramount+, Peacock, and History each launch from the KDE launcher and play protected video.
+- [ ] Pegasus is installed, its desktop entry resolves, and `/var/home/family/Games/streaming/metadata.pegasus.txt` exists.
+- [ ] All 12 active Pegasus launcher paths resolve successfully and each wrapper contains both `flatpak run org.chromium.Chromium --app=` and `--start-fullscreen`.
+- [ ] Several streaming services launch from Pegasus and behave as expected; the remaining active entries are individually playback-tested before sign-off.
 - [ ] Steam Big Picture launches manually from **Steam Big Picture (Manual)** and signs in cleanly when gaming is needed.
 - [ ] If you chose optional Steam mirroring, the same streaming apps launch from the Steam Big Picture library as Non-Steam entries.
 - [ ] If you chose optional Steam mirroring, the `Streaming`, `Media`, and `Emulators` Steam collections exist and contain the right entries for the apps actually installed.
-- [ ] A fresh backup archive exists for the `family` account, including Chromium and Steam metadata, and the latest `rpm-ostree status` plus `flatpak list --system` snapshot has been recorded.
+- [ ] A fresh post-August 8, 2026 backup archive exists for the `family` account, including Pegasus metadata, Chromium state, and Steam metadata, and the latest `rpm-ostree status` plus `flatpak list --system` snapshot has been recorded.
 - [ ] At least one controller path is validated end-to-end, with the official Xbox Wireless Adapter preferred.
 
 ### Living-room ready acceptance checklist
 
 - [ ] A family member can boot the box, tolerate a brief KDE flash if it happens, and land in Kodi without keyboard help.
-- [ ] The most-used services launch from the normal launcher tiles or wrappers without requiring Steam first.
-- [ ] Optional media apps such as Jellyfin and Plex appear only if they are actually in use.
+- [ ] The most-used services launch from Pegasus without requiring Steam first.
+- [ ] Optional media apps such as Jellyfin appear only if they are actually in use, while Plex remains available if it is part of the active Pegasus catalog.
 - [ ] Optional emulator tools appear only in the `Emulators` collection and do not clutter the main streaming surface.
 - [ ] Steam Big Picture remains available as a manual gaming path and does not replace Kodi at boot.
 - [ ] Exiting a streaming app returns cleanly to the Kodi-first launch surface.
