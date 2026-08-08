@@ -8,13 +8,13 @@ This guide turns a Lenovo M720q Tiny into a simple, family-friendly HTPC that fe
 
 1. For this exact build, keep `JMStover` as the personal admin account and `family` as the non-admin shared account. Later file paths assume the shared account name stays `family`.
 2. Use `JMStover` for setup, sudo/admin work, recovery, firmware tasks, updates, and occasional desktop/admin use.
-3. Use `family` for KDE auto-login, Steam Big Picture, Portal entries, Chromium fallback launchers, `.desktop` files, and normal day-to-day HTPC use from the couch.
+3. Use `family` for KDE auto-login, Kodi autostart, Chromium app-mode launcher tiles and wrappers, manual Steam launchers, `.desktop` files, and normal day-to-day HTPC use from the couch.
 4. Keep the everyday couch Steam account set to `the_stover_family`.
 5. For this exact build, use the **Bazzite / Fedora Atomic** command blocks and ignore the **Debian / Ubuntu** reference blocks unless you are intentionally adapting the guide.
 6. Run Bazzite-specific commands from the normal KDE terminal on the HTPC itself, not from a distrobox or container shell.
 7. Copy commands exactly unless a step explicitly tells you to replace a value such as `MAC`.
 8. Reboot any time the guide tells you to reboot. On Bazzite, host-level changes often do not apply until the next boot.
-9. Treat Sections 9, 10, and 12 as optional until streaming, Steam Big Picture, and at least one controller work correctly.
+9. Treat Sections 10 and 12 as optional until Kodi, streaming launchers, and at least one controller work correctly.
 
 ### Current environment assumptions
 
@@ -38,17 +38,17 @@ This guide turns a Lenovo M720q Tiny into a simple, family-friendly HTPC that fe
 
 ## Section 1: Introduction and Goals
 
-This guide converts a Lenovo M720q Tiny with an i5-8400T, 16GB RAM, and 256GB SSD into a Bazzite KDE HTPC for streaming, Steam Big Picture, later emulators, and Xbox controller use.
+This guide converts a Lenovo M720q Tiny with an i5-8400T, 16GB RAM, and 256GB SSD into a Bazzite KDE HTPC for Kodi-first streaming, manual Steam Big Picture gaming, later emulators, and Xbox controller use.
 
 It is written for a Linux novice who is also a .NET developer: technical enough to follow structured steps, but not interested in constant churn or avoidable Linux maintenance. Because the household already uses Firestick and Xbox, the system should feel familiar, controller-friendly, remote-friendly, and simple for the whole family. Routine use should work from a controller or HTPC-friendly remote, while the KDE desktop stays mostly in the background as an admin tool and occasional web-browsing fallback with a nearby Logitech K400+.
 
-The main goals are simplicity, reproducibility, stability, and clear recovery when something breaks. Day-one success means the box reliably launches Netflix, Hulu, Max, Disney+, Apple TV+, YouTube, Paramount+, Peacock, and History as Chromium app/window entries that can also be reached from Steam Big Picture over the initial Wi-Fi setup. It should also leave a clean path for later additions such as Kodi and Jellyfin once the NAS exists, NAS-hosted files and ROMs, and game streaming from the main gaming PC when the network is ready. Wired Ethernet and Cat6a are later upgrades that should improve NAS-backed media and in-home game streaming, not prerequisites for the first working box. Each of those goals matters because this HTPC is meant to work as a dependable living-room device, not just as a successful one-time setup.
+The main goals are simplicity, reproducibility, stability, and clear recovery when something breaks. Day-one success means the box boots into the `family` account, opens Kodi automatically, and reliably launches Netflix, Hulu, Max, Disney+, Apple TV+, YouTube, Paramount+, Peacock, and History from Chromium app/window launcher tiles and wrappers over the initial Wi-Fi setup. Steam Big Picture remains available as a manual gaming path, not the default shell. Jellyfin, NAS-hosted files and ROMs, and game streaming from the main gaming PC remain later additions when the network and media-server side are ready. Wired Ethernet and Cat6a are later upgrades that should improve NAS-backed media and in-home game streaming, not prerequisites for the first working box. Each of those goals matters because this HTPC is meant to work as a dependable living-room device, not just as a successful one-time setup.
 
 ### Account model for this build
 
 This HTPC intentionally uses two Linux accounts. `JMStover` is the admin account. The shared `family` Linux account is the non-admin couch-facing auto-login account. That split keeps passwords, updates, recovery, and setup work separate from the everyday TV experience.
 
-When a step says to use the admin account, log into `JMStover`. Use it for installer choices, sudo/admin tasks, firmware work, rollback, recovery, and occasional desktop troubleshooting. When a step says to use `family`, log into the shared `family` Linux account. Use it for Steam Big Picture, Portal entries, Chromium fallback launchers, non-Steam shortcuts, and anything stored under `/var/home/family`.
+When a step says to use the admin account, log into `JMStover`. Use it for installer choices, sudo/admin tasks, firmware work, rollback, recovery, and occasional desktop troubleshooting. When a step says to use `family`, log into the shared `family` Linux account. Use it for Kodi autostart, Chromium app-mode launchers, manual Steam launchers, optional non-Steam shortcuts, and anything stored under `/var/home/family`.
 
 ## Section 2: Hardware Overview
 
@@ -64,7 +64,7 @@ Ventoy is a good fit for this build because it keeps USB setup simple and reusab
 
 Bazzite KDE is the target OS because it is gaming-focused, Steam-friendly, Flatpak-friendly, and closer in spirit to a console-like Linux experience than a general-purpose desktop distro. KDE is the preferred edition because it is flexible, works well on TV-oriented setups, and gives you more control over session behavior, autologin, and launcher integration.
 
-For this build, do not treat `family` as the only Linux user. Your personal Linux account should be the admin/sudo account, and `family` should be the shared couch-facing account. `family` should be the auto-login session because it owns the Steam, launcher, and desktop files that make the HTPC feel like a simple living-room appliance.
+For this build, do not treat `family` as the only Linux user. Your personal Linux account should be the admin/sudo account, and `family` should be the shared couch-facing account. `family` should be the auto-login session because it owns the Kodi autostart, streaming launcher, Steam launcher, and desktop files that make the HTPC feel like a simple living-room appliance.
 
 ### Create the Ventoy USB
 
@@ -155,7 +155,7 @@ After installation, the first goal is to establish a clean, repeatable baseline.
 
 Bazzite's ostree-style model matters because the base operating system is more controlled than on a traditional mutable Linux install. That is useful for stability, but it also means updates and system-level changes should be done deliberately. The safest pattern is to keep the base system lean, prefer Flatpak for apps, and use host package layering only when a system-level tool is truly needed.
 
-From this point forward, use a simple rule unless a section tells you otherwise: log into `JMStover` for OS updates, sudo/admin commands, firmware work, rollback, recovery, and troubleshooting. Log into `family` for Steam, streaming apps, `.desktop` files, autostart entries, and normal couch-facing configuration. When this guide uses `~` for those couch-facing files, assume you are logged into `family`, so `~` means `/var/home/family`.
+From this point forward, use a simple rule unless a section tells you otherwise: log into `JMStover` for OS updates, sudo/admin commands, firmware work, rollback, recovery, and troubleshooting. Log into `family` for Kodi, streaming apps, manual Steam launchers, `.desktop` files, autostart entries, and normal couch-facing configuration. When this guide uses `~` for those couch-facing files, assume you are logged into `family`, so `~` means `/var/home/family`.
 
 If you are following this exact Lenovo M720q + Bazzite KDE guide, use the Bazzite steps below and ignore the Debian/Ubuntu reference block.
 
@@ -296,11 +296,11 @@ If playback is choppy or `vainfo` is broken, do not assume the browser or app is
 
 ## Section 6: Steam Setup
 
-Even if the most common first action is launching a streaming app, Steam Big Picture is still the best controller-first shell for this build because it can surface streaming shortcuts, games, emulators, and later media apps in one familiar place. That makes it easier for the household to navigate from the couch and keeps the desktop hidden unless it is actually needed.
+Steam still matters on this HTPC, but in the revised build it is a manual gaming path rather than the default day-one shell. Keep it installed, signed in, and ready for Big Picture, but let Kodi stay in front for the normal living-room boot flow.
 
-Native host Steam is the intended runtime for this build. On the validated July 18, 2026 setup, `command -v steam` resolves to `/usr/bin/steam` and the real target resolves to `/usr/lib/steam/bin_steam.sh`. Do not install or use Flatpak Steam for the day-to-day HTPC workflow. Flatpak Chromium remains correct for the web launchers in Section 8, but Steam itself should stay native on the host. On Bazzite, do not stop here to install Feral GameMode first. Bazzite already applies its own gaming-oriented tuning, and this guide does not depend on `gamemoderun` or `gamemoded` for the first working box. The day-one job is getting Steam, autostart, and controller navigation working reliably.
+Native host Steam is the intended runtime for this build. On the validated July 18, 2026 setup, `command -v steam` resolves to `/usr/bin/steam` and the real target resolves to `/usr/lib/steam/bin_steam.sh`. Do not install or use Flatpak Steam for the day-to-day HTPC workflow. Flatpak Chromium remains correct for the web launchers in Section 8, but Steam itself should stay native on the host. On Bazzite, do not stop here to install Feral GameMode first. Bazzite already applies its own gaming-oriented tuning, and this guide does not depend on `gamemoderun` or `gamemoded` for the first working box. The day-one job here is simply to get Steam installed, validated, and available for manual launch.
 
-Before you start this section, sign into the Linux `family` account. Steam's day-to-day data, autostart file, and later non-Steam shortcuts should all live in the same shared couch-facing profile that auto-logs in.
+Before you start this section, sign into the Linux `family` account. Steam's day-to-day data, manual launcher, and any later optional non-Steam shortcuts should all live in the same shared couch-facing profile that auto-logs in.
 
 ### Install Steam
 
@@ -313,7 +313,7 @@ readlink -f "$(command -v steam)"
 
 If those commands do not resolve to the normal host Steam path, fix that state before you continue.
 
-For this build, Steam is both a gaming platform and a front-end shell for couch navigation.
+For this build, Steam is the gaming platform and an optional secondary launch surface, not the boot shell.
 
 ### Optional GameMode reference for non-Bazzite systems
 
@@ -339,23 +339,32 @@ This does the same thing for Debian or Ubuntu systems.
 
 `gamemoderun` is useful on distros that use Feral GameMode because it launches a supported app with temporary gaming-oriented tweaks. On this Bazzite HTPC, you can ignore it unless you intentionally choose to adapt the guide elsewhere later.
 
-### Configure Steam Big Picture autostart
+### Create a manual Steam Big Picture launcher
 
-Create the following autostart file so Steam Big Picture starts automatically at login.
+Create the following launcher script so Steam Big Picture is always available without taking over boot.
 
-File path: `~/.config/autostart/steam-bigpicture.desktop`
+File path: `/var/home/family/bin/launch-steam-bigpicture.sh`
+
+```bash
+#!/bin/bash
+steam -tenfoot
+```
+
+Create the following desktop entry for manual launch from the `family` account.
+
+File path: `~/.local/share/applications/steam-bigpicture-manual.desktop`
 
 ```ini
 [Desktop Entry]
 Type=Application
-Exec=steam -tenfoot
-Hidden=false
-X-GNOME-Autostart-enabled=true
-Name=Steam Big Picture
-Comment=Start Steam in Big Picture mode for couch use
+Name=Steam Big Picture (Manual)
+Exec=/var/home/family/bin/launch-steam-bigpicture.sh
+Icon=steam
+Terminal=false
+Categories=Game;
 ```
 
-This autostarts Steam directly into Big Picture mode at login. That is a major part of the console-like experience.
+This keeps Steam Big Picture one click away for gaming without overriding the Kodi-first startup flow.
 
 ### First launch checks
 
@@ -365,9 +374,10 @@ After installing Steam:
 2. let it complete first-run setup and updates
 3. sign in long enough to finish setup; Section 7 decides which Steam account stays on the HTPC every day
 4. confirm Big Picture launches correctly
-5. reboot once to verify autostart behavior
+5. launch **Steam Big Picture (Manual)** once from KDE and confirm it returns cleanly after exit
+6. reboot once to verify the box still lands in Kodi instead of Steam
 
-Controller navigation matters because if the family has to reach for a mouse and keyboard every time Steam opens, the system has already missed part of its goal. Once the streaming apps from Section 8 are added to Steam, Big Picture becomes the place where the family can open the apps they actually use most without dropping to the desktop.
+Controller navigation still matters for gaming, but the HTPC no longer depends on Steam opening by itself. Once the streaming apps from Section 8 exist as launcher tiles and wrappers, Steam-side shortcuts become optional convenience instead of the primary day-one path.
 
 ## Section 7: Family Steam Account Setup
 
@@ -383,18 +393,18 @@ Family Library Sharing protects the main account because it lets the HTPC borrow
 4. Sign out of the main purchasing account and sign into `the_stover_family`.
 5. Confirm the shared library appears correctly. If the box is going to be used by children or guests, remove anything you do not want visible from the shared selection before you call the setup done.
 6. Enable Family View or the current parental-controls equivalent from Steam settings. Hide the Store, Community, and other areas that do not belong in a simple couch UI, then set a PIN that the adults in the house can remember.
-7. Turn on the normal Steam account persistence options so `the_stover_family` stays signed in on this machine. The goal is a controller-first boot path, not repeated credential entry.
-8. Reboot the box and make sure Steam returns directly to `the_stover_family` without asking for manual sign-in. If it does not, fix that before moving on. A living-room account flow that breaks on every reboot is not finished.
+7. Turn on the normal Steam account persistence options so `the_stover_family` stays signed in on this machine. The goal is fast manual Steam access when gaming is needed, not repeated credential entry.
+8. Reboot the box, launch Steam manually, and make sure it returns directly to `the_stover_family` without asking for manual sign-in. If it does not, fix that before moving on. A living-room account flow that breaks every time Steam is opened is not finished.
 
 ## Section 8: Streaming Apps
 
 Widevine DRM matters because major streaming services use it to decide whether protected playback is allowed. If Widevine is missing or confused, services may refuse playback, drop quality, or behave unpredictably. That is why this section standardizes on one browser path instead of treating every service differently.
 
-For this guide, the clear primary path is **Bazzite Portal app entries first**, then **Chromium app desktop IDs launched through `gtk-launch` wrappers when a service is missing from Portal or the Portal entry is unreliable**. Manual wrapper scripts are still useful, but only as the second tier after the Portal path is ruled out.
+For this guide, the clear primary path is **Chromium app-mode launchers exposed through `.desktop` entries and wrapper scripts**, with **Bazzite Portal app entries kept only as an optional secondary path when a service already launches cleanly there**. Steam Non-Steam shortcuts can still mirror those launchers later, but they are no longer the canonical day-one requirement.
 
 **Re-validated on July 18, 2026.**
 
-Flatpak Chromium is still the browser baseline because it is easy to reinstall and consistent across multiple boxes. Bazzite Portal entries are preferred when they already expose a working service launcher. Chromium-created launcher entries still matter because they land in KDE automatically, can be wrapped into stable Steam shortcuts when Portal is missing the service, and store their app state inside `~/.var/app/org.chromium.Chromium`, which is now part of the backup plan.
+Flatpak Chromium is still the browser baseline because it is easy to reinstall and consistent across multiple boxes. Chromium-created launcher entries now matter most because they land in KDE automatically, can be wrapped into stable launcher tiles and optional Steam shortcuts, and store their app state inside `~/.var/app/org.chromium.Chromium`, which is now part of the backup plan. Portal entries can stay in the mix when they already work well, but they are not the required baseline for this build.
 
 This is the day-one heart of the box. The required streaming set for this build is Netflix, Hulu, Max, Disney+, Apple TV+, YouTube, Paramount+, Peacock, and History. Validate those services over Wi-Fi first. Wired Ethernet can come later with the broader Cat6a plan and should be treated as an upgrade path for heavier future use such as NAS media and main-PC game streaming.
 
@@ -404,19 +414,20 @@ Install the browser used by the apps:
 flatpak install -y flathub org.chromium.Chromium
 ```
 
-Stay logged into the Linux `family` account for this entire section. These app installs, launcher entries, and Steam shortcuts belong to the shared couch-facing home directory.
+Stay logged into the Linux `family` account for this entire section. These app installs, launcher entries, wrapper scripts, and any later optional Steam shortcuts belong to the shared couch-facing home directory.
 
 Do not add a generic browser tile on day one. Keep ordinary web browsing as a desktop fallback with the K400+ so the main launcher surface stays focused and simple.
 
-On this box, reserve Chromium on the `family` account for streaming fallback apps and service sign-ins. For casual web browsing, prefer Firefox or another separate browser/profile so the streaming app profile stays cleaner and more predictable.
+On this box, reserve Chromium on the `family` account for streaming apps and service sign-ins. For casual web browsing, prefer Firefox or another separate browser/profile so the streaming app profile stays cleaner and more predictable.
 
 ### Canonical operating model for this build
 
 1. The Linux `family` account is the canonical runtime account for day-to-day HTPC operations.
-2. Native host Steam is the only Steam runtime for this build. Do not use Flatpak Steam for the living-room workflow.
-3. Use Bazzite Portal app entries first when they exist and launch cleanly.
-4. Use a Chromium app desktop ID launched through a wrapper script second when Portal does not provide the service or the Portal entry is unreliable.
-5. Keep one Steam entry per service and periodically remove duplicates from the library.
+2. `family` should auto-log in and Kodi should open automatically as the primary shell.
+3. Launch streaming services from Chromium app-mode launcher tiles and wrappers as the canonical day-one path.
+4. Keep Bazzite Portal entries only as optional secondary launchers when they already exist and stay reliable.
+5. Native host Steam is the only Steam runtime for this build, but Steam Big Picture is launched manually when you want gaming.
+6. If you later mirror services into Steam, keep one Steam entry per service and periodically remove duplicates from the library.
 
 | Service | URL | Notes |
 |------|-----|-------|
@@ -424,7 +435,7 @@ On this box, reserve Chromium on the `family` account for streaming fallback app
 | Hulu | `https://www.hulu.com/` | Core day-one service |
 | Max | `https://play.max.com/` | Replaces the old HBO Max naming |
 | Disney+ | `https://www.disneyplus.com/` | Core day-one service |
-| Apple TV+ | `https://tv.apple.com/` | Prefer Portal if present; otherwise use the Chromium fallback path |
+| Apple TV+ | `https://tv.apple.com/` | Validate carefully; keep Portal only if it is clearly cleaner than the Chromium launcher path |
 | YouTube | `https://www.youtube.com/tv` | TV UI is better for couch use |
 | Paramount+ | `https://www.paramountplus.com/` | Standard browser path |
 | Peacock | `https://www.peacocktv.com/` | Standard browser path |
@@ -447,7 +458,7 @@ On this box, reserve Chromium on the `family` account for streaming fallback app
 If you are migrating from an older version of this guide or an earlier launcher experiment:
 
 1. Remove old Steam Non-Steam streaming entries before adding the current set again.
-2. Archive or remove legacy `open-*` scripts and any old streaming `launch-*` scripts that no longer match the current Portal-first and `gtk-launch` fallback model.
+2. Archive or remove legacy `open-*` scripts and any old streaming `launch-*` scripts that no longer match the current Chromium-launcher and wrapper model.
 3. Clear stale user `.desktop` launchers from `~/.local/share/applications` so KDE does not keep surfacing dead entries.
 4. Rebuild the KDE app database after cleanup:
 
@@ -455,22 +466,49 @@ If you are migrating from an older version of this guide or an earlier launcher 
 kbuildsycoca6 --noincremental
 ```
 
-Use the URLs below for Chromium fallback installation and troubleshooting. They are not the first thing to prefer when Bazzite Portal already provides a clean service entry.
+Use the URLs below for Chromium app-mode installation and troubleshooting. They are the canonical day-one streaming path for this revised build.
 
-### Tier 1 (preferred): Bazzite Portal app entries
+### Migration from Steam-first plan (rollback + cleanup)
 
-1. Stay logged into `family` and prefer the existing Bazzite Portal entry for a service when it is present in KDE and launches correctly.
+If you already built the older Steam-first version of this box, use this cleanup pass before calling the revised Kodi-first layout finished:
+
+1. Remove Steam autostart desktop files if they still exist:
+
+```bash
+rm -f ~/.config/autostart/steam-bigpicture.desktop ~/.config/autostart/steam.desktop
+```
+
+2. Ensure the Kodi autostart desktop file exists for `family`. If `~/.config/autostart/kodi.desktop` is missing, recreate it from Section 17 before continuing.
+3. Open Steam manually, review the **Streaming** collection and other Non-Steam entries, and remove duplicate streaming shortcuts so only one entry per service remains.
+4. Review old experimental scripts first:
+
+```bash
+find ~/bin -maxdepth 1 -type f \( -name 'open-*' -o -name 'test-*' \) | sort
+```
+
+After review, remove only the stale experimental copies you no longer need.
+5. Rebuild the KDE app database:
+
+```bash
+kbuildsycoca6 --noincremental
+```
+
+6. Reboot and validate the revised boot flow: `family` auto-login, Kodi autostart, streaming launchers still play correctly, and Steam remains a manual launch.
+
+### Optional secondary path: Bazzite Portal app entries
+
+1. Stay logged into `family` and use the existing Bazzite Portal entry for a service only when it is present in KDE and launches correctly.
 2. Launch the Portal entry once from the desktop, sign in if needed, confirm protected playback, and exit cleanly.
-3. Add that Portal entry to Steam as the single Non-Steam shortcut for the service.
-4. Repeat one service at a time so each chosen Steam entry is deliberate and duplicate-free.
+3. Keep it as a secondary launcher only if it remains cleaner than the Chromium app-mode path for that service.
+4. If you also mirror the service into Steam later, add only one Steam entry and keep duplicates out of the library.
 
-When the Portal entry works, stop there. That is the preferred path for this build.
+When the Portal entry works well, you can keep it, but it is not the canonical baseline for this build.
 
-### Tier 2 (fallback): Chromium app desktop ID wrapper
+### Canonical day-one path: Chromium app desktop ID wrapper
 
 ### Portal launcher locations, discovery, and canonical wrapper workflow
 
-For this HTPC build, treat launcher discovery and wrapper creation as a deterministic workflow.
+For this HTPC build, treat launcher discovery and wrapper creation as a deterministic workflow for the primary streaming tiles, with optional Steam reuse later.
 
 **Launcher and wrapper locations**
 
@@ -518,19 +556,21 @@ kbuildsycoca6 --noincremental
 
 **Decision flow**
 
-If a service exists as a working Portal/KDE launcher:
+If a service already exists as a working Chromium app launcher:
 
 1. Launch once from KDE and validate playback.
-2. Keep that as the single Steam entry OR wrap it deterministically with `gtk-launch`.
+2. Keep that launcher tile for day-one use.
+3. If you want a deterministic wrapper, build it with `gtk-launch` and pair it with the matching `.desktop` template from Section 17.
 
-If a service does not exist in Portal:
+If a service does not yet exist as a Chromium app launcher:
 
 1. Create/install a Chromium app-window entry from the service URL.
 2. Confirm it launches from KDE.
 3. Find its `.desktop` file in `~/.local/share/applications/`.
 4. Derive the desktop ID as the filename without `.desktop`.
 5. Create a wrapper in `/var/home/family/bin/steam-webapps/launch-<service>.sh`.
-6. Use that wrapper as the Steam shortcut target.
+6. Create or keep the matching `.desktop` launcher that calls the wrapper.
+7. Use that wrapper as the optional Steam shortcut target only if you later want the same service in Big Picture.
 
 **Canonical wrapper creation**
 
@@ -546,7 +586,7 @@ EOF
 chmod +x /var/home/family/bin/steam-webapps/launch-<service>.sh
 ```
 
-Steam shortcut fields for wrappers:
+Optional Steam shortcut fields for wrappers:
 
 - **Target:** `/var/home/family/bin/steam-webapps/launch-<service>.sh`
 - **Start In:** `/var/home/family/bin/steam-webapps/`
@@ -599,17 +639,19 @@ echo "Launch Options: (empty)"
 flatpak list --app --columns=application | grep -E 'com.valvesoftware.Steam|org.chromium.Chromium|com.google.Chrome' || true
 command -v steam
 readlink -f "$(command -v steam)"
-grep -E '^Exec=' ~/.config/autostart/steam-bigpicture.desktop
+grep -E '^Exec=' ~/.config/autostart/kodi.desktop
 find ~/.local/share/applications -maxdepth 1 -name 'org.chromium.Chromium.flextop.chrome-*-Default.desktop' | sort
 find ~/.local/share/applications -maxdepth 1 -name 'org.chromium.Chromium.flextop.chrome-*-Default.desktop' | wc -l
 find ~/.local/share/Steam/userdata -type f -name shortcuts.vdf 2>/dev/null
 ```
 
-### Phase G: Big Picture App Integration
+### Phase G: Optional Big Picture App Integration
+
+Only do this phase if you want the same services reachable from Steam as a secondary manual launch surface.
 
 1. Open Steam once from the KDE desktop while logged into `family` and signed into `the_stover_family`.
 2. Choose **Games > Add a Non-Steam Game to My Library**.
-3. Add Netflix, Hulu, Max, Disney+, Apple TV+, YouTube, Paramount+, Peacock, and History from the app list, choosing the Portal entry when it exists and the wrapper entry only when Portal does not.
+3. Add Netflix, Hulu, Max, Disney+, Apple TV+, YouTube, Paramount+, Peacock, and History from the app list, choosing the Chromium launcher or wrapper entry you actually kept for the service and using the Portal entry only when you intentionally decided to keep that secondary path.
 4. Remove duplicate entries so there is only one Steam shortcut per service.
 5. If you need to discover launcher files, build a deterministic wrapper, or confirm the correct Steam target and Start In values, use the authoritative workflow in **Portal launcher locations, discovery, and canonical wrapper workflow** above.
 6. Return to Big Picture mode and launch each entry once from the library to confirm the Steam shortcut points at the correct app.
@@ -620,20 +662,22 @@ find ~/.local/share/Steam/userdata -type f -name shortcuts.vdf 2>/dev/null
 11. Mark the services your household uses most often as favorites so they are easiest to reach from the couch.
 12. Optional polish: add custom Steam artwork for the streaming entries so Big Picture reads like a dedicated media shelf instead of a generic shortcut list.
 
-At that point, the preferred launch path is controller-first: boot into Steam Big Picture, open the relevant collection or favorites row, and launch the streaming app without touching the KDE desktop.
+At that point, Steam becomes an optional second launch surface: open **Steam Big Picture (Manual)** when you want games or Steam-side shortcuts, otherwise stay in Kodi and the normal launcher tiles.
 
 Steam stores the Non-Steam shortcut definitions, collection membership, and custom artwork in its own user data. Treat that metadata as part of the real HTPC state, not as disposable polish.
 
 #### Phase G acceptance checklist
+
+Use this checklist only if you choose to mirror streaming apps into Steam.
 
 - [ ] The app launches from the KDE desktop.
 - [ ] The same app launches from Steam Big Picture.
 - [ ] Exiting the app returns cleanly to Steam.
 - [ ] YouTube, Netflix, and Apple TV+ all pass before you scale the full catalog.
 
-### Fallback path: manual Chromium launchers
+### Canonical path: manual Chromium launchers
 
-Use the manual wrapper path only if a service is missing from Portal, the Portal entry is unreliable, or the installed Chromium app needs a stable `gtk-launch` wrapper for Steam. Apple TV+ is still one of the first services to validate carefully. Build and place those wrappers exactly as described in **Portal launcher locations, discovery, and canonical wrapper workflow** above. The fallback scripts and desktop-file templates in Section 17 are the reusable examples, not a separate operational model.
+Use the manual wrapper path as the standard launcher model for this revised build. Apple TV+ is still one of the first services to validate carefully. Build and place those wrappers exactly as described in **Portal launcher locations, discovery, and canonical wrapper workflow** above, then use the matching desktop-file templates from Section 17 so KDE surfaces them as normal launcher tiles. Portal remains secondary and Steam integration remains optional.
 
 For already-installed Chromium apps, the preferred wrapper form is:
 
@@ -645,9 +689,9 @@ Do not use a direct `--app=https://...` command as the persistent Steam target f
 
 ## Section 9: Kodi + Jellyfin
 
-Kodi and Jellyfin are not day-one requirements for this box. They are the clean later path for local and server-backed media once the NAS or media-server side of the house is ready. Kodi is the local media app because it is still one of the best couch-friendly front ends for files you own and control. Jellyfin is the server media app because it gives you a clean path to a centralized home media server without tying the household to a paid ecosystem.
+Kodi is now a day-one requirement for this build mode because it is the primary shell that should open automatically after `family` auto-login. Jellyfin remains optional later for server-backed media once the NAS or media-server side of the house is ready. Kodi is the local media app because it is still one of the best couch-friendly front ends for files you own and control. Jellyfin is the server media app because it gives you a clean path to a centralized home media server without tying the household to a paid ecosystem.
 
-If your NAS or media server is not ready yet, skip this section on day one and come back later. Once it is ready, both apps should be integrated into Steam because the fewer front ends the family has to understand, the better. If Steam Big Picture is already the main shell, adding Kodi and Jellyfin into that same shell keeps the living-room experience coherent.
+Do not skip Kodi on day one for this revised plan. Install Kodi, launch it once, and use the Kodi autostart entry from Section 17 so the expected boot flow becomes `family` auto-login -> Kodi opens -> streaming launchers stay available from the normal living-room surface. Jellyfin can wait until the server side is actually ready. If you later add Kodi or Jellyfin to Steam, treat that as optional convenience, not as the main shell design.
 
 ```bash
 flatpak install -y flathub tv.kodi.Kodi
@@ -656,9 +700,9 @@ flatpak install -y flathub org.jellyfin.jellyfin-media-player
 
 After installation, launch each app once from KDE with a keyboard and mouse so it can complete first-run setup cleanly.
 
-For Kodi, do the minimum stable setup first: set the display mode correctly for the TV, point it at your local or network media sources, choose the default skin unless you have a strong reason to change it, and confirm controller navigation works before you start decorating it. For Jellyfin Media Player, enter the server URL, sign in with the correct household user, confirm direct playback works, and then stop changing things once it feels solid. Later, when the NAS exists, this is the natural place for shared videos, pictures, and other household media to surface.
+For Kodi, do the minimum stable setup first: set the display mode correctly for the TV, point it at your local or network media sources, choose the default skin unless you have a strong reason to change it, and confirm controller navigation works before you start decorating it. For this build mode, stick to stock Kodi plus the normal launcher flow first instead of treating third-party Kodi repos or add-ons as the canonical path. For Jellyfin Media Player, enter the server URL, sign in with the correct household user, confirm direct playback works, and then stop changing things once it feels solid. Later, when the NAS exists, this is the natural place for shared videos, pictures, and other household media to surface.
 
-To add Kodi and Jellyfin to Steam, open Steam in desktop mode, choose **Add a Non-Steam Game**, scan the available applications, and select the matching launcher entries. Then return to Big Picture and confirm both apps launch from the couch without needing desktop interaction. The point is not to prove that Linux can do everything. The point is to reduce how often anyone has to think about Linux at all.
+If you want Kodi or Jellyfin reachable from Steam too, open Steam in desktop mode, choose **Add a Non-Steam Game**, scan the available applications, and select the matching launcher entries. Then return to Big Picture and confirm the optional Steam launch still works without needing desktop interaction. The point is not to prove that Linux can do everything. The point is to reduce how often anyone has to think about Linux at all.
 
 ## Section 10: Emulators
 
@@ -887,10 +931,10 @@ If you eventually want a Home Assistant view from the couch, treat it as another
 
 Cloning matters because identical Lenovo M720q units are one of the biggest advantages of this project. Once one system is correct, you should not have to manually rebuild every detail from scratch on the next unit. Clonezilla is chosen because it is reliable, common, and good at whole-disk imaging for identical hardware. Ostree-style replication is also an option because Bazzite's immutable base means a lot of your real customization lives in user configuration and Flatpak state instead of a deeply hand-crafted host.
 
-The safest cloning strategy is to create one "golden" box first, but stop before you fill it with room-specific chaos. In practice, that means you should finish Bazzite, Steam, the day-one streaming launcher flow, Phase G Big Picture integration, and the general controller flow, but think carefully before cloning active browser sessions, stale DRM tokens, room-specific Bluetooth pairings, or later add-ons that are not truly universal. The best golden image is polished but not overly personalized. Keep the same two-account model on every box: `JMStover` for admin work and `family` as the shared auto-login couch account.
+The safest cloning strategy is to create one "golden" box first, but stop before you fill it with room-specific chaos. In practice, that means you should finish Bazzite, Kodi autostart, the day-one streaming launcher flow, any optional Phase G Steam integration you actually want to keep, and the general controller flow, but think carefully before cloning active browser sessions, stale DRM tokens, room-specific Bluetooth pairings, or later add-ons that are not truly universal. The best golden image is polished but not overly personalized. Keep the same two-account model on every box: `JMStover` for admin work and `family` as the shared auto-login couch account.
 
 1. Finish one M720q until it is the exact baseline you want to reproduce.
-2. Update it, reboot it, and test the core flows one last time: boot, Steam Big Picture, at least one streaming launcher from KDE, the same app from Steam Big Picture, and at least one controller.
+2. Update it, reboot it, and test the core flows one last time: boot into Kodi, launch at least one streaming launcher from the normal surface, confirm manual Steam Big Picture still works if you kept it, and validate at least one controller.
 3. Decide whether you want to clone logged-in browser sessions and app credentials. If not, sign out of room-specific services before imaging so the new boxes start cleanly. If yes, remember that you are cloning Chromium app state, not just launcher icons.
 4. Boot the golden unit from your Ventoy USB and launch Clonezilla.
 5. Choose the device-image workflow and save the entire internal SSD to an external drive or network share. Name the image in a way that describes the room role and Bazzite state, such as `m720q-htpc-golden-01`.
@@ -984,7 +1028,7 @@ fi
 
 The most important backup targets are `~/.local/share/applications`, `~/.config/autostart`, `~/.var/app/org.chromium.Chromium`, and `~/.local/share/Steam/userdata`. That Steam path is where the Non-Steam shortcuts, collections, and custom artwork live. Keep `~/bin` in the archive too so any fallback wrappers, power helpers, or recovery scripts come back with the rest of the couch-facing environment.
 
-Run the backup script after the Portal entries, Chromium fallback launchers, Steam shortcuts, collections, artwork, and sign-ins are stable, then copy the resulting archive to a NAS share, external SSD, or recovery USB. If the box is reinstalled later, run the restore script before you start rebuilding app entries by hand.
+Run the backup script after the Chromium launcher tiles and wrappers, any optional Portal entries, Steam shortcuts, collections, artwork, and sign-ins are stable, then copy the resulting archive to a NAS share, external SSD, or recovery USB. If the box is reinstalled later, run the restore script before you start rebuilding app entries by hand.
 
 If controllers stop reconnecting, treat them as pairing state problems first, not as "Linux is broken" problems. If you use the official Xbox Wireless Adapter, unplug it once, reconnect it, and repeat the adapter test flow from Section 11. If you use Bluetooth, remove the old controller entry and repeat the `bluetoothctl` flow. If both paths suddenly start failing, check Secure Boot and the `xone` module before you start changing unrelated parts of the box.
 
@@ -1008,9 +1052,9 @@ Lock-screen behavior on Bazzite KDE has had regressions, including [issue #2856]
 
 ### Autostart quirks
 
-KDE session startup and autostart behavior on Bazzite has also had known issues, including [issue #2044](https://github.com/ublue-os/bazzite/issues/2044) (`Sunshine service failing to autostart on Bazzite gnome desktop images`) and [issue #4624](https://github.com/ublue-os/bazzite/issues/4624) (`Exiting KDE to go back to game mode doesn't stop KDE user services`). This matters directly for Steam Big Picture autostart and any custom launcher flow.
+KDE session startup and autostart behavior on Bazzite has also had known issues, including [issue #2044](https://github.com/ublue-os/bazzite/issues/2044) (`Sunshine service failing to autostart on Bazzite gnome desktop images`) and [issue #4624](https://github.com/ublue-os/bazzite/issues/4624) (`Exiting KDE to go back to game mode doesn't stop KDE user services`). This matters directly for Kodi autostart and any custom launcher flow.
 
-A brief flash of the KDE desktop before Steam Big Picture takes over on `family` auto-login is acceptable on this build. Treat it as optional polish work for later, not as a blocker, as long as Steam reliably lands in Big Picture without manual input.
+A brief flash of the KDE desktop before Kodi opens on `family` auto-login is acceptable on this build. Treat it as optional polish work for later, not as a blocker, as long as Kodi reliably opens without manual input.
 
 ### Steam and Big Picture quirks
 
@@ -1026,9 +1070,9 @@ Chromium may also log Wayland or Vulkan warnings even when playback and app-wind
 
 ### Streaming service quirks
 
-Apple TV+ is one of the first services to test with the Portal path when it exists and one of the last services you should force back to manual wrappers. Prefer the Portal entry first, then the installed Chromium app entry, and only then the fallback script-and-desktop path from Section 17 for that service.
+Apple TV+ is one of the first services to test carefully. Start with the installed Chromium app entry and wrapper model from Section 8, keep a Portal entry only if it is obviously more reliable on your box, and use the troubleshooting-only URL pattern from Section 17 only when you are diagnosing a broken app entry.
 
-The practical lesson is simple: after major updates, test lock behavior, autostart, Steam launch flow, and streaming playback before assuming the HTPC is still fully appliance-ready.
+The practical lesson is simple: after major updates, test lock behavior, Kodi autostart, manual Steam launch flow, and streaming playback before assuming the HTPC is still fully appliance-ready.
 
 ## Routine Maintenance
 
@@ -1058,11 +1102,11 @@ If you already own Xbox controllers and want to start with Bluetooth, that is st
 
 Power on: If wake-from-sleep is configured and reliable, use the remote or wake path you set up. Otherwise press the Lenovo power button and wait for the box to boot.
 
-Launch Steam Big Picture: It should start automatically. If it does not, open Steam from the KDE launcher and let it return to Big Picture mode.
+Kodi: It should open automatically after `family` signs in. If it does not, open Kodi from the KDE launcher.
 
-Launch streaming apps: Use the Steam Non-Steam shortcuts or the `Streaming` collection first. Day-one priority services are Netflix, Hulu, Max, Disney+, Apple TV+, YouTube, Paramount+, Peacock, and History.
+Launch streaming apps: Use the launcher tiles or wrappers first. Day-one priority services are Netflix, Hulu, Max, Disney+, Apple TV+, YouTube, Paramount+, Peacock, and History.
 
-Launch Kodi: If configured later, open Kodi from Steam or from the KDE application menu.
+Launch Steam Big Picture: Open **Steam Big Picture (Manual)** when you want games or optional Steam-side shortcuts.
 
 Controller basics: `A` selects, `B` backs out, the D-pad or left stick moves focus, and the Xbox button is your home or attention button. Keep the K400+ nearby for admin work or fallback browsing.
 
@@ -1074,28 +1118,49 @@ Family View PIN: ____________________
 
 ## Section 17: Appendix
 
-This appendix keeps the exact fallback file contents and recovery helpers in one place when you are rebuilding a box. Section 8 remains the primary deployment path: use Bazzite Portal entries first, then use the material below only when you need Chromium wrapper fallbacks or repair tools.
+This appendix keeps the exact fallback file contents and recovery helpers in one place when you are rebuilding a box. Section 8 remains the primary deployment path: use Chromium app-mode launchers and wrappers first, keep Portal as an optional secondary path, and use the material below when you need the exact reusable files again.
 
 Unless a step above explicitly says otherwise, the `~` paths in this appendix are meant to be created while logged into the Linux `family` account, so `~` means `/var/home/family`.
 
-### Steam autostart desktop file
+### Kodi autostart desktop file
 
-File path: `~/.config/autostart/steam-bigpicture.desktop`
+File path: `~/.config/autostart/kodi.desktop`
 
 ```ini
 [Desktop Entry]
 Type=Application
-Exec=steam -tenfoot
+Exec=flatpak run tv.kodi.Kodi
 Hidden=false
 X-GNOME-Autostart-enabled=true
-Name=Steam Big Picture
-Comment=Start Steam in Big Picture mode for couch use
+Name=Kodi
+Comment=Start Kodi automatically for the living-room shell
 ```
 
-### Streaming fallback launcher scripts
+### Manual Steam Big Picture launcher
+
+File path: `/var/home/family/bin/launch-steam-bigpicture.sh`
+
+```bash
+#!/bin/bash
+steam -tenfoot
+```
+
+File path: `~/.local/share/applications/steam-bigpicture-manual.desktop`
+
+```ini
+[Desktop Entry]
+Type=Application
+Name=Steam Big Picture (Manual)
+Exec=/var/home/family/bin/launch-steam-bigpicture.sh
+Icon=steam
+Terminal=false
+Categories=Game;
+```
+
+### Streaming launcher scripts
 
 Section 8 is the canonical operational workflow for launcher discovery and wrapper creation; Appendix entries below are templates/reference snippets.
-Use these only if the Portal path is unavailable and you need a stable wrapper for an already-installed Chromium app. Replace the `<id>` placeholder with the real Chromium flextop desktop ID from `~/.local/share/applications`.
+Use these as the normal `.desktop` and wrapper model for Chromium app-mode launchers. Replace the `<id>` placeholder with the real Chromium flextop desktop ID from `~/.local/share/applications`.
 
 File path: `/var/home/family/bin/steam-webapps/launch-netflix.sh`
 
@@ -1168,7 +1233,7 @@ Use this only to prove that a raw service URL still opens in Chromium. Do not us
 flatpak run org.chromium.Chromium --app=https://example.com/
 ```
 
-### Streaming fallback desktop files
+### Streaming launcher desktop files
 
 File path: `~/.local/share/applications/netflix.desktop`
 
@@ -1574,21 +1639,23 @@ This file is one continuous Markdown document intended to stay copy/pasteable, s
 
 ### Pass/fail validation checklist
 
-- [ ] `family` auto-logs into KDE and Steam reaches Big Picture without manual sign-in.
+- [ ] `family` auto-logs into KDE and Kodi opens automatically without manual repair.
 - [ ] `the_stover_family` stays signed into Steam and the shared library is visible.
 - [ ] VA-API remains healthy with the Intel `iHD` driver.
 - [ ] Netflix, Hulu, Max, Disney+, Apple TV+, YouTube, Paramount+, Peacock, and History each launch from the KDE launcher and play protected video.
-- [ ] The same streaming apps launch from the Steam Big Picture library as Non-Steam entries.
-- [ ] The `Streaming`, `Media`, and `Emulators` Steam collections exist and contain the right entries for the apps actually installed.
+- [ ] Steam Big Picture launches manually from **Steam Big Picture (Manual)** and signs in cleanly when gaming is needed.
+- [ ] If you chose optional Steam mirroring, the same streaming apps launch from the Steam Big Picture library as Non-Steam entries.
+- [ ] If you chose optional Steam mirroring, the `Streaming`, `Media`, and `Emulators` Steam collections exist and contain the right entries for the apps actually installed.
 - [ ] A fresh backup archive exists for the `family` account, including Chromium and Steam metadata, and the latest `rpm-ostree status` plus `flatpak list --system` snapshot has been recorded.
 - [ ] At least one controller path is validated end-to-end, with the official Xbox Wireless Adapter preferred.
 
 ### Living-room ready acceptance checklist
 
-- [ ] A family member can boot the box, tolerate a brief KDE flash if it happens, and reach Big Picture without keyboard help.
-- [ ] The most-used services are in Steam favorites or near the top of the `Streaming` collection.
-- [ ] Optional media apps such as Kodi, Jellyfin, and Plex appear only if they are actually in use.
+- [ ] A family member can boot the box, tolerate a brief KDE flash if it happens, and land in Kodi without keyboard help.
+- [ ] The most-used services launch from the normal launcher tiles or wrappers without requiring Steam first.
+- [ ] Optional media apps such as Jellyfin and Plex appear only if they are actually in use.
 - [ ] Optional emulator tools appear only in the `Emulators` collection and do not clutter the main streaming surface.
-- [ ] Exiting a streaming app returns cleanly to the controller-first launch surface.
+- [ ] Steam Big Picture remains available as a manual gaming path and does not replace Kodi at boot.
+- [ ] Exiting a streaming app returns cleanly to the Kodi-first launch surface.
 - [ ] Recovery media or off-box storage contains the latest HTPC backup archive.
 - [ ] The K400+ or another keyboard/mouse is only needed for admin work, first-run sign-ins, or troubleshooting.
